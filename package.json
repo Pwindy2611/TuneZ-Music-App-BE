@@ -25,12 +25,14 @@
     "express": "^4.21.2",
     "firebase": "^11.1.0",
     "firebase-admin": "^13.0.2",
+    "nodemailer": "^6.9.16",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "tunez-be": "file:",
     "typescript": "^5.7.2"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0"
+    "@types/express": "^5.0.0",
+    "@types/nodemailer": "^6.4.17"
   }
 }

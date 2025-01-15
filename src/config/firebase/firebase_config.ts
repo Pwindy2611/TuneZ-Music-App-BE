@@ -1,28 +1,25 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
 import * as dotenv from 'dotenv';
+import * as admin from 'firebase-admin';
+import { cert } from 'firebase-admin/app'; // Import cert from firebase-admin
+import { getAuth } from 'firebase-admin/auth';
+import { getDatabase } from 'firebase-admin/database';
 
-// TODO: Add SDKs for Firebase products that you want to use
-
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
+// Load environment variables from the .env file
 dotenv.config();
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+
+// Path to the service account key JSON file
+const serviceAccount = require("../../../key/key.json");  // Make sure the file is a valid JSON file
+
+// Initialize Firebase Admin SDK with the service account
+admin.initializeApp({
+    credential: cert(serviceAccount as admin.ServiceAccount),
     databaseURL: process.env.FIREBASE_DATABASE_URL,
     projectId: process.env.FIREBASE_PROJECT_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.FIREBASE_APP_ID,
-    measurementId: process.env.FIREBASE_MEASUREMENT_ID,
-};
+});
 
-// Initialize Firebase
+// Initialize the Firebase Realtime Database and Firebase Authentication
+const database = getDatabase(); // Use the initialized app directly
+const auth = getAuth(); // Use the initialized app directly
 
-const app = initializeApp(firebaseConfig);
+export { auth, database };
 
-export const database = getDatabase(app);
