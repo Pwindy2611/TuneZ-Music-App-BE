@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { auth } from "../config/firebase/firebase_config";
 import {createUserService, getAllUsersService, getUserByEmailService} from '../services/user_services';
 import { authentication, random } from '../utils/helpers/authentication_helper';
-import {sendVerificationEmail} from "../utils/base/function_base";
+import {sendResetPasswordEmail, sendVerificationEmail} from "../utils/base/function_base";
 
 const router = Router();
 
@@ -64,6 +64,18 @@ export const sendVerificationEmailApi = async (req: Request, res: Response) => {
         res.status(200).json({status: 200, message: 'Send Verification Email Successfully'});
     }catch (error) {
         res.status(500).json({status: 500, message: "Error sending email"});
+        return;
+    }
+};
+export const sendForgetPasswordApi = async (req: Request, res: Response) => {
+    try {
+        const {email} = req.body;
+        const link = await auth.generatePasswordResetLink(email);
+        await sendResetPasswordEmail(email, link);
+        
+        res.status(200).json({status: 200, message: 'Send Reset Password Email Successfully'});
+    }catch (error) {
+        res.status(500).json({status: 500, message: "Error sending forget password"});
         return;
     }
 };

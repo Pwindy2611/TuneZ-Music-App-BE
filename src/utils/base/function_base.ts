@@ -18,19 +18,43 @@ export async function sendVerificationEmail(email: string, link: string) {
         const mailOptions = {
             from: process.env.EMAIL_PASS,
             to: email,
-            subject: 'Email Xác Thực',
-            text: `Xin chào, hãy nhấn vào liên kết này để xác thực email của bạn: ${link}`,
+            subject: 'Verification Email',
+            text: `Hello, click this link to verify your email: ${link}`,
         };
 
         // Gửi email
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.log('Lỗi khi gửi email:', error);
+                console.log('Error sending email:', error);
             } else {
-                console.log('Email đã được gửi:', info.response);
+                console.log('Email has been sent:', info.response);
             }
         });
     } catch (error) {
-        console.error('Lỗi khi tạo hoặc gửi email xác thực:', error);
+        console.error('Error creating or sending authentication email:', error);
+    }
+}
+
+export async function sendResetPasswordEmail(email: string, link: string) {
+    try {
+
+        // Cấu hình email
+        const mailOptions = {
+            from: process.env.EMAIL_PASS,
+            to: email,
+            subject: 'Password Reset Email',
+            text: `Hello, please click this link to reset your password: ${link}`,
+        };
+
+        // Gửi email
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log('Error sending email:', error);
+            } else {
+                console.log('Email has been sent:', info.response);
+            }
+        });
+    } catch (error) {
+        console.error('Error creating or sending authentication email:', error);
     }
 }
