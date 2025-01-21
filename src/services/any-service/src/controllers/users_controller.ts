@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { auth } from "../config/firebase/firebase_config";
-import {createUserService, getAllUsersService, getUserByEmailService} from '../services/user_services';
+import {createUserService, getAllUsersService, getUserByEmailService} from '../services/user-service/src/services/user_services';
 import { authentication, random } from '../utils/helpers/authentication_helper';
 import {sendResetPasswordEmail, sendVerificationEmail} from "../utils/base/function_base";
 
