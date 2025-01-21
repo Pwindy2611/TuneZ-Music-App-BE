@@ -1,0 +1,24 @@
+# filepath: /d:/TuneZ-Music-App-BE/docker/docker-compose.yml
+services:
+  user-service:
+    build:
+      context: ../src/services/user-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - any-service
+
+  any-service:
+    build:
+      context: ../src/services/any-service
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+
+volumes:
+  pgdata:

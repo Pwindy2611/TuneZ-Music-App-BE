@@ -1,4 +1,4 @@
-import { database } from '../../../../config/firebase/firebase_config';
+import { database } from '../config/firebase/firebase_config';
 
 
 // Thêm người dùng
