@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { auth } from "../../config/firebase/firebase_config";
-import { getUserByEmailService } from "../../services/user-service/src/services/user_services";
+import { getUserByEmailService } from "../../services/user_services";
 import { validateEmail, validatePassword, validateUsername } from "../base/regex_base";
 import { saveSessionTokenToDatabase } from "../base/token_base";
 import { authentication, random } from "../helpers/authentication_helper";

@@ -1,3 +1,2 @@
 # Ignore node_modules directories
-src/services/any-service/node_modules/
-src/services/user-service/node_modules/
+node_modules/
