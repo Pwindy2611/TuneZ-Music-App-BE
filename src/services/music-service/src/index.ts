@@ -4,10 +4,10 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
-import userRoute from './routes/users_route.js';
+import musicRoute from './routes/musics_route.js';
 
 const app = express();
-const port = process.env.PORT || 3001; 
+const port = process.env.PORT || 3002; 
 // Middleware
 app.use(cors({
     origin: 'http://localhost:3000',
@@ -18,15 +18,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
-app.use('/users', userRoute);
+app.use('/musics', musicRoute);
 
 // Health check endpoint
-app.get('/health', (_req, res) => {
+app.get('/health', (req, res) => {
     res.status(200).json({ status: 'UP' });
 });
 
 // Start the server
 const server = http.createServer(app);
 server.listen(port, () => {
-    console.log(`User service is running on http://localhost:${port}/`);
+    console.log(`Music service is running on http://localhost:${port}/`);
 });

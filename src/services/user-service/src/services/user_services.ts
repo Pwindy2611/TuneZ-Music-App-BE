@@ -1,13 +1,14 @@
-import { database } from '../config/firebase/firebase_config';
+import { database } from '../config/firebase/firebase_config.js';
 
 
 // Thêm người dùng
-export const createUserService = async (user: {userId: string; email: string; username: string; authentication: { salt: string; password: string}}) => {
+export const createUserService = async (user: { userId: string; email: string; username: string; authentication: { salt: string; password: string } }) => {
     try {
         // Tạo userId dựa trên timestamp
         const userRef = database.ref(`users/${user.userId}`);
         let sessionToken = null;
         let role = "listener";
+
         // Lưu thông tin người dùng vào Firebase
         await userRef.set({
             ...user,
@@ -16,8 +17,12 @@ export const createUserService = async (user: {userId: string; email: string; us
         });
 
         return user.userId; // Trả về userId để dùng khi cần
-    } catch (error) {
-        throw new Error("Error creating new user: " + error.message);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            throw new Error("Error creating new user: " + error.message);
+        } else {
+            throw new Error("Error creating new user: Unknown error");
+        }
     }
 };
 
@@ -33,8 +38,8 @@ export const getAllUsersService = async () => {
 };
 
 export const getUserByEmailService = async (email: string) => {
-    try{
-        const userRef = database.ref('users')
+    try {
+        const userRef = database.ref('users');
         const snapshot = await userRef.orderByChild('email').equalTo(email).once('value');
 
         if (snapshot.exists()) {
@@ -45,9 +50,14 @@ export const getUserByEmailService = async (email: string) => {
         } else {
             return null; // Không tìm thấy người dùng
         }
-    } catch (error) {
-        throw new Error("Error fetching user by email: " + error.message);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            throw new Error("Error fetching user by email: " + error.message);
+        } else {
+            throw new Error("Error fetching user by email: Unknown error");
+        }
     }
-}
+};
+
 
     

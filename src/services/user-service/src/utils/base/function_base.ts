@@ -13,7 +13,6 @@ const transporter = nodemailer.createTransport({
 
 export async function sendVerificationEmail(email: string, link: string) {
     try {
-
         // Cấu hình email
         const mailOptions = {
             from: process.env.EMAIL_PASS,
@@ -30,14 +29,17 @@ export async function sendVerificationEmail(email: string, link: string) {
                 console.log('Email has been sent:', info.response);
             }
         });
-    } catch (error) {
-        console.error('Error creating or sending authentication email:', error);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error('Error creating or sending authentication email:', error.message);
+        } else {
+            console.error('Error creating or sending authentication email: Unknown error');
+        }
     }
 }
 
 export async function sendResetPasswordEmail(email: string, link: string) {
     try {
-
         // Cấu hình email
         const mailOptions = {
             from: process.env.EMAIL_PASS,
@@ -54,7 +56,11 @@ export async function sendResetPasswordEmail(email: string, link: string) {
                 console.log('Email has been sent:', info.response);
             }
         });
-    } catch (error) {
-        console.error('Error creating or sending authentication email:', error);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error('Error creating or sending authentication email:', error.message);
+        } else {
+            console.error('Error creating or sending authentication email: Unknown error');
+        }
     }
 }

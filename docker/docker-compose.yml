@@ -7,6 +7,9 @@ services:
       - "3000:3000"
     depends_on:
       - user-service
+      - music-service
+    networks:
+      - app-network
 
   user-service:
     build:
@@ -14,10 +17,26 @@ services:
     ports:
       - "3001:3001"
     depends_on:
-      - any-service
+      - music-service
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+    networks:
+      - app-network
 
-  any-service:
+  music-service:
     build:
-      context: ../src/services/any-service
+      context: ../src/services/music-service
     ports:
       - "3002:3002"
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

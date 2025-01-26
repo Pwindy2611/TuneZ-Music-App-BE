@@ -11,7 +11,12 @@ export const saveSessionTokenToDatabase = async (userId: string, sessionToken: s
         });
 
         console.log("Session token saved successfully!");
-    } catch (error) {
-        console.error("Error saving session token:", error.message);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error("Error saving session token:", error.message);
+        } else {
+            console.error("Error saving session token: Unknown error");
+        }
     }
 };
+

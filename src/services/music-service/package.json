@@ -1,10 +1,11 @@
 {
   "name": "tunez-be",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.ts",
+  "type": "module",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "build": "tsc",
+    "start": "tsx src/index.ts",
+    "build": "npx",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,8 +14,6 @@
   "description": "",
   "dependencies": {
     "@types/body-parser": "^1.19.5",
-    "@types/compression": "^1.7.5",
-    "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/firebase": "^2.4.32",
     "body-parser": "^1.20.3",
@@ -22,17 +21,19 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2",
+    "express": "^5.0.0",
     "firebase": "^11.1.0",
     "firebase-admin": "^13.0.2",
     "nodemailer": "^6.9.16",
-    "nodemon": "^3.1.9",
-    "ts-node": "^10.9.2",
-    "tunez-be": "file:",
-    "typescript": "^5.7.2"
+    "nodemon": "^3.1.9"
   },
   "devDependencies": {
+    "@types/compression": "^1.7.5",
+    "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
-    "@types/nodemailer": "^6.4.17"
+    "@types/nodemailer": "^6.4.17",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
   }
 }
