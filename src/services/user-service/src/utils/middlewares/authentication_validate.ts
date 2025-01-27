@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { auth } from "../../config/firebase/firebase_config";
-import { getUserByEmailService } from "../../services/user_services";
-import { validateEmail, validatePassword, validateUsername } from "../base/regex_base";
-import { saveSessionTokenToDatabase } from "../base/token_base";
-import { authentication, random } from "../helpers/authentication_helper";
-import {sendVerificationEmail} from "../base/function_base";
+import { auth } from '../../config/firebase/firebase_config.js';
+import { getUserByEmailService } from '../../services/user_services.js';
+import { validateEmail, validatePassword, validateUsername } from '../base/regex_base.js';
+import { saveSessionTokenToDatabase } from '../base/token_base.js';
+import { authentication, random } from '../helpers/authentication_helper.js';
 
 export const validateRegister = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, username } = req.body;

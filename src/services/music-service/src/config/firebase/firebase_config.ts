@@ -5,7 +5,6 @@ import { getDatabase } from 'firebase-admin/database';
 import * as fs from 'fs';
 import * as path from 'path';
 
-
 // Load environment variables from the .env file
 dotenv.config();
 

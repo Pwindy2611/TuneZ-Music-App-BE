@@ -1,18 +1,30 @@
 import { database } from '../config/firebase/firebase_config.js';
 import { generateId } from "../utils/helpers/authentication_helper.js";
+import {getSignedFileUrl, uploadFile} from "../utils/base/upload_base.js";
 
-export const createMusicService = async (music: { name: string; artist: string; duration: number; category: string }) => {
+export const createMusicService = async (music: {
+    name: string;
+    artist: string;
+    duration: number;
+    category: string;
+}, musicFile: { originalname: string; mimetype: string; buffer: Buffer }) => {
     try {
         const musicId = generateId();
         const musicRef = database.ref(`musics/${musicId}`);
         const loveCount = 0;
         const playCount = 0;
 
+        // Upload file
+        const uploadFileData = await uploadFile(musicFile, musicId);
+        
+        const music_path = await getSignedFileUrl(uploadFileData?.path as string);
+        // Lưu thông tin vào database
         await musicRef.set({
             musicId,
             ...music,
             loveCount,
             playCount,
+            music_path,
         });
 
         return musicId;
