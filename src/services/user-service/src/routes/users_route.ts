@@ -2,8 +2,8 @@ import express from 'express';
 import {
     getAllUsersApi,
     registerApi,
-    sendForgetPasswordApi,
-    sendVerificationEmailApi
+    sendForgetPasswordApi, sendOtpEmailApi,
+    sendVerificationEmailApi, verifyOtpEmailApi
 } from '../controllers/users_controller.js';
 import { validateLogin, validateRegister } from '../utils/middlewares/authentication_validate.js';
 
@@ -14,4 +14,7 @@ router.post('/register', validateRegister, registerApi);
 router.post('/login', validateLogin);
 router.post('/send_email_verify', sendVerificationEmailApi);
 router.post('/send_email_reset_password', sendForgetPasswordApi);
+router.post('/send_otp_email', sendOtpEmailApi);
+router.post('/verify_otp', verifyOtpEmailApi);
+
 export default router;

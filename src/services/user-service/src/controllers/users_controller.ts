@@ -1,8 +1,8 @@
 import { Request, Response, Router } from 'express';
 import { auth } from "../config/firebase/firebase_config.js";
-import {createUserService, getAllUsersService, getUserByEmailService} from '../services/user_services.js';
+import {createUserService, getAllUsersService} from '../services/user_services.js';
 import { authentication, random } from '../utils/helpers/authentication_helper.js';
-import {sendResetPasswordEmail, sendVerificationEmail} from "../utils/base/function_base.js";
+import {sendOtpEmail, sendResetPasswordEmail, sendVerificationEmail, verifyOtp} from "../utils/base/function_base.js";
 
 const router = Router();
 
@@ -94,4 +94,69 @@ export const sendForgetPasswordApi = async (req: Request, res: Response) => {
         }
     }
 };
+
+export const sendOtpEmailApi = async (req: Request, res: Response) => {
+    const { email } = req.body;
+
+    if (!email) {
+        res.status(400).json({ status: 400, success: false, message: 'Email is required' });
+        return;
+    }
+    
+    try {
+        // Gửi OTP qua email
+        await sendOtpEmail(email);
+
+        // Phản hồi nếu thành công
+        res.status(200).json({
+            status: 200,
+            success: true,
+            message: 'OTP has been sent successfully',
+        });
+        return;
+    } catch (error: unknown) {
+        // Xử lý lỗi nếu có vấn đề
+        const errorMessage =
+            error instanceof Error ? error.message : 'Unknown error occurred';
+
+        res.status(500).json({
+            status: 500,
+            success: false,
+            message: `Failed to send OTP: ${errorMessage}`,
+        });
+        return;
+    }
+}
+
+export const verifyOtpEmailApi = async (req: Request, res: Response) => {
+    const { email , otp } = req.body;
+
+
+    if (!email || !otp) {
+        res.status(400).json({status: 400, success: false, message: 'Email & Otp is required' });
+        return;
+    }
+    
+    try {
+        await verifyOtp(email, otp);
+        res.status(200).json({
+            status: 200,
+            success: true,
+            message: 'OTP has been verified',
+        });
+        return;
+    }
+    catch (error: unknown) {
+        // Xử lý lỗi nếu có vấn đề
+        const errorMessage =
+            error instanceof Error ? error.message : 'Unknown error occurred';
+
+        res.status(500).json({
+            status: 500,
+            success: false,
+            message: `Failed to verify OTP: ${errorMessage}`,
+        });
+        return;
+    }
+}
 export default router;
