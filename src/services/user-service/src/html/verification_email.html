@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            background-color: #1DB954;
+            padding: 30px;
+            text-align: center;
+            max-width: 600px;
+            margin: 50px auto;
+            border-radius: 12px;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: white;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 16px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .verification-button {
+            background-color: #ffffff;
+            color: black;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .verification-button:hover {
+            background-color: #9affb6;
+            text: white;
+        }
+
+        .footer {
+            font-size: 14px;
+            color: #d3d3d3;
+            margin-top: 30px;
+        }
+
+        .footer a {
+            color: #d3d3d3;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="email-container">
+    <h1>Welcome to Our Music Service!</h1>
+    <p>We’re excited to have you on board. To start enjoying our service, please verify your email by clicking the button below.</p>
+    <a href="{{link}}" class="verification-button">Verify Email</a>
+    <div class="footer">
+        <p>If you did not create an account, please ignore this email.</p>
+        <p>Best regards,<br>The TuneZ Service Team</p>
+    </div>
+</div>
+
+</body>
+</html>
