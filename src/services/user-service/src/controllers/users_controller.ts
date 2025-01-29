@@ -1,12 +1,10 @@
-import { Request, Response, Router } from 'express';
+import { Request, Response } from 'express';
 import { auth } from "../config/firebase/firebase_config.js";
 import {createUserService, getAllUsersService} from '../services/user_services.js';
 import { authentication, random } from '../utils/helpers/authentication_helper.js';
 import {sendOtpEmail, sendResetPasswordEmail, sendVerificationEmail, verifyOtp} from "../utils/base/function_base.js";
 
-const router = Router();
-
-export const getAllUsersApi = async (req: Request, res: Response) => {
+export const getAllUsersApi = async (_req: Request, res: Response) => {
     try {
         const users = await getAllUsersService();
         res.status(200).json({ status: 200, users });
@@ -159,4 +157,3 @@ export const verifyOtpEmailApi = async (req: Request, res: Response) => {
         return;
     }
 }
-export default router;

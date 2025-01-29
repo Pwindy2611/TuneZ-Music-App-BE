@@ -1,23 +1,21 @@
 import multer from 'multer'
 import {Request, Response} from "express";
 import {
-    createMusicService,
-    getAllMusicService,
-    getMusicByArtistService,
-    getMusicByCategoryService
-} from "../services/musics_services.js";
+    createMusic,
+    getAllMusic,
+    getMusicByArtist,
+    getMusicByCategory
+} from "../services/music.services.js";
 
 const uploadMulter = multer({});
 export const createMusicApi = [
-    uploadMulter.single('musicFile'), // Đặt tên file giống như key trong form-data
+    uploadMulter.single('musicFile'),
     async (req: Request, res: Response) => {
         try {
             const { name, artist, duration, category } = req.body;
 
-            // Lấy thông tin file
-            const musicFile = req.file; // File sẽ được multer xử lý và lưu tại đây
+            const musicFile = req.file;
             
-            // Kiểm tra các trường bắt buộc
             if (!name || !artist || !duration || !category || !musicFile) {
                 res.status(400).json({
                     status: 400,
@@ -27,23 +25,19 @@ export const createMusicApi = [
                 return;
             }
             
-            // Tạo đối tượng file cần thiết để upload lên Supabase
             const fileObject = {
-                originalname: musicFile.originalname, // Tên file gốc
-                mimetype: musicFile.mimetype, // Loại file (ví dụ: audio/mpeg)
-                buffer: musicFile.buffer, // Dữ liệu file
+                originalName: musicFile.originalname, 
+                mimetype: musicFile.mimetype,
+                buffer: musicFile.buffer, 
             };
             
-            // Gọi service để tạo bản ghi mới
-            const newMusic = await createMusicService({
+            const newMusic = await createMusic({
                 name,
                 artist,
                 duration,
                 category,
-                 // Lấy đường dẫn file
             }, fileObject);
 
-            // Trả về kết quả thành công
             res.status(201).json({
                 status: 201,
                 success: true,
@@ -71,9 +65,9 @@ export const createMusicApi = [
 ];
 
 
-export const getAllMusicsApi = async (req: Request, res: Response) => {
+export const getAllMusicsApi = async (_req: Request, res: Response) => {
     try {
-        const musics = await getAllMusicService();
+        const musics = await getAllMusic();
 
         res.status(200).json({
             status: 200,
@@ -104,9 +98,9 @@ export const getMusicByArtistApi = async (req: Request, res: Response) => {
             return;
         }
 
-        const musicsByArtist = await getMusicByArtistService(artist);
-
-        if (!musicsByArtist || musicsByArtist.length === 0) {
+        const musicsByArtist = await getMusicByArtist(artist);
+        
+        if (!musicsByArtist) {
             res.status(404).json({
                 status: 404,
                 success: false,
@@ -144,9 +138,9 @@ export const getMusicByCategoryApi = async (req: Request, res: Response) => {
             return;
         }
 
-        const musicsByCategory = await getMusicByCategoryService(category);
+        const musicsByCategory = await getMusicByCategory(category);
 
-        if (!musicsByCategory || musicsByCategory.length === 0) {
+        if (!musicsByCategory) {
             res.status(404).json({
                 status: 404,
                 success: false,

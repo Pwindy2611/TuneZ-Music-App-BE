@@ -16,9 +16,12 @@ app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use((req, res, next) => {
+    console.log(`[Music Api] Request method: ${req.method}, path: ${req.path}`);
+    next();
+});
 // Routes
-app.use('/musics', musicRoute);
+app.use(musicRoute);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

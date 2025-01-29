@@ -8,9 +8,9 @@ import {
 
 const router = express.Router();
 
-router.post('/create_new_music', createMusicApi);
-router.get('/get_all_music', getAllMusicsApi);
-router.post('/get_music_by_artist', getMusicByArtistApi);
-router.post('/get_music_by_category', getMusicByCategoryApi);
+router.post('/createNewMusic', createMusicApi);
+router.get('/getAllMusic', getAllMusicsApi);
+router.post('/getMusicByArtist', getMusicByArtistApi);
+router.post('/getMusicByCategory', getMusicByCategoryApi);
 
 export default router;

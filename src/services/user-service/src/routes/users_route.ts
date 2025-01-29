@@ -9,12 +9,12 @@ import { validateLogin, validateRegister } from '../utils/middlewares/authentica
 
 const router = express.Router();
 
-router.get('/all_users', getAllUsersApi);
+router.get('/getAllUser', getAllUsersApi);
 router.post('/register', validateRegister, registerApi);
 router.post('/login', validateLogin);
-router.post('/send_email_verify', sendVerificationEmailApi);
-router.post('/send_email_reset_password', sendForgetPasswordApi);
-router.post('/send_otp_email', sendOtpEmailApi);
-router.post('/verify_otp', verifyOtpEmailApi);
+router.post('/sendEmailVerify', sendVerificationEmailApi);
+router.post('/sendEmailResetPassword', sendForgetPasswordApi);
+router.post('/sendOtpEmail', sendOtpEmailApi);
+router.post('/verifyOtp', verifyOtpEmailApi);
 
 export default router;

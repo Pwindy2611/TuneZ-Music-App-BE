@@ -7,9 +7,8 @@ services:
       - "3000:3000"
     depends_on:
       - user-service
-      - music-service
     networks:
-      - app-network
+      - app_network 
 
   user-service:
     build:
@@ -23,7 +22,7 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
     networks:
-      - app-network
+      - app_network  
 
   music-service:
     build:
@@ -35,8 +34,8 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
     networks:
-      - app-network
+      - app_network  
 
 networks:
-  app-network:
-    driver: bridge
+  app_network:
+    driver: bridge 

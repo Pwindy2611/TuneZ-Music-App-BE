@@ -1,9 +1,9 @@
 import {supabase} from '../../config/supabase/supabase_config.js'
 
-export const uploadFile = async (file: { originalname: string; mimetype: string; buffer: Buffer }, musicId: String) => {
+export const uploadFile = async (file: { originalName: string; mimetype: string; buffer: Buffer }, musicId: String) => {
     const { data, error } = await supabase.storage
         .from("music-storage")
-        .upload(`files/${musicId}/${file.originalname}`, file.buffer, {
+        .upload(`files/${musicId}/${file.originalName}`, file.buffer, {
             contentType: file.mimetype,
         });
 
