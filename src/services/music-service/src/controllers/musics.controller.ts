@@ -6,8 +6,18 @@ import {
     getMusicByArtist,
     getMusicByCategory
 } from "../services/music.services.js";
+import {IMusicFile} from "../interface/musicFile.interface.js";
 
-const uploadMulter = multer({});
+const uploadMulter = multer({
+    limits: { fileSize: 10 * 1024 * 1024 },
+    fileFilter: (_req, file, cb) => {
+        if (!file.mimetype.startsWith('audio/')) {
+            console.log("File is not musicFile")
+            return cb(null, false);
+        }
+        cb(null, true);
+    }
+});
 export const createMusicApi = [
     uploadMulter.single('musicFile'),
     async (req: Request, res: Response) => {
@@ -16,7 +26,12 @@ export const createMusicApi = [
 
             const musicFile = req.file;
             
-            if (!name || !artist || !duration || !category || !musicFile) {
+            if (!musicFile) {
+                res.status(400).json({ message: "No music file uploaded" });
+                return;
+            }
+            
+            if (!name || !artist || !duration || !category) {
                 res.status(400).json({
                     status: 400,
                     success: false,
@@ -25,7 +40,7 @@ export const createMusicApi = [
                 return;
             }
             
-            const fileObject = {
+            const fileObject: IMusicFile = {
                 originalName: musicFile.originalname, 
                 mimetype: musicFile.mimetype,
                 buffer: musicFile.buffer, 

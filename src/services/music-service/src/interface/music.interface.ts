@@ -1,4 +1,4 @@
-export interface Music {
+export interface IMusic {
     name: string;
     artist: string;
     duration: number;

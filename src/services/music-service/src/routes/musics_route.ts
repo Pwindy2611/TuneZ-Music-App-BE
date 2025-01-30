@@ -4,7 +4,7 @@ import {
     getAllMusicsApi,
     getMusicByArtistApi,
     getMusicByCategoryApi
-} from "../controllers/musics_controller.js";
+} from "../controllers/musics.controller.js";
 
 const router = express.Router();
 
