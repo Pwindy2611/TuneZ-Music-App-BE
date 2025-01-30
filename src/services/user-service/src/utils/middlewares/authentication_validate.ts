@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { auth } from '../../config/firebase/firebase_config.js';
-import { getUserByEmailService } from '../../services/user_services.js';
+import { getUserByEmailService } from '../../services/user.serivce.js';
 import { validateEmail, validatePassword, validateUsername } from '../base/regex_base.js';
 import { saveSessionTokenToDatabase } from '../base/token_base.js';
 import { authentication, random } from '../helpers/authentication_helper.js';

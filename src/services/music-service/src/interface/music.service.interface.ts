@@ -1,5 +1,5 @@
-import {Music} from "../interface/music.interface.js";
-import {MusicFile} from "../interface/musicFile.interface.js";
+import {Music} from "./music.interface.js";
+import {MusicFile} from "./musicFile.interface.js";
 
 export interface IMusicService {
     createMusic(music: Music, musicFile: MusicFile): Promise<string>;

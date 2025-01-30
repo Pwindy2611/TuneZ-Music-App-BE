@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { auth } from "../config/firebase/firebase_config.js";
-import {createUserService, getAllUsersService} from '../services/user_services.js';
+import {createUserService, getAllUsersService} from '../services/user.serivce.js';
 import { authentication, random } from '../utils/helpers/authentication_helper.js';
 import {sendOtpEmail, sendResetPasswordEmail, sendVerificationEmail, verifyOtp} from "../utils/base/function_base.js";
 

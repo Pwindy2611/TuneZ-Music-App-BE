@@ -50,20 +50,17 @@ export async function sendResetPasswordEmail(email: string, link: string) {
     }
 
     try {
-        // Xây dựng đường dẫn đến tệp HTML trong thư mục src/html
         const emailTemplatePath = path.join(__dirname, '..', '..', '..' , 'src', 'html', 'resetpassword_email.html');
 
-        // Đọc tệp HTML từ thư mục src/html
         const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf-8');
 
-        // Thay thế {{link}} trong template bằng giá trị thực tế của link
         const htmlContent = emailTemplate.replace('{{link}}', link);
 
         const mailOptions = {
-            from: process.env.EMAIL_PASS, // Đảm bảo rằng bạn đã cấu hình email sender
+            from: process.env.EMAIL_PASS, 
             to: email,
             subject: 'Password Reset Email',
-            html: htmlContent,  // Gửi nội dung HTML đã thay thế
+            html: htmlContent,  
         };
 
         await transporter.sendMail(mailOptions);
@@ -86,20 +83,17 @@ export async function sendOtpEmail(email: string) {
     otpStore[email] = { otp, expiresAt };
 
     try {
-        // Xây dựng đường dẫn đến tệp HTML trong thư mục src/html
         const emailTemplatePath = path.join(__dirname, '..', '..', '..', 'src', 'html', 'otp_email.html');
 
-        // Đọc tệp HTML từ thư mục src/html
         const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf-8');
 
-        // Thay thế {{otp}} trong template bằng giá trị thực tế của OTP
         const htmlContent = emailTemplate.replace('{{otp}}', otp);
 
         const mailOptions = {
-            from: process.env.EMAIL_PASS,  // Đảm bảo rằng bạn đã cấu hình email sender
+            from: process.env.EMAIL_PASS,
             to: email,
             subject: 'Your OTP Code',
-            html: htmlContent,  // Gửi nội dung HTML đã thay thế
+            html: htmlContent,
         };
 
         await transporter.sendMail(mailOptions);
