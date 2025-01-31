@@ -1,4 +1,4 @@
-import { database } from "../../config/firebase/firebase_config.js";
+import { database } from "../../config/firebase/FireBaseConfig.js";
 // Hàm để lưu session token
 export const saveSessionTokenToDatabase = async (userId: string, sessionToken: string) => {
     try {

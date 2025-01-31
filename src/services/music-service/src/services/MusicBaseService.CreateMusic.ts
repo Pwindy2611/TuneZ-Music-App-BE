@@ -1,7 +1,7 @@
-import {IMusicService} from "../interface/music.service.interface.js";
-import {generateId} from "../utils/helpers/authentication.helper.js";
-import {database} from "../config/firebase/firebase.config.js";
-import {getSignedFileUrl, uploadFile} from "../utils/base/upload.base.js";
+import {IMusicService} from "../interface/IMusicBaseService.js";
+import {generateId} from "../utils/helpers/AuthenticationHelper.js";
+import {database} from "../config/firebase/FireBaseConfig.js";
+import {getSignedFileUrl, uploadFile} from "../utils/base/UploadBase.js";
 
 export const createMusic: IMusicService["createMusic"] = async (music, musicFile) => {
     try {

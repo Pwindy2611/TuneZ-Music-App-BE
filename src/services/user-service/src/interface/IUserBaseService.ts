@@ -1,4 +1,4 @@
-import {IUser} from "./user.interface.js";
+import {IUser} from "./IUser.js";
 
 export interface IUserService {
     createUser(user: IUser): Promise<string>;

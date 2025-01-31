@@ -4,8 +4,8 @@ import {
     registerApi,
     sendForgetPasswordApi, sendOtpEmailApi,
     sendVerificationEmailApi, verifyOtpEmailApi
-} from '../controllers/users_controller.js';
-import { validateLogin, validateRegister } from '../utils/middlewares/authentication_validate.js';
+} from '../controllers/UserController.js';
+import { validateLogin, validateRegister } from '../utils/middlewares/AuthenticationValidate.js';
 
 const router = express.Router();
 

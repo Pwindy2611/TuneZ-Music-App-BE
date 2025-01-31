@@ -4,7 +4,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
-import userRoute from './routes/users_route.js';
+import userRoute from './routes/UserRoute.js';
 
 const app = express();
 const port = process.env.PORT || 3001; 

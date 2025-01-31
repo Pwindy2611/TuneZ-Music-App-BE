@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv'
-import {OtpEntry} from "../../interface/otp_entry.js";
-import {generateOtp} from "../helpers/authentication_helper.js";
+import {OtpEntry} from "../../interface/IOtpEntry.js";
+import {generateOtp} from "../helpers/AuthenticationHelper.js";
 import fs from 'fs';
 import path from 'path';
 

@@ -1,5 +1,5 @@
-import {IMusicService} from "../interface/music.service.interface.js";
-import {database} from "../config/firebase/firebase.config.js";
+import {IMusicService} from "../interface/IMusicBaseService.js";
+import {database} from "../config/firebase/FireBaseConfig.js";
 
 export const getMusicByArtist: IMusicService["getMusicByArtist"] = async (artist) => {
     try {

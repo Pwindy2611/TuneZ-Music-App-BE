@@ -5,8 +5,8 @@ import {
     getAllMusic,
     getMusicByArtist,
     getMusicByCategory
-} from "../services/music.services.js";
-import {IMusicFile} from "../interface/musicFile.interface.js";
+} from "../services/MusicBaseService.js";
+import {IMusicFile} from "../interface/IMusicFile.js";
 
 const uploadMulter = multer({
     limits: { fileSize: 10 * 1024 * 1024 },
