@@ -1,7 +1,9 @@
 import {IUser} from "./IUser.js";
+import {UserDto} from "../Dto/UserDto.js";
 
 export interface IUserService {
     createUser(user: IUser): Promise<string>;
-    getAllUsers(): Promise<Record<string, IUser> | null>;
+    loginUserGoogle(idToken: string): Promise<UserDto>;
+    getAllUsers: () => Promise<UserDto[] | null>;
     getUserByEmail(email: string): Promise<IUser | null>;
 }
