@@ -1,0 +1,41 @@
+version: '3'
+services:
+  api-gateway:
+    build:
+      context: ../src/services/api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - user-service
+    networks:
+      - app_network 
+
+  user-service:
+    build:
+      context: ../src/services/user-service
+    ports:
+      - "3001:3001"
+    depends_on:
+      - music-service
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+    networks:
+      - app_network  
+
+  music-service:
+    build:
+      context: ../src/services/music-service
+    ports:
+      - "3002:3002"
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+    networks:
+      - app_network  
+
+networks:
+  app_network:
+    driver: bridge 
