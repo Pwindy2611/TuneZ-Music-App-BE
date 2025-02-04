@@ -7,6 +7,8 @@ import {
     getMusicByCategory
 } from "../services/MusicBaseService.js";
 import {IMusicFile} from "../interface/IMusicFile.js";
+import {CreateMusicDto} from "../dto/CreateMusicDto.js";
+import {IMusic} from "../interface/IMusic.js";
 
 const uploadMulter = multer({
     limits: { fileSize: 10 * 1024 * 1024 },
@@ -24,34 +26,32 @@ export const createMusicApi = [
         try {
             const { name, artist, duration, category, userId } = req.body;
 
+            const musicData: IMusic = {
+                name,
+                artist,
+                duration: Number(duration),
+                category,
+                userId
+            };
+            
+            const createMusicDto = new CreateMusicDto(musicData);
+            
+            await createMusicDto.validate();
+
             const musicFile = req.file;
             
             if (!musicFile) {
                 res.status(400).json({ message: "No music file uploaded" });
                 return;
             }
-            
-            if (!name || !artist || !duration || !category || !userId) {
-                res.status(400).json({
-                    status: 400,
-                    success: false,
-                    message: 'All fields (name, artist, duration, category, musicFile, userId) are required',
-                });
-                return;
-            }
-            
+           
             const fileObject: IMusicFile = {
                 originalName: musicFile.originalname, 
                 mimetype: musicFile.mimetype,
                 buffer: musicFile.buffer, 
             };
-            
-            const newMusic = await createMusic({
-                name,
-                artist,
-                duration,
-                category,
-            }, fileObject, userId);
+
+            const newMusic = await createMusic(musicData, fileObject);
 
             res.status(201).json({
                 status: 201,

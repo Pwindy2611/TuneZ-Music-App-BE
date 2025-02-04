@@ -1,6 +1,6 @@
 import { supabase } from "../config/supabase/SupbaBaseClient.js";
 import { UserDto } from "../Dtos/UserDto.js";
-import {IUserService} from "../interface/IUserBaseService.js";
+import {IUserBaseService} from "../interface/IUserBaseService.js";
 
 /**
  * Đăng nhập bằng Google với Supabase
@@ -8,7 +8,7 @@ import {IUserService} from "../interface/IUserBaseService.js";
  * @returns UserDto hoặc lỗi nếu không thành công
  */
 
-export const loginUserGoogle : IUserService["loginUserGoogle"]= async (idToken: string): Promise<UserDto> => {
+export const loginUserGoogle : IUserBaseService["loginUserGoogle"]= async (idToken: string): Promise<UserDto> => {
     if (!idToken) {
         throw new Error("Thiếu idToken");
     }

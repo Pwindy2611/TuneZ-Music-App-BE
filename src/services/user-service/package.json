@@ -19,6 +19,8 @@
     "@types/cors": "^2.8.17",
     "@types/firebase": "^2.4.32",
     "body-parser": "^1.20.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "compression": "^1.7.5",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -29,6 +31,7 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.9",
+    "reflect-metadata": "^0.2.2",
     "tunez-be": "file:"
   },
   "devDependencies": {

@@ -3,4 +3,5 @@ export interface IMusic {
     artist: string;
     duration: number;
     category: string;
+    userId: string;
 }

@@ -14,13 +14,14 @@ services:
     build:
       context: ../src/services/user-service
     ports:
-      - "3001:3001"
+      - "3001:3000"
     depends_on:
       - music-service
     env_file:
       - ../.env
     volumes:
       - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
     networks:
       - app_network  
 
@@ -28,11 +29,13 @@ services:
     build:
       context: ../src/services/music-service
     ports:
-      - "3002:3002"
+      - "3002:3000"
     env_file:
       - ../.env
     volumes:
       - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+
     networks:
       - app_network  
 
