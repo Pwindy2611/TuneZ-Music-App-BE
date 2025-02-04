@@ -1,8 +1,8 @@
 import {database} from "../config/firebase/FireBaseConfig.js";
-import {IUserService} from "../interface/IUserBaseService.js";
+import {IUserBaseService} from "../interface/IUserBaseService.js";
 import {IUser} from "../interface/IUser.js";
 
-export const getUserByEmailService : IUserService["getUserByEmail"] = async (email) => {
+export const getUserByEmailService : IUserBaseService["getUserByEmail"] = async (email) => {
     try {
         const userRef = database.ref('users');
         const snapshot = await userRef.orderByChild('email').equalTo(email).once('value');

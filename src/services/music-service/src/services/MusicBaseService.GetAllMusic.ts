@@ -1,8 +1,8 @@
 import { database } from "../config/firebase/FireBaseConfig.js";
-import {IMusicService} from "../interface/IMusicBaseService.js";
+import {IMusicBaseService} from "../interface/IMusicBaseService.js";
 
 
-export const getAllMusic: IMusicService["getAllMusic"] = async () => {
+export const getAllMusic: IMusicBaseService["getAllMusic"] = async () => {
     try {
         const musicRef = database.ref("musics");
         const snapshot = await musicRef.get();

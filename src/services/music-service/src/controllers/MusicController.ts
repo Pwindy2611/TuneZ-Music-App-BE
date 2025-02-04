@@ -22,7 +22,7 @@ export const createMusicApi = [
     uploadMulter.single('musicFile'),
     async (req: Request, res: Response) => {
         try {
-            const { name, artist, duration, category } = req.body;
+            const { name, artist, duration, category, userId } = req.body;
 
             const musicFile = req.file;
             
@@ -31,11 +31,11 @@ export const createMusicApi = [
                 return;
             }
             
-            if (!name || !artist || !duration || !category) {
+            if (!name || !artist || !duration || !category || !userId) {
                 res.status(400).json({
                     status: 400,
                     success: false,
-                    message: 'All fields (name, artist, duration, category, musicFile) are required',
+                    message: 'All fields (name, artist, duration, category, musicFile, userId) are required',
                 });
                 return;
             }
@@ -51,7 +51,7 @@ export const createMusicApi = [
                 artist,
                 duration,
                 category,
-            }, fileObject);
+            }, fileObject, userId);
 
             res.status(201).json({
                 status: 201,

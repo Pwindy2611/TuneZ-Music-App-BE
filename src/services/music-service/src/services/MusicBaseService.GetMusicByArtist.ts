@@ -1,7 +1,7 @@
-import {IMusicService} from "../interface/IMusicBaseService.js";
+import {IMusicBaseService} from "../interface/IMusicBaseService.js";
 import {database} from "../config/firebase/FireBaseConfig.js";
 
-export const getMusicByArtist: IMusicService["getMusicByArtist"] = async (artist) => {
+export const getMusicByArtist: IMusicBaseService["getMusicByArtist"] = async (artist) => {
     try {
         const musicRef = database.ref("musics");
         const snapshot = await musicRef.orderByChild("artist").equalTo(artist).get();

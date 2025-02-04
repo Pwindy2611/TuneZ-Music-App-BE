@@ -1,7 +1,7 @@
 import {database} from "../config/firebase/FireBaseConfig.js";
-import {IUserService} from "../interface/IUserBaseService.js";
+import {IUserBaseService} from "../interface/IUserBaseService.js";
 
-export const createUserService : IUserService["createUser"] = async (user): Promise<string> => {
+export const createUserService : IUserBaseService["createUser"] = async (user): Promise<string> => {
     try {
         const userRef = database.ref(`users/${user.userId}`);
         const role = "listener";

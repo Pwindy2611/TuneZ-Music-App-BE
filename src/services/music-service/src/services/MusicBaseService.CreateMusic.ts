@@ -1,9 +1,9 @@
-import {IMusicService} from "../interface/IMusicBaseService.js";
+import {IMusicBaseService} from "../interface/IMusicBaseService.js";
 import {generateId} from "../utils/helpers/AuthenticationHelper.js";
-import {database} from "../config/firebase/FireBaseConfig.js";
+import {database, auth} from "../config/firebase/FireBaseConfig.js";
 import {getSignedFileUrl, uploadFile} from "../utils/base/UploadBase.js";
 
-export const createMusic: IMusicService["createMusic"] = async (music, musicFile) => {
+export const createMusic: IMusicBaseService["createMusic"] = async (music, musicFile, userId) => {
     try {
         const musicId = generateId();
         const musicRef = database.ref(`musics/${musicId}`);
@@ -13,10 +13,14 @@ export const createMusic: IMusicService["createMusic"] = async (music, musicFile
         // Upload file
         const uploadFileData = await uploadFile(musicFile, musicId);
         const music_path = await getSignedFileUrl(uploadFileData?.path as string);
-
+        
+        if(!(await auth.getUser(userId))){
+            return null;
+        }
         // Lưu thông tin vào database
         await musicRef.set({
             musicId,
+            userId,
             ...music,
             loveCount,
             playCount,
