@@ -1,7 +1,23 @@
 import {database} from "../config/firebase/FireBaseConfig.js";
 import {IUserBaseService} from "../interface/IUserBaseService.js";
-export const getAllUsersService : IUserBaseService["getAllUsers"] = async () => {
+import {UserDto} from "../Dtos/UserDto.js";
+
+export const getAllUsersService: IUserBaseService["getAllUsers"] = async () => {
     const usersRef = database.ref('users');
     const snapshot = await usersRef.get();
-    return snapshot.exists() ? snapshot.val() : null;
+    if (!snapshot.exists()) {
+        return null;
+    }
+
+    const usersData = snapshot.val();
+    return Object.values(usersData).map(user => {
+        const {userId, email, username, role, sessionToken} = user as {
+            userId: string;
+            email: string;
+            username: string;
+            role: string;
+            sessionToken: string;
+        };
+        return new UserDto(userId, email, username, role, sessionToken);
+    });
 };
