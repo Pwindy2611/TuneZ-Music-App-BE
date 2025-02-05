@@ -30,14 +30,28 @@ services:
       context: ../src/services/music-service
     ports:
       - "3002:3000"
+    depends_on:
+      - history-service
     env_file:
       - ../.env
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
-
     networks:
       - app_network  
+    
+  history-service:
+    build:
+      context: ../src/services/history-service
+    ports:
+      - "3003:3000"
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    networks:
+      - app_network
 
 networks:
   app_network:

@@ -4,7 +4,8 @@ import {
     createMusic,
     getAllMusic,
     getMusicByArtist,
-    getMusicByCategory
+    getMusicByCategory,
+    getMusicHistory
 } from "../services/MusicBaseService.js";
 import {IMusicFile} from "../interface/IMusicFile.js";
 import {CreateMusicDto} from "../dto/CreateMusicDto.js";
@@ -179,3 +180,34 @@ export const getMusicByCategoryApi = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const getMusicHistoryApi = async (req: Request, res: Response) => {
+    try {
+        const {userId} = req.body;
+        
+        const musicHistory = await getMusicHistory(userId);
+        
+        if(!musicHistory) {
+            res.status(404).json({
+                status: 404,
+                success: false,
+                message: `No music found with: ${userId}`,
+            });
+            return;
+        }
+        
+        res.status(200).json({
+            status: 200,
+            success: true,
+            message: `Fetched music history with: ${userId}`,
+            musics: musicHistory,
+        });
+    }catch (error: unknown) {
+        console.error('Error fetching music history:', error);
+        res.status(500).json({
+            status: 500,
+            success: false,
+            message: 'Internal Server Error',
+        });
+    }
+}
