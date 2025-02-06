@@ -1,7 +1,7 @@
 import multer from 'multer'
 import {Request, Response} from "express";
 import {
-    createMusic,
+    createMusic, generateUserPlaylist,
     getAllMusic,
     getMusicByArtist,
     getMusicByCategory,
@@ -208,6 +208,37 @@ export const getMusicHistoryApi = async (req: Request, res: Response) => {
             status: 500,
             success: false,
             message: 'Internal Server Error',
+        });
+    }
+}
+
+export const generateUserPlaylistApi = async (req: Request, res: Response) => {
+    try {
+        const {userId} = req.body;
+        
+        const userMusicPlaylist = await generateUserPlaylist(userId)
+        
+        if(!userMusicPlaylist) {
+            res.status(404).json({
+                status: 404,
+                success: false,
+                message: `No music found with: ${userId}`,
+            });
+            return;
+        }
+
+        res.status(200).json({
+            status: 200,
+            success: true,
+            message: `Generate music playlist successfully with : ${userId}`,
+            musics: userMusicPlaylist,
+        });
+    }catch (error: unknown) {
+        console.error('Error generate music playlist:', error);
+        res.status(500).json({
+            status: 500,
+            success: false,
+            message: `Error generate music playlist ${error}`,
         });
     }
 }

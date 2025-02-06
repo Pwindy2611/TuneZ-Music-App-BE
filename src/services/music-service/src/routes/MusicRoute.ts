@@ -4,7 +4,8 @@ import {
     getAllMusicsApi,
     getMusicByArtistApi,
     getMusicByCategoryApi,
-    getMusicHistoryApi
+    getMusicHistoryApi,
+    generateUserPlaylistApi
 } from "../controllers/MusicController.js";
 
 const router = express.Router();
@@ -14,5 +15,6 @@ router.get('/getAllMusic', getAllMusicsApi);
 router.post('/getMusicByArtist', getMusicByArtistApi);
 router.post('/getMusicByCategory', getMusicByCategoryApi);
 router.post('/getMusicHistory', getMusicHistoryApi);
+router.post('/generateUserPlaylist', generateUserPlaylistApi);
 
 export default router;
