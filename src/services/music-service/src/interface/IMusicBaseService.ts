@@ -3,7 +3,7 @@ import {IMusicFile} from "./IMusicFile.js";
 import {GetMusicResponseDto} from "../dto/GetMusicResponseDto.js";
 
 export interface IMusicBaseService {
-    createMusic(music: IMusic, musicFile: IMusicFile): Promise<string | null>;
+    createMusic(music: IMusic, musicFile: IMusicFile, imgFile: IMusicFile): Promise<string | null>;
     getAllMusic(): Promise<GetMusicResponseDto[] | null>;
     getMusicByArtist(artist: string): Promise<GetMusicResponseDto[] | null>;
     getMusicByCategory(category: string): Promise<GetMusicResponseDto[] | null>;

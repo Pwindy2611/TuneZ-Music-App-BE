@@ -14,17 +14,21 @@ import {IMusic} from "../interface/IMusic.js";
 import {SongType} from "../enum/SongType.js";
 
 const uploadMulter = multer({
-    limits: { fileSize: 10 * 1024 * 1024 },
+    limits: { fileSize: 10 * 1024 * 1024 }, // Giới hạn file 10MB
     fileFilter: (_req, file, cb) => {
-        if (!file.mimetype.startsWith('audio/')) {
-            console.log("File is not musicFile")
-            return cb(null, false);
+        if (file.mimetype.startsWith('audio/') || file.mimetype.startsWith('image/')) {
+            cb(null, true); // Chấp nhận file nhạc và ảnh
+        } else {
+            console.log("File is not a valid music or image file");
         }
-        cb(null, true);
     }
 });
+
 export const createMusicApi = [
-    uploadMulter.single('musicFile'),
+    uploadMulter.fields([
+        { name: "musicFile", maxCount: 1 },
+        { name: "imgFile", maxCount: 1 }
+    ]),
     async (req: Request, res: Response) => {
         try {
             const { name, artist, duration, category, officialArtistId } = req.body;
@@ -37,25 +41,38 @@ export const createMusicApi = [
                 category,
                 officialArtistId
             };
-            
+
             const createMusicDto = new CreateMusicDto(musicData);
-            
             await createMusicDto.validate();
 
-            const musicFile = req.file;
-            
+            const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+            const musicFile = files.musicFile?.[0];
+            const imgFile = files.imgFile?.[0];
+
             if (!musicFile) {
                 res.status(400).json({ message: "No music file uploaded" });
                 return;
             }
-           
-            const fileObject: IMusicFile = {
-                originalName: musicFile.originalname, 
-                mimetype: musicFile.mimetype,
-                buffer: musicFile.buffer, 
-            };
 
-            const newMusic = await createMusic(musicData, fileObject);
+            if (!imgFile) {
+                res.status(400).json({ message: "No image file uploaded" });
+                return;
+            }
+            
+            const musicObject: IMusicFile = {
+                originalName: musicFile.originalname,
+                mimetype: musicFile.mimetype,
+                buffer: musicFile.buffer,
+            }
+            
+            const imgObject: IMusicFile = {
+                originalName: imgFile.originalname,
+                mimetype: imgFile.mimetype,
+                buffer: imgFile.buffer,
+            }
+
+            const newMusic = await createMusic(musicData, musicObject, imgObject);
 
             res.status(201).json({
                 status: 201,
@@ -82,6 +99,7 @@ export const createMusicApi = [
         }
     },
 ];
+
 
 
 export const getAllMusicsApi = async (_req: Request, res: Response) => {

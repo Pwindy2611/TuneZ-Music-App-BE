@@ -4,8 +4,8 @@ import {database} from "../config/firebase/FireBaseConfig.js"
 export const createOfficialArtist: IOfficialArtistBaseService["createOfficialArtist"] = async (artist) => {
     try{
         artist.offAristId = generateId();
-        artist.createdAt = new Date();
-        artist.updatedAt = new Date();
+        artist.createdAt = new Date().toISOString();
+        artist.updatedAt = new Date().toISOString();
         
         const artistRef = database.ref(`officialArtist/${artist.offAristId}`)
         
