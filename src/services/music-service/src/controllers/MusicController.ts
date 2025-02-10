@@ -1,7 +1,8 @@
 import multer from 'multer'
 import {Request, Response} from "express";
 import {
-    createMusic, generateUserPlaylist,
+    createMusic,
+    generateUserPlaylist,
     getAllMusic,
     getMusicByArtist,
     getMusicByCategory,
@@ -10,6 +11,7 @@ import {
 import {IMusicFile} from "../interface/IMusicFile.js";
 import {CreateMusicDto} from "../dto/CreateMusicDto.js";
 import {IMusic} from "../interface/IMusic.js";
+import {SongType} from "../enum/SongType.js";
 
 const uploadMulter = multer({
     limits: { fileSize: 10 * 1024 * 1024 },
@@ -25,14 +27,15 @@ export const createMusicApi = [
     uploadMulter.single('musicFile'),
     async (req: Request, res: Response) => {
         try {
-            const { name, artist, duration, category, userId } = req.body;
+            const { name, artist, duration, category, officialArtistId } = req.body;
 
             const musicData: IMusic = {
                 name,
+                songType: SongType.OFFICIAL,
                 artist,
                 duration: Number(duration),
                 category,
-                userId
+                officialArtistId
             };
             
             const createMusicDto = new CreateMusicDto(musicData);

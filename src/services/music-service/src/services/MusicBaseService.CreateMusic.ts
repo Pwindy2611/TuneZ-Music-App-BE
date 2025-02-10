@@ -6,15 +6,16 @@ import {getSignedFileUrl, uploadFile} from "../utils/base/UploadBase.js";
 export const createMusic: IMusicBaseService["createMusic"] = async (music, musicFile) => {
     try {
         const musicId = generateId();
-        const musicRef = database.ref(`musics/${musicId}`);
         const loveCount = 0;
         const playCount = 0;
-
+        
+        const musicRef = database.ref(`musics/${musicId}`);
+        
         // Upload file
         const uploadFileData = await uploadFile(musicFile, musicId);
         const musicPath = await getSignedFileUrl(uploadFileData?.path as string);
         
-        if(!(await auth.getUser(music.userId))){
+        if(!(await auth.getUser(<string>music.officialArtistId))){
             return null;
         }
         // Lưu thông tin vào database

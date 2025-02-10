@@ -1,9 +1,12 @@
 import express from 'express';
-import proxy from 'express-http-proxy';
 import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import {historyProxy} from "./middleware/HistoryProxy";
+import {musicProxy} from "./middleware/MusicProxy";
+import {userProxy} from "./middleware/UserProxy";
+import {officialArtistProxy} from "./middleware/OfficialArtistProxy";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -28,73 +31,14 @@ app.use((req, res, next) => {
         express.json()(req, res, next);
     }
 });
-// Proxy for /users
-app.use(
-    '/users',
-    proxy('http://user-service:3001', {
-        proxyReqPathResolver: (req) => {
-            const newPath = req.url.replace(/^\/users/, '');
-            console.log(`[PROXY] Forwarding to user-service: ${newPath}`);
-            return newPath;
-        },
-        proxyReqOptDecorator: (proxyReqOpts, _req) => {
-            console.log(`[PROXY] Requesting: ${proxyReqOpts.protocol}//${proxyReqOpts.host}${proxyReqOpts.path}`);
-            return proxyReqOpts;
-        },
-    })
-);
+// Proxy
+app.use('/users', userProxy);
 
-// Proxy for /musics
-app.use('/musics', (req, res, next) => {
-    const contentType = req.headers['content-type'] || '';
-    console.log('Content-Type:', contentType);
+app.use('/musics', musicProxy);
 
-    if (contentType.includes('multipart/form-data')) {
-        proxy('http://music-service:3002', {
-            parseReqBody: false,
-            proxyReqPathResolver: (req) => {
-                const newPath = req.url.replace(/^\/musics/, '');
-                console.log(`[PROXY] Forwarding to music-service: ${newPath}`);
-                return newPath;
-            },
-            proxyReqOptDecorator: (proxyReqOpts, req) => {
-                proxyReqOpts.headers = proxyReqOpts.headers || {};
-                proxyReqOpts.headers['Content-Type'] = req.headers['content-type'] || '';
-                console.log(`[PROXY] Requesting: ${proxyReqOpts.protocol}//${proxyReqOpts.host}${proxyReqOpts.path}`);
-                return proxyReqOpts;
-            },
-        })(req, res, next);
-    } else {
-        proxy('http://music-service:3002', {
-            proxyReqPathResolver: (req) => {
-                const newPath = req.url.replace(/^\/musics/, '');
-                console.log(`[PROXY] Forwarding to music-service: ${newPath}`);
-                return newPath;
-            },
-            proxyReqOptDecorator: (proxyReqOpts, req) => {
-                proxyReqOpts.headers = proxyReqOpts.headers || {};
-                proxyReqOpts.headers['Content-Type'] = req.headers['content-type'] || '';
-                console.log(`[PROXY] Requesting: ${proxyReqOpts.protocol}//${proxyReqOpts.host}${proxyReqOpts.path}`);
-                return proxyReqOpts;
-            },
-        })(req, res, next);
-    }
-});
+app.use('/history', historyProxy);
 
-app.use(
-    '/history',
-    proxy('http://history-service:3003', {
-        proxyReqPathResolver: (req) => {
-            const newPath = req.url.replace(/^\/history/, '');
-            console.log(`[PROXY] Forwarding to history-service: ${newPath}`);
-            return newPath;  
-        },
-        proxyReqOptDecorator: (proxyReqOpts, _req) => {
-            console.log(`[PROXY] Requesting: ${proxyReqOpts.protocol}//${proxyReqOpts.host}${proxyReqOpts.path}`);
-            return proxyReqOpts;
-        },
-    })
-);
+app.use('/offartist', officialArtistProxy)
 // Health check endpoint
 app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'UP' });

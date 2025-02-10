@@ -24,7 +24,20 @@ services:
       - ../tsconfig.json:/usr/src/app/tsconfig.json
     networks:
       - app_network  
-
+    
+  official-artist-service:
+    build:
+      context: ../src/services/official-artist-service
+    ports:
+      - "3004:3000"
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    networks:
+      - app_network
+  
   music-service:
     build:
       context: ../src/services/music-service
@@ -32,6 +45,7 @@ services:
       - "3002:3000"
     depends_on:
       - user-service
+      - official-artist-service
     env_file:
       - ../.env
     volumes:

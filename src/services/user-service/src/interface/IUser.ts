@@ -1,3 +1,5 @@
+import {UserRole} from "../enum/UserRole.js";
+
 export interface IUser {
     userId: string;
     email: string;
@@ -6,6 +8,6 @@ export interface IUser {
         salt: string;
         password: string;
     };
-    role?: string;
+    role?: UserRole;
     sessionToken?: string | null;
 }
