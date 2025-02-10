@@ -12,4 +12,5 @@ export interface IMusicBaseService {
         playlistsByCategory: Record<string, GetMusicResponseDto[]>; // Playlist theo thể loại
         playlistsByArtist: Record<string, GetMusicResponseDto[]>;   // Playlist theo nghệ sĩ
     } | null>;
+    uploadMusicByUser(music: IMusic, musicFile: IMusicFile, imgFile: IMusicFile): Promise<string | null>;
 }
