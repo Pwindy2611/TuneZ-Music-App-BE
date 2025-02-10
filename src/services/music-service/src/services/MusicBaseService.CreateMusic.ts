@@ -13,11 +13,11 @@ export const createMusic: IMusicBaseService["createMusic"] = async (music, music
 
         // Upload music file
         const uploadMusicData = await uploadFile(musicFile, musicId);
-        const musicPath = await getSignedFileUrl(uploadMusicData?.path as string);
+        const musicPath = await getSignedFileUrl(uploadMusicData);
 
         // Upload image file
         const uploadImgData = await uploadFile(imgFile, musicId);
-        const imgPath = await getSignedFileUrl(uploadImgData?.path as string);
+        const imgPath = await getSignedFileUrl(uploadImgData);
 
         const artistRef = database.ref(`officialArtist/${music.officialArtistId}`);
         const snapshot = await artistRef.once("value");

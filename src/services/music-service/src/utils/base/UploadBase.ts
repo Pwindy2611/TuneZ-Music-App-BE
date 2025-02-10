@@ -1,39 +1,40 @@
 import {supabase} from '../../config/supabase/SupabaseConfig.js'
 import {cloudinary} from '../../config/cloudinary/CloudinaryConfig.js'
+import { PassThrough } from 'stream';
 
 export const uploadFile = async (
     file: { originalName: string; mimetype: string; buffer: Buffer },
     musicId: string
 ) => {
-    const supabasePath = `files/${musicId}/${file.originalName}`
-
-    // Thử upload lên Supabase
-    const { data, error } = await supabase.storage
-        .from("music-storage")
-        .upload(supabasePath, file.buffer, { contentType: file.mimetype })
-
-    if (!error) {
-        console.log("File uploaded to Supabase:", data)
-        return { storage: "supabase", path: supabasePath }
-    }
-
-    console.error("Supabase upload error:", error)
-
-    // Kiểm tra dung lượng lưu trữ
     try {
-        const storageUsage = await getSupabaseStorageUsage()
+        const storageUsage = await getSupabaseStorageUsage();
+        console.log("Supabase Storage Usage:", storageUsage);
 
-        if (storageUsage >= 1073741824) { // 1GB
-            const cloudinaryUrl = await uploadToCloudinary(file, musicId)
-            return { storage: "cloudinary", url: cloudinaryUrl }
-        } else {
-            return Promise.reject(new Error(`Upload failed but storage not full: ${error.message}`))
+        if (storageUsage >= 1073741824) { // Nếu đã đầy 1GB, upload lên Cloudinary
+            console.log("Supabase full, uploading to Cloudinary...");
+            const cloudinaryUrl = await uploadToCloudinary(file, musicId);
+            return { storage: "cloudinary", url: cloudinaryUrl };
         }
+
+        // Nếu còn dung lượng, thử upload Supabase
+        console.log("Uploading to Supabase...");
+        const supabasePath = `files/${musicId}/${file.originalName}`;
+        const { data, error } = await supabase.storage
+            .from("music-storage")
+            .upload(supabasePath, file.buffer, { contentType: file.mimetype });
+
+        if (!error) {
+            console.log("File uploaded to Supabase:", data);
+            return { storage: "supabase", path: supabasePath };
+        }
+
+        console.error("Supabase upload error:", error);
+        return Promise.reject(new Error(`Upload failed: ${error.message}`));
     } catch (err) {
-        console.error("Storage check failed:", err)
-        throw err
+        console.error("Storage check failed:", err);
+        throw err;
     }
-}
+};
 
 export const uploadToCloudinary = async (file: { originalName: string; buffer: Buffer }, musicId: string): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -49,24 +50,34 @@ export const uploadToCloudinary = async (file: { originalName: string; buffer: B
             }
         )
 
-        const bufferStream = new (require('stream').PassThrough)()
+        const bufferStream = new PassThrough();
         bufferStream.end(file.buffer)
         bufferStream.pipe(uploadStream)
     })
 }
-export const getSignedFileUrl = async (filePath: string) => {
-    const oneYearInSeconds = 31536000;
-    const { data, error } = await supabase.storage
-        .from("music-storage")
-        .createSignedUrl(filePath, oneYearInSeconds);
-
-    if (error) {
-        console.error("Error generating signed URL:", error.message);
-        return null;
+export const getSignedFileUrl = async (fileInfo: { storage: string, path?: string, url?: string }) => {
+    if (fileInfo.storage === "cloudinary") {
+        console.log("File is stored on Cloudinary, returning direct URL.");
+        return fileInfo.url; // Cloudinary đã có URL trực tiếp, không cần signed URL
     }
 
-    console.log("Signed URL:", data.signedUrl);
-    return data.signedUrl;
+    if (fileInfo.storage === "supabase" && fileInfo.path) {
+        const oneYearInSeconds = 31536000;
+        const { data, error } = await supabase.storage
+            .from("music-storage")
+            .createSignedUrl(fileInfo.path, oneYearInSeconds);
+
+        if (error) {
+            console.error("Error generating signed URL from Supabase:", error.message);
+            return null;
+        }
+
+        console.log("Signed URL from Supabase:", data.signedUrl);
+        return data.signedUrl;
+    }
+
+    console.error("Invalid file info provided.");
+    return null;
 };
 
 const getSupabaseStorageUsage = async (): Promise<number> => {
