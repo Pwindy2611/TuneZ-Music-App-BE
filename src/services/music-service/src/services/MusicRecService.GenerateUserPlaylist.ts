@@ -1,9 +1,9 @@
-import {IMusicBaseService} from "../interface/IMusicBaseService.js";
+import {IMusicRecService} from "../interface/IMusicRecService.js";
 import {getUserPreferences} from "../utils/base/HistoryBase.js";
 import {getMusicByArtist, getMusicByCategory} from "./MusicBaseService.js";
 import {GetMusicResponseDto} from "../dto/GetMusicResponseDto.js";
 
-export const generateUserPlaylist: IMusicBaseService ["generateUserPlayList"] = async (userId) => {
+export const generateUserPlaylist: IMusicRecService ["generateUserPlayList"] = async (userId) => {
     try{
         const {topArtists, topCategories} = await getUserPreferences(userId)
 

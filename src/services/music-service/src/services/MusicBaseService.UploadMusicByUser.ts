@@ -14,6 +14,7 @@ export const uploadMusicByUser: IMusicBaseService["uploadMusicByUser"] = async (
         if(! await auth.getUser(<string>music.userId)){
             return null;
         }
+        
         // Upload music file
         const uploadMusicData = await uploadFile(musicFile, musicId);
         const musicPath = await getSignedFileUrl(uploadMusicData);

@@ -1,6 +1,6 @@
 import {IMusicBaseService} from "../interface/IMusicBaseService.js";
 import {generateId} from "../utils/helpers/AuthenticationHelper.js";
-import {database, auth} from "../config/firebase/FireBaseConfig.js";
+import {database} from "../config/firebase/FireBaseConfig.js";
 import {getSignedFileUrl, uploadFile} from "../utils/base/UploadBase.js";
 
 export const createMusic: IMusicBaseService["createMusic"] = async (music, musicFile, imgFile) => {
@@ -23,7 +23,7 @@ export const createMusic: IMusicBaseService["createMusic"] = async (music, music
         const snapshot = await artistRef.once("value");
 
         if (!snapshot.exists()) {
-            return null; // Nếu không tồn tại artistId trong database, trả về null
+            return null; 
         }
         
         // Lưu thông tin vào database

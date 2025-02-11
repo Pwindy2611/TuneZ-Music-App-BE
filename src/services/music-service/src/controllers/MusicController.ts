@@ -2,7 +2,6 @@ import multer from 'multer'
 import {Request, Response} from "express";
 import {
     createMusic,
-    generateUserPlaylist,
     getAllMusic,
     getMusicByArtist,
     getMusicByCategory,
@@ -14,6 +13,10 @@ import {CreateMusicDto} from "../dto/CreateMusicDto.js";
 import {IMusic} from "../interface/IMusic.js";
 import {SongType} from "../enum/SongType.js";
 import {UploadMusicDto} from "../dto/UploadMusicDto.js";
+import {
+    generateRecentPlaylist, 
+    generateUserPlaylist
+} from "../services/MusicRecService.js";
 
 const uploadMulter = multer({
     limits: { fileSize: 10 * 1024 * 1024 }, // Giới hạn file 10MB
@@ -329,6 +332,37 @@ export const generateUserPlaylistApi = async (req: Request, res: Response) => {
             success: true,
             message: `Generate music playlist successfully with : ${userId}`,
             musics: userMusicPlaylist,
+        });
+    }catch (error: unknown) {
+        console.error('Error generate music playlist:', error);
+        res.status(500).json({
+            status: 500,
+            success: false,
+            message: `Error generate music playlist ${error}`,
+        });
+    }
+}
+
+export const generateRecentPlaylistApi = async (req: Request, res: Response) => {
+    try {
+        const {userId} = req.body;
+
+        const recentMusicPlaylist = await generateRecentPlaylist(userId, 20, 50);
+
+        if(!recentMusicPlaylist) {
+            res.status(404).json({
+                status: 404,
+                success: false,
+                message: `No music found with: ${userId}`,
+            });
+            return;
+        }
+
+        res.status(200).json({
+            status: 200,
+            success: true,
+            message: `Generate music playlist successfully with : ${userId}`,
+            musics: recentMusicPlaylist,
         });
     }catch (error: unknown) {
         console.error('Error generate music playlist:', error);

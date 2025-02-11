@@ -13,7 +13,7 @@ export const getMusicByCategory: IMusicBaseService["getMusicByCategory"] = async
 
         const musicData = snapshot.val()
         return Object.values(musicData).map(music => {
-            const { name, artist, duration, category, loveCount, playCount, musicPath} = music as {
+            const { name, songType, artist, duration, category, loveCount, playCount, musicPath, imgPath} = music as {
                 name: string;
                 artist: string;
                 duration: number;
@@ -21,8 +21,10 @@ export const getMusicByCategory: IMusicBaseService["getMusicByCategory"] = async
                 loveCount: number;
                 playCount: number;
                 musicPath: string;
+                imgPath: string;
+                songType: string;
             }
-            return new GetMusicResponseDto(name, artist, duration, category, loveCount, playCount, musicPath)
+            return new GetMusicResponseDto(name, artist, duration, category, loveCount, playCount, musicPath, imgPath, songType);
         })
     } catch (error: unknown) {
         if (error instanceof Error) {
