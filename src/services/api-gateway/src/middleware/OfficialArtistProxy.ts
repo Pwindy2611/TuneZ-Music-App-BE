@@ -1,6 +1,6 @@
 import proxy from "express-http-proxy";
 
-export const officialArtistProxy = proxy('http://official-artist-service:3004', {
+export const officialArtistProxy = proxy('http://official-artist-service:3002', {
     proxyReqPathResolver: (req) => {
         const newPath = req.url.replace(/^\/offartist/, '');
         console.log(`[PROXY] Forwarding to official-artist-service: ${newPath}`);

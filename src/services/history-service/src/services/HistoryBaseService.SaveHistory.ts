@@ -15,7 +15,8 @@ export const saveHistory : IHistoryBaseService ["saveHistory"] = async (history)
                 }
             )
         return historyRef.id;
-    }catch (error : any){
-        
+    }catch (error){
+        throw new Error(`Error saving history music: ${error.message}`);
+
     }
 }

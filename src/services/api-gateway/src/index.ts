@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import {historyProxy} from "./middleware/HistoryProxy";
 import {musicProxy} from "./middleware/MusicProxy";
 import {userProxy} from "./middleware/UserProxy";
+import {loveProxy} from "./middleware/LoveProxy";
 import {officialArtistProxy} from "./middleware/OfficialArtistProxy";
 
 const app = express();
@@ -39,6 +40,9 @@ app.use('/musics', musicProxy);
 app.use('/history', historyProxy);
 
 app.use('/offartist', officialArtistProxy)
+
+app.use('/love', loveProxy)
+
 // Health check endpoint
 app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'UP' });

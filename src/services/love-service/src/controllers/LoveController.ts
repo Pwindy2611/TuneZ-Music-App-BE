@@ -1,30 +1,29 @@
 import {Request, Response} from "express";
-import {IHistory} from "../interface/IHistory";
-import {SaveHistoryDto} from "../dto/SaveHistoryDto";
-import {saveHistory} from "../services/HistoryBaseSerice";
+import {ILove} from "../interface/ILove";
+import {SaveMusicDto} from "../dto/SaveMusicDto";
+import {saveLoveMusic} from "../services/LoveBaseService";
 
-export const saveHistoryApi = async (req: Request, res: Response) => {
+export const saveLoveMusicApi = async (req: Request, res: Response) => {
     try {
-        const { userId, musicId } = req.body;
+        const {musicId, userId} = req.body || req.params;
         
-        const historyData: IHistory = {
-            userId,
-            musicId
+        const loveData: ILove = {
+            musicId, 
+            userId
         }
+        const saveMusicDto = new SaveMusicDto(loveData);
         
-        const saveHistoryDto = new SaveHistoryDto(historyData);
+        await saveMusicDto.validate()
         
-        await saveHistoryDto.validate();
-        
-        const newHistory = await saveHistory(saveHistoryDto);
+        const newLoveMusic = await saveLoveMusic(saveMusicDto)
 
         res.status(201).json({
             status: 201,
             success: true,
-            message: 'Save new history successfully',
-            newHistory
+            message: 'Save new love successfully',
+            newLoveMusic
         });
-    }catch (error : any) {
+    }catch (error){
         if (error instanceof Error) {
             console.error('Error save new history:', error.message);
             res.status(500).json({

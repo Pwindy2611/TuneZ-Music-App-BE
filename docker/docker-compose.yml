@@ -29,7 +29,7 @@ services:
     build:
       context: ../src/services/official-artist-service
     ports:
-      - "3004:3000"
+      - "3002:3000"
     env_file:
       - ../.env
     volumes:
@@ -42,7 +42,7 @@ services:
     build:
       context: ../src/services/music-service
     ports:
-      - "3002:3000"
+      - "3003:3000"
     depends_on:
       - user-service
       - official-artist-service
@@ -58,7 +58,22 @@ services:
     build:
       context: ../src/services/history-service
     ports:
-      - "3003:3000"
+      - "3004:3000"
+    depends_on:
+      - music-service
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    networks:
+      - app_network
+      
+  love-service:
+    build:
+      context: ../src/services/love-service
+    ports:
+      - "3005:3000"
     depends_on:
       - music-service
     env_file:

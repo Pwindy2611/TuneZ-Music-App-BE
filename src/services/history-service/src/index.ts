@@ -7,7 +7,7 @@ import 'reflect-metadata';
 import HistoryRoute from "./routes/HistoryRoute";
 
 const app = express();
-const port = process.env.PORT || 3003;
+const port = process.env.PORT || 3004;
 
 // Middleware
 app.use(cors({ credentials: true }));

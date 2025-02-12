@@ -5,7 +5,7 @@ export const musicProxy = (req: Request, res: Response, next: NextFunction) => {
     console.log('Content-Type:', contentType);
 
     if (contentType.includes('multipart/form-data')) {
-        proxy('http://music-service:3002', {
+        proxy('http://music-service:3003', {
             parseReqBody: false,
             proxyReqPathResolver: (req) => {
                 const newPath = req.url.replace(/^\/musics/, '');
@@ -20,7 +20,7 @@ export const musicProxy = (req: Request, res: Response, next: NextFunction) => {
             },
         })(req, res, next);
     } else {
-        proxy('http://music-service:3002', {
+        proxy('http://music-service:3003', {
             proxyReqPathResolver: (req) => {
                 const newPath = req.url.replace(/^\/musics/, '');
                 console.log(`[PROXY] Forwarding to music-service: ${newPath}`);
