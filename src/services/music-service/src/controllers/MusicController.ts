@@ -14,6 +14,7 @@ import {IMusic} from "../interface/IMusic.js";
 import {SongType} from "../enum/SongType.js";
 import {UploadMusicDto} from "../dto/UploadMusicDto.js";
 import {
+    generateThrowBackPlaylist,
     generateRecentPlaylist, 
     generateUserPlaylist
 } from "../services/MusicRecService.js";
@@ -363,6 +364,37 @@ export const generateRecentPlaylistApi = async (req: Request, res: Response) => 
             success: true,
             message: `Generate music playlist successfully with : ${userId}`,
             musics: recentMusicPlaylist,
+        });
+    }catch (error: unknown) {
+        console.error('Error generate music playlist:', error);
+        res.status(500).json({
+            status: 500,
+            success: false,
+            message: `Error generate music playlist ${error}`,
+        });
+    }
+}
+
+export const generateThrowBackPlaylistApi = async (req: Request, res: Response) => {
+    try {
+        const {userId} = req.body;
+
+        const throwBackMusicPlaylist = await generateThrowBackPlaylist(userId, 20, 50);
+
+        if(!throwBackMusicPlaylist) {
+            res.status(404).json({
+                status: 404,
+                success: false,
+                message: `No music found with: ${userId}`,
+            });
+            return;
+        }
+
+        res.status(200).json({
+            status: 200,
+            success: true,
+            message: `Generate music playlist successfully with : ${userId}`,
+            musics: throwBackMusicPlaylist,
         });
     }catch (error: unknown) {
         console.error('Error generate music playlist:', error);

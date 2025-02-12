@@ -1,14 +1,13 @@
 import {IMusicRecService} from "../interface/IMusicRecService.js";
 import {firestore} from '../config/firebase/FireBaseConfig.js'
-import * as admin from 'firebase-admin';
+import { Timestamp } from 'firebase-admin/firestore';
 import {fetchMusicDetails} from "../utils/base/FetchBase.js";
 
 export const generateThrowBackPlaylist: IMusicRecService ["generateThrowBackPlaylist"] = async (userId: string, playlistLimit: number = 20, historyLimit: number = 100) => {
     const cutoffDate = new Date();
     cutoffDate.setMonth(cutoffDate.getMonth() - 6);
-
-    const cutoffTimestamp = admin.firestore.Timestamp.fromDate(cutoffDate); 
-
+    const cutoffTimestamp = Timestamp.fromDate(cutoffDate); 
+    
     const historySnapshot = await firestore
         .collection(`history`)
         .doc(userId)

@@ -6,5 +6,5 @@ export interface IMusic {
     duration: number;
     category: string;
     userId?: string;
-    officialArtistId?: string
+    officialArtistId?: string;
 }   

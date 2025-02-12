@@ -3,8 +3,9 @@ import { fetchMusicDetails, fetchMusicIdsFromHistory } from '../utils/base/Fetch
 
 export const getMusicHistory: IMusicBaseService["getMusicHistory"] = async (userId) => {
     try {
-        const musicIds = await fetchMusicIdsFromHistory(userId, 50)
-        const musicHistory = await fetchMusicDetails(musicIds);
+        const musicIds = await fetchMusicIdsFromHistory(userId, 50);
+        const uniqueMusicIds = [...new Set(musicIds)];
+        const musicHistory = await fetchMusicDetails(uniqueMusicIds);
         
         if(!musicHistory) return null;
         

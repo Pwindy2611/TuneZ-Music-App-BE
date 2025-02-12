@@ -1,6 +1,6 @@
 import {IMusicBaseService} from "../interface/IMusicBaseService.js";
 import {database} from "../config/firebase/FireBaseConfig.js";
-import {GetMusicResponseDto} from "../dto/GetMusicResponseDto.js";
+import {fetchMusicDetails} from "../utils/base/FetchBase.js";
 
 export const getMusicByCategory: IMusicBaseService["getMusicByCategory"] = async (category) => {
     try {
@@ -12,20 +12,9 @@ export const getMusicByCategory: IMusicBaseService["getMusicByCategory"] = async
         }
 
         const musicData = snapshot.val()
-        return Object.values(musicData).map(music => {
-            const { name, songType, artist, duration, category, loveCount, playCount, musicPath, imgPath} = music as {
-                name: string;
-                artist: string;
-                duration: number;
-                category: string;
-                loveCount: number;
-                playCount: number;
-                musicPath: string;
-                imgPath: string;
-                songType: string;
-            }
-            return new GetMusicResponseDto(name, artist, duration, category, loveCount, playCount, musicPath, imgPath, songType);
-        })
+        const musicIds = Object.keys(musicData);
+
+        return await fetchMusicDetails(musicIds);
     } catch (error: unknown) {
         if (error instanceof Error) {
             throw new Error("Error retrieving music by category: " + error.message);

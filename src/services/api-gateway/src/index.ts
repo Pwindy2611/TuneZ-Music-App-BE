@@ -12,7 +12,13 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors({ credentials: true }));
+app.use(cors({
+    origin: '*',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+}));
+
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -24,13 +30,7 @@ app.use((req, _res, next) => {
     console.log(`[API Gateway] Request path: ${req.url}`);
     next(); 
 });
-app.use((req, res, next) => {
-    if (req.headers['content-type']?.includes('multipart/form-data')) {
-        next();
-    } else {
-        express.json()(req, res, next);
-    }
-});
+
 // Proxy
 app.use('/users', userProxy);
 
