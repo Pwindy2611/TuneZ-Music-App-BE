@@ -7,8 +7,10 @@ services:
       - "3000:3000"
     depends_on:
       - user-service
+      - official-artist-service
       - music-service
       - history-service
+      - love-service
     networks:
       - app_network 
 
