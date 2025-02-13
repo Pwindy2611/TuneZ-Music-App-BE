@@ -7,6 +7,10 @@ services:
       - "3000:3000"
     depends_on:
       - user-service
+      - official-artist-service
+      - music-service
+      - history-service
+      - love-service
     networks:
       - app_network 
 
@@ -14,27 +18,73 @@ services:
     build:
       context: ../src/services/user-service
     ports:
-      - "3001:3001"
+      - "3001:3000"
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    networks:
+      - app_network  
+    
+  official-artist-service:
+    build:
+      context: ../src/services/official-artist-service
+    ports:
+      - "3002:3000"
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    networks:
+      - app_network
+  
+  music-service:
+    build:
+      context: ../src/services/music-service
+    ports:
+      - "3003:3000"
+    depends_on:
+      - user-service
+      - official-artist-service
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    networks:
+      - app_network  
+    
+  history-service:
+    build:
+      context: ../src/services/history-service
+    ports:
+      - "3004:3000"
     depends_on:
       - music-service
     env_file:
       - ../.env
     volumes:
       - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
     networks:
-      - app_network  
-
-  music-service:
+      - app_network
+      
+  love-service:
     build:
-      context: ../src/services/music-service
+      context: ../src/services/love-service
     ports:
-      - "3002:3002"
+      - "3005:3000"
+    depends_on:
+      - music-service
     env_file:
       - ../.env
     volumes:
       - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
     networks:
-      - app_network  
+      - app_network
 
 networks:
   app_network:

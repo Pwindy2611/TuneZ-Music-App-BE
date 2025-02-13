@@ -1,0 +1,1 @@
+export {createOfficialArtist} from "./OfficialArtistBaseService.CreateOfficialArtist.js"

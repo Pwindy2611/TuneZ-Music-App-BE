@@ -1,16 +1,20 @@
-import {IMusicService} from "../interface/IMusicBaseService.js";
+import {IMusicBaseService} from "../interface/IMusicBaseService.js";
 import {database} from "../config/firebase/FireBaseConfig.js";
+import {fetchMusicDetails} from "../utils/base/FetchBase.js";
 
-export const getMusicByCategory: IMusicService["getMusicByCategory"] = async (category) => {
+export const getMusicByCategory: IMusicBaseService["getMusicByCategory"] = async (category) => {
     try {
         const musicRef = database.ref("musics");
         const snapshot = await musicRef.orderByChild("category").equalTo(category).get();
 
-        if (snapshot.exists()) {
+        if (!snapshot.exists()) {
             return snapshot.val();
-        } else {
-            return null;
         }
+
+        const musicData = snapshot.val()
+        const musicIds = Object.keys(musicData);
+
+        return await fetchMusicDetails(musicIds);
     } catch (error: unknown) {
         if (error instanceof Error) {
             throw new Error("Error retrieving music by category: " + error.message);

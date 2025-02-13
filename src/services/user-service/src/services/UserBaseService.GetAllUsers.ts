@@ -1,8 +1,8 @@
 import {database} from "../config/firebase/FireBaseConfig.js";
-import {IUserService} from "../interface/IUserBaseService.js";
+import {IUserBaseService} from "../interface/IUserBaseService.js";
 import {UserDto} from "../Dtos/UserDto.js";
 
-export const getAllUsersService: IUserService["getAllUsers"] = async () => {
+export const getAllUsersService: IUserBaseService["getAllUsers"] = async () => {
     const usersRef = database.ref('users');
     const snapshot = await usersRef.get();
     if (!snapshot.exists()) {

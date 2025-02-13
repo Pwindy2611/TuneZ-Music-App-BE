@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 import { initializeApp, cert } from 'firebase-admin/app'; // Import from firebase-admin/app
 import { getAuth } from 'firebase-admin/auth';
 import { getDatabase } from 'firebase-admin/database';
+import { getFirestore } from "firebase-admin/firestore";
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -37,5 +38,6 @@ const app = initializeApp({
 // Initialize the Firebase Realtime Database and Firebase Authentication
 const database = getDatabase(app); // Use the initialized app directly
 const auth = getAuth(app); // Use the initialized app directly
+const firestore = getFirestore(app);
 
-export { auth, database };
+export { auth, database, firestore };

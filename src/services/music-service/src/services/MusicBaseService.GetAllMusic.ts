@@ -1,17 +1,21 @@
 import { database } from "../config/firebase/FireBaseConfig.js";
-import {IMusicService} from "../interface/IMusicBaseService.js";
+import {IMusicBaseService} from "../interface/IMusicBaseService.js";
+import {fetchMusicDetails} from "../utils/base/FetchBase.js";
 
 
-export const getAllMusic: IMusicService["getAllMusic"] = async () => {
+export const getAllMusic: IMusicBaseService["getAllMusic"] = async () => {
     try {
         const musicRef = database.ref("musics");
         const snapshot = await musicRef.get();
 
-        if (snapshot.exists()) {
+        if (!snapshot.exists()) {
             return snapshot.val();
-        } else {
-            return null;
         }
+
+        const musicData = snapshot.val()
+        const musicIds = Object.keys(musicData);
+
+        return await fetchMusicDetails(musicIds);
     } catch (error: unknown) {
         if (error instanceof Error) {
             throw new Error("Error retrieving all music: " + error.message);

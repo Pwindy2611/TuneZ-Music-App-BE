@@ -1,26 +1,39 @@
-import {IMusicService} from "../interface/IMusicBaseService.js";
+import {IMusicBaseService} from "../interface/IMusicBaseService.js";
 import {generateId} from "../utils/helpers/AuthenticationHelper.js";
 import {database} from "../config/firebase/FireBaseConfig.js";
 import {getSignedFileUrl, uploadFile} from "../utils/base/UploadBase.js";
 
-export const createMusic: IMusicService["createMusic"] = async (music, musicFile) => {
+export const createMusic: IMusicBaseService["createMusic"] = async (music, musicFile, imgFile) => {
     try {
         const musicId = generateId();
-        const musicRef = database.ref(`musics/${musicId}`);
         const loveCount = 0;
         const playCount = 0;
 
-        // Upload file
-        const uploadFileData = await uploadFile(musicFile, musicId);
-        const music_path = await getSignedFileUrl(uploadFileData?.path as string);
+        const musicRef = database.ref(`musics/${musicId}`);
 
+        const artistRef = database.ref(`officialArtist/${music.officialArtistId}`);
+        const snapshot = await artistRef.once("value");
+
+        if (!snapshot.exists()) {
+            return Promise.reject(new Error(("Error creating new music: Official Artist is not exist")));
+        }
+
+        // Upload music file
+        const uploadMusicData = await uploadFile(musicFile, musicId);
+        const musicPath = await getSignedFileUrl(uploadMusicData);
+
+        // Upload image file
+        const uploadImgData = await uploadFile(imgFile, musicId);
+        const imgPath = await getSignedFileUrl(uploadImgData);
+        
         // Lưu thông tin vào database
         await musicRef.set({
             musicId,
             ...music,
             loveCount,
             playCount,
-            music_path,
+            musicPath,
+            imgPath,
         });
 
         return musicId;
@@ -31,3 +44,4 @@ export const createMusic: IMusicService["createMusic"] = async (music, musicFile
         throw new Error("Unknown error occurred while creating new music.");
     }
 };
+

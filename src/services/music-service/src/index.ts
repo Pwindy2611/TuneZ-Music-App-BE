@@ -5,9 +5,10 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
 import musicRoute from './routes/MusicRoute.js';
+import 'reflect-metadata';
 
 const app = express();
-const port = process.env.PORT || 3002; 
+const port = process.env.PORT || 3003; 
 // Middleware
 app.use(cors({
     origin: 'http://localhost:3000',

@@ -1,9 +1,13 @@
-import {IMusic} from "./music.interface.js";
-import {IMusicFile} from "./musicFile.interface.js";
+import {IMusic} from "./IMusic.js";
+import {IMusicFile} from "./IMusicFile.js";
+import {GetMusicResponseDto} from "../dto/GetMusicResponseDto.js";
 
-export interface IMusicService {
-    createMusic(music: IMusic, musicFile: IMusicFile): Promise<string>;
-    getAllMusic(): Promise<Record<string, IMusic> | null>;
-    getMusicByArtist(artist: string): Promise<Record<string, IMusic> | null>;
-    getMusicByCategory(category: string): Promise<Record<string, IMusic> | null>;
+export interface IMusicBaseService {
+    createMusic(music: IMusic, musicFile: IMusicFile, imgFile: IMusicFile): Promise<string | null>;
+    getAllMusic(): Promise<GetMusicResponseDto[] | null>;
+    getMusicByArtist(artist: string): Promise<GetMusicResponseDto[] | null>;
+    getMusicByCategory(category: string): Promise<GetMusicResponseDto[] | null>;
+    getMusicHistory(userId: string): Promise<GetMusicResponseDto[] | null>;
+    getMusicLove(userId: string): Promise<GetMusicResponseDto[] | null>;
+    uploadMusicByUser(music: IMusic, musicFile: IMusicFile, imgFile: IMusicFile): Promise<string | null>;
 }
