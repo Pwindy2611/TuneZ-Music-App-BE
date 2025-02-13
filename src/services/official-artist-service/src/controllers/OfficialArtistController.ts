@@ -15,19 +15,19 @@ export const createOfficialArtistApi = async (req: Request, res: Response) => {
         res.status(201).json({
             status: 201,
             success: true,
-            message: 'Create new music successfully',
+            message: 'Create new official arist successfully',
             artist: newArtist,
         });
     }catch (error) {
         if (error instanceof Error) {
-            console.error('Error creating new music:', error.message);
+            console.error('Error creating new official arist:', error.message);
             res.status(500).json({
                 status: 500,
                 success: false,
                 message: error.message,
             });
         } else {
-            console.error('Unexpected error while creating music');
+            console.error('Unexpected error while creating official arist');
             res.status(500).json({
                 status: 500,
                 success: false,

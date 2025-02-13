@@ -6,10 +6,12 @@ import {
     getMusicByArtistApi,
     getMusicByCategoryApi,
     getMusicHistoryApi,
+    getMusicLoveApi,
     generateUserPlaylistApi,
     generateRecentPlaylistApi, 
     generateThrowBackPlaylistApi
 } from "../controllers/MusicController.js";
+import {getMusicLove} from "../services/MusicBaseService.GetMusicLove.js";
 
 const router = express.Router();
 
@@ -22,6 +24,7 @@ router.get('/getAllMusic', getAllMusicsApi);
 router.post('/getMusicByArtist', getMusicByArtistApi);
 router.post('/getMusicByCategory', getMusicByCategoryApi);
 router.post('/getMusicHistory', getMusicHistoryApi);
+router.post('/getMusicLove', getMusicLoveApi)
 
 //GENERATE
 router.post('/generateUserPlaylist', generateUserPlaylistApi);

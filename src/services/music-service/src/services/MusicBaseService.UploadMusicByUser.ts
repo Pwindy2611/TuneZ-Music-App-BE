@@ -12,7 +12,7 @@ export const uploadMusicByUser: IMusicBaseService["uploadMusicByUser"] = async (
         const musicRef = database.ref(`musics/${musicId}`);
         
         if(! await auth.getUser(<string>music.userId)){
-            return null;
+            return Promise.reject(new Error(("Error creating new music: User is not exist")));
         }
         
         // Upload music file

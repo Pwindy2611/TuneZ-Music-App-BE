@@ -18,6 +18,7 @@ import {
     generateRecentPlaylist, 
     generateUserPlaylist
 } from "../services/MusicRecService.js";
+import {getMusicLove} from "../services/MusicBaseService.GetMusicLove.js";
 
 const uploadMulter = multer({
     limits: { fileSize: 10 * 1024 * 1024 }, // Giới hạn file 10MB
@@ -305,6 +306,37 @@ export const getMusicHistoryApi = async (req: Request, res: Response) => {
         });
     }catch (error: unknown) {
         console.error('Error fetching music history:', error);
+        res.status(500).json({
+            status: 500,
+            success: false,
+            message: 'Internal Server Error',
+        });
+    }
+}
+
+export const getMusicLoveApi = async (req: Request, res: Response) => {
+    try {
+        const {userId} = req.body;
+
+        const musicLove = await getMusicLove(userId);
+
+        if(!musicLove) {
+            res.status(404).json({
+                status: 404,
+                success: false,
+                message: `No music found with: ${userId}`,
+            });
+            return;
+        }
+
+        res.status(200).json({
+            status: 200,
+            success: true,
+            message: `Fetched music love with: ${userId}`,
+            musics: musicLove,
+        });
+    }catch (error: unknown) {
+        console.error('Error fetching music love:', error);
         res.status(500).json({
             status: 500,
             success: false,

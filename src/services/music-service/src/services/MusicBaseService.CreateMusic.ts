@@ -11,6 +11,13 @@ export const createMusic: IMusicBaseService["createMusic"] = async (music, music
 
         const musicRef = database.ref(`musics/${musicId}`);
 
+        const artistRef = database.ref(`officialArtist/${music.officialArtistId}`);
+        const snapshot = await artistRef.once("value");
+
+        if (!snapshot.exists()) {
+            return Promise.reject(new Error(("Error creating new music: Official Artist is not exist")));
+        }
+
         // Upload music file
         const uploadMusicData = await uploadFile(musicFile, musicId);
         const musicPath = await getSignedFileUrl(uploadMusicData);
@@ -18,13 +25,6 @@ export const createMusic: IMusicBaseService["createMusic"] = async (music, music
         // Upload image file
         const uploadImgData = await uploadFile(imgFile, musicId);
         const imgPath = await getSignedFileUrl(uploadImgData);
-
-        const artistRef = database.ref(`officialArtist/${music.officialArtistId}`);
-        const snapshot = await artistRef.once("value");
-
-        if (!snapshot.exists()) {
-            return null; 
-        }
         
         // Lưu thông tin vào database
         await musicRef.set({

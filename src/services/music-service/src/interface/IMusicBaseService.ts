@@ -8,5 +8,6 @@ export interface IMusicBaseService {
     getMusicByArtist(artist: string): Promise<GetMusicResponseDto[] | null>;
     getMusicByCategory(category: string): Promise<GetMusicResponseDto[] | null>;
     getMusicHistory(userId: string): Promise<GetMusicResponseDto[] | null>;
+    getMusicLove(userId: string): Promise<GetMusicResponseDto[] | null>;
     uploadMusicByUser(music: IMusic, musicFile: IMusicFile, imgFile: IMusicFile): Promise<string | null>;
 }

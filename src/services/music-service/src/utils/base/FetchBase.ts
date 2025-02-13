@@ -37,3 +37,15 @@ export async function fetchMusicIdsFromHistory(userId: string, limit: number) {
 
     return historySnapshot.empty ? [] : historySnapshot.docs.map(doc => doc.data().musicId);
 }
+
+export async function fetchMusicIdsFromLove(userId: string, limit: number) {
+    const historySnapshot = await firestore
+        .collection(`love`)
+        .doc(userId)
+        .collection('data')
+        .orderBy('listendAt', 'desc')
+        .limit(limit)
+        .get();
+
+    return historySnapshot.empty ? [] : historySnapshot.docs.map(doc => doc.data().musicId);
+}
