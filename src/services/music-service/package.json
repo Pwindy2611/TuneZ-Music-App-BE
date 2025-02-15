@@ -6,7 +6,7 @@
   "scripts": {
     "start": "tsx src/index.ts",
     "dev": "npx tsx watch src/index.ts",
-    "debug": "node --inspect=0.0.0.0:9228 --nolazy --loader tsx src/index.ts",
+    "debug": "node --inspect=0.0.0.0:9227 --nolazy --import tsx src/index.ts",
     "build": "npx"
   },
   "keywords": [],
@@ -19,7 +19,6 @@
     "@types/cors": "^2.8.17",
     "@types/firebase": "^2.4.32",
     "body-parser": "^1.20.3",
-    "class-validator": "^0.14.1",
     "cloudinary": "^2.5.1",
     "compression": "^1.7.5",
     "cookie-parser": "^1.4.7",
@@ -28,7 +27,6 @@
     "express": "^5.0.0",
     "firebase": "^11.1.0",
     "firebase-admin": "^13.0.2",
-    "mega": "^0.2.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.9",

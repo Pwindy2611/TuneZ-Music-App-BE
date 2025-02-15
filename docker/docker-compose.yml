@@ -5,38 +5,44 @@ services:
       context: ../src/services/api-gateway
     ports:
       - "3000:3000"
-    depends_on:
-      - user-service
-      - official-artist-service
-      - music-service
-      - history-service
-      - love-service
+      - "9227:9227"  # debug port
+    command: npm run debug
+    environment:
+      - NODE_ENV=development
     networks:
-      - app_network 
-
+      - app_network
+  
   user-service:
     build:
       context: ../src/services/user-service
     ports:
       - "3001:3000"
+      - "9228:9227"  # debug port
     env_file:
       - ../.env
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run debug
+    environment:
+      - NODE_ENV=development
     networks:
-      - app_network  
-    
+      - app_network
+  
   official-artist-service:
     build:
       context: ../src/services/official-artist-service
     ports:
       - "3002:3000"
+      - "9229:9227"  # debug port
     env_file:
       - ../.env
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run debug
+    environment:
+      - NODE_ENV=development
     networks:
       - app_network
   
@@ -45,6 +51,7 @@ services:
       context: ../src/services/music-service
     ports:
       - "3003:3000"
+      - "9230:9227"  # debug port
     depends_on:
       - user-service
       - official-artist-service
@@ -53,14 +60,18 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run debug
+    environment:
+      - NODE_ENV=development
     networks:
-      - app_network  
-    
+      - app_network
+  
   history-service:
     build:
       context: ../src/services/history-service
     ports:
       - "3004:3000"
+      - "9231:9227"  # debug port
     depends_on:
       - music-service
     env_file:
@@ -68,14 +79,18 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run debug
+    environment:
+      - NODE_ENV=development
     networks:
       - app_network
-      
+  
   love-service:
     build:
       context: ../src/services/love-service
     ports:
       - "3005:3000"
+      - "9232:9227"  # debug port
     depends_on:
       - music-service
     env_file:
@@ -83,9 +98,12 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run debug
+    environment:
+      - NODE_ENV=development
     networks:
       - app_network
 
 networks:
   app_network:
-    driver: bridge 
+    driver: bridge

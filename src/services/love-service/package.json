@@ -6,7 +6,7 @@
     "scripts": {
         "start": "tsx src/index.ts",
         "dev": "npx tsx watch src/index.ts",
-        "debug": "node --inspect=0.0.0.0:9227 --nolazy --loader tsx src/index.ts",
+        "debug": "node --inspect=0.0.0.0:9227 --nolazy --import tsx src/index.ts",
         "build": "npx"
     },
     "keywords": [],

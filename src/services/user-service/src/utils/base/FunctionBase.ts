@@ -92,7 +92,7 @@ export async function sendOtpEmail(email: string) {
         const mailOptions = {
             from: process.env.EMAIL_PASS,
             to: email,
-            subject: 'Your OTP Code',
+            subject: `${otp} is your OTP Code`,
             html: htmlContent,
         };
 
