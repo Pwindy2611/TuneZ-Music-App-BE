@@ -39,50 +39,35 @@ export const validateRegister = async (req: Request, res: Response, next: NextFu
 
 export const validateLogin = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { email, password } = req.body;
+        const { token } = req.body;
 
-        if (!email || !password) {
-            res.status(400).json({ status: 400, success: false, message: 'Please fill all fields' });
+        const user = await auth.verifyIdToken(token);
+        
+        if (!user) {
+            res.status(400).json({status: 400, success: false, message: 'Invalid token' });
             return;
         }
 
-        if (!validatePassword(password)) {
-            res.status(400).json({ status: 400, success: false, message: 'Must have >= 8 character, uppercase, lowercase, digit, special character' });
-            return;
-        }
-
-        if (!validateEmail(email)) {
-            res.status(400).json({ status: 400, success: false, message: 'Wrong email format. Example: username@domain.com' });
-            return;
-        }
-
-        const firebaseUser = await auth.getUserByEmail(email);
-
-        if (!firebaseUser.emailVerified) {
+        if (!(user.email_verified)) {
             res.status(403).json({ success: false, message: "Email not verified" });
             return;
         }
 
-        const existingUser = await getUserByEmailService(email);
+        const existingUser = await getUserByEmailService(user.email ?? "");
+        
         if (!existingUser) {
             res.status(400).json({ status: 400, success: false, message: 'User does not exist' });
             return;
         }
 
-        const expectedHash = authentication(existingUser.authentication.salt, password);
-        if (existingUser.authentication.password !== expectedHash) {
-            res.status(403).json({ status: 403, success: false, message: 'Invalid password' });
-            return;
-        }
-
-        const salt = random();
-        const sessionToken = authentication(salt, existingUser.userId.toString());
-
-        await saveSessionTokenToDatabase(existingUser.userId, sessionToken);
-
-        res.cookie('TUNEZ-AUTH', sessionToken, { domain: 'localhost', path: '/' })
-            .status(200)
-            .json({ status: 200, success: true, message: 'Login successful' });
+        const firebaseToken = await auth.createCustomToken(existingUser.userId.toString());
+        
+        res.status(200).json({
+            status: 200,
+            success: true,
+            message: "Login successful",
+            firebaseToken, 
+        });
     } catch (error: unknown) {
         if (error instanceof Error) {
             console.error('Error logging in user:', error.message);
