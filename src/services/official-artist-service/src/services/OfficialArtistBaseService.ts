@@ -1,1 +1,5 @@
-export {createOfficialArtist} from "./OfficialArtistBaseService.CreateOfficialArtist.js"
+import {createOfficialArtist} from "./OfficialArtistBaseService.CreateOfficialArtist.js"
+
+export const OfficialArtistBaseService = {
+    createOfficialArtist,
+}

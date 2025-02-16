@@ -1,6 +1,6 @@
 import {IMusicRecService} from "../interface/IMusicRecService.js";
-import {getUserPreferences} from "../utils/base/HistoryBase.js";
-import {getMusicByArtist, getMusicByCategory} from "./MusicBaseService.js";
+import HistoryBase from "../utils/base/HistoryBase.js";
+import {MusicBaseService} from "./MusicBaseService.js";
 import {GetMusicResponseDto} from "../dto/GetMusicResponseDto.js";
 import {auth} from '../config/firebase/FireBaseConfig.js'
 export const generateUserPlaylist: IMusicRecService ["generateUserPlayList"] = async (userId) => {
@@ -9,18 +9,18 @@ export const generateUserPlaylist: IMusicRecService ["generateUserPlayList"] = a
             return Promise.reject(new Error(("Error creating new music: User is not exist")));
         }
         
-        const {topArtists, topCategories} = await getUserPreferences(userId)
+        const {topArtists, topCategories} = await HistoryBase.getUserPreferences(userId)
 
         if (!topArtists.length && !topCategories.length) {
-            return null; // Nếu không có dữ liệu, trả về null
+            return null;
         }
 
         const artistPromises = topArtists.map(artist =>
-            getMusicByArtist(artist).then(songs => ({ artist, songs: songs ?? [] }))
+            MusicBaseService.getMusicByArtist(artist).then(songs => ({ artist, songs: songs ?? [] }))
         );
 
         const categoryPromises = topCategories.map(category =>
-            getMusicByCategory(category).then(songs => ({ category, songs: songs ?? [] }))
+            MusicBaseService.getMusicByCategory(category).then(songs => ({ category, songs: songs ?? [] }))
         );
 
         const [artistResults, categoryResults] = await Promise.all([

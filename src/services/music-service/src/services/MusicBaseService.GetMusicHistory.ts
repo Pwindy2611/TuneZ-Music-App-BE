@@ -1,11 +1,11 @@
 import { IMusicBaseService } from "../interface/IMusicBaseService.js";
-import { fetchMusicDetails, fetchMusicIdsFromHistory } from '../utils/base/FetchBase.js'
+import FetchBase from '../utils/base/FetchBase.js'
 
 export const getMusicHistory: IMusicBaseService["getMusicHistory"] = async (userId) => {
     try {
-        const musicIds = await fetchMusicIdsFromHistory(userId, 50);
+        const musicIds = await FetchBase.fetchMusicIdsFromHistory(userId, 50);
         const uniqueMusicIds = [...new Set(musicIds)];
-        const musicHistory = await fetchMusicDetails(uniqueMusicIds);
+        const musicHistory = await FetchBase.fetchMusicDetails(uniqueMusicIds);
         
         if(!musicHistory) return null;
         

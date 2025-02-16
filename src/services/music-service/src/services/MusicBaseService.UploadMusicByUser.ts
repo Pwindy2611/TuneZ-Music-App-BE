@@ -1,7 +1,7 @@
 import {IMusicBaseService} from "../interface/IMusicBaseService.js";
 import {generateId} from "../utils/helpers/AuthenticationHelper.js";
 import {database, auth} from "../config/firebase/FireBaseConfig.js";
-import {getSignedFileUrl, uploadFile} from "../utils/base/UploadBase.js";
+import UploadBase from "../utils/base/UploadBase.js";
 
 export const uploadMusicByUser: IMusicBaseService["uploadMusicByUser"] = async (music, musicFile, imgFile) => {
     try {
@@ -16,12 +16,12 @@ export const uploadMusicByUser: IMusicBaseService["uploadMusicByUser"] = async (
         }
         
         // Upload music file
-        const uploadMusicData = await uploadFile(musicFile, musicId);
-        const musicPath = await getSignedFileUrl(uploadMusicData);
+        const uploadMusicData = await UploadBase.uploadFile(musicFile, musicId);
+        const musicPath = await UploadBase.getSignedFileUrl(uploadMusicData);
 
         // Upload image file
-        const uploadImgData = await uploadFile(imgFile, musicId);
-        const imgPath = await getSignedFileUrl(uploadImgData);
+        const uploadImgData = await UploadBase.uploadFile(imgFile, musicId);
+        const imgPath = await UploadBase.getSignedFileUrl(uploadImgData);
         
         // Lưu thông tin vào database
         await musicRef.set({

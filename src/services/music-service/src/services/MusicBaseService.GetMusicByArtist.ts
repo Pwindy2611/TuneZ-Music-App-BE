@@ -1,6 +1,6 @@
 import {IMusicBaseService} from "../interface/IMusicBaseService.js";
 import {database} from "../config/firebase/FireBaseConfig.js";
-import {fetchMusicDetails} from "../utils/base/FetchBase.js";
+import FetchBase from "../utils/base/FetchBase.js";
 
 export const getMusicByArtist: IMusicBaseService["getMusicByArtist"] = async (artist) => {
     try {
@@ -14,7 +14,7 @@ export const getMusicByArtist: IMusicBaseService["getMusicByArtist"] = async (ar
         const musicData = snapshot.val()
         const musicIds = Object.keys(musicData);
 
-        return await fetchMusicDetails(musicIds);
+        return await FetchBase.fetchMusicDetails(musicIds);
     } catch (error: unknown) {
         if (error instanceof Error) {
             throw new Error("Error retrieving music by artist: " + error.message);

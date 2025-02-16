@@ -1,6 +1,16 @@
-export { createMusic } from "./MusicBaseService.CreateMusic.js";
-export { getAllMusic } from "./MusicBaseService.GetAllMusic.js";
-export { getMusicByArtist } from "./MusicBaseService.GetMusicByArtist.js";
-export { getMusicByCategory } from "./MusicBaseService.GetMusicByCategory.js";
-export { getMusicHistory } from "./MusicBaseService.GetMusicHistory.js";
-export { uploadMusicByUser } from "./MusicBaseService.UploadMusicByUser.js";
+import { createMusic } from "./MusicBaseService.CreateMusic.js";
+import { getAllMusic } from "./MusicBaseService.GetAllMusic.js";
+import { getMusicByArtist } from "./MusicBaseService.GetMusicByArtist.js";
+import { getMusicByCategory } from "./MusicBaseService.GetMusicByCategory.js";
+import { getMusicHistory } from "./MusicBaseService.GetMusicHistory.js";
+import { uploadMusicByUser } from "./MusicBaseService.UploadMusicByUser.js";
+
+export const MusicBaseService = {
+    createMusic,
+    getAllMusic,
+    getMusicByArtist,
+    getMusicByCategory,
+    getMusicHistory,
+    uploadMusicByUser,
+    
+}

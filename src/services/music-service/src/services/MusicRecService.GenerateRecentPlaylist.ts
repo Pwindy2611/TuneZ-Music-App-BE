@@ -1,5 +1,5 @@
 import {IMusicRecService} from "../interface/IMusicRecService.js";
-import {fetchMusicDetails, fetchMusicIdsFromHistory} from "../utils/base/FetchBase.js";
+import FetchBase from "../utils/base/FetchBase.js";
 import {auth} from "../config/firebase/FireBaseConfig.js";
 
 export const generateRecentPlaylist: IMusicRecService["generateRecentPlaylist"] = async (userId, playlistLimit: number = 20, historyLimit: number = 50) => {
@@ -7,7 +7,7 @@ export const generateRecentPlaylist: IMusicRecService["generateRecentPlaylist"] 
         if(! await auth.getUser(<string>userId)){
             return Promise.reject(new Error(("Error creating new music: User is not exist")));
         }
-        const musicIds = await fetchMusicIdsFromHistory(userId, historyLimit);
+        const musicIds = await FetchBase.fetchMusicIdsFromHistory(userId, historyLimit);
 
         const musicCount: { [key: string]: number } = {};
         musicIds.forEach(musicId => {
@@ -20,7 +20,7 @@ export const generateRecentPlaylist: IMusicRecService["generateRecentPlaylist"] 
 
         const topMusicIds = sortedMusicIds.slice(0, playlistLimit);
 
-        return await fetchMusicDetails(topMusicIds);
+        return await FetchBase.fetchMusicDetails(topMusicIds);
     }
     catch (error: unknown) {
         if (error instanceof Error) {

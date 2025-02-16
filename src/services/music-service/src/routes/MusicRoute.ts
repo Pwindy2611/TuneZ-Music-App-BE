@@ -1,33 +1,22 @@
 import express from 'express';
-import {
-    createMusicApi,
-    uploadMusicByUserApi,
-    getAllMusicsApi,
-    getMusicByArtistApi,
-    getMusicByCategoryApi,
-    getMusicHistoryApi,
-    getMusicLoveApi,
-    generateUserPlaylistApi,
-    generateRecentPlaylistApi, 
-    generateThrowBackPlaylistApi
-} from "../controllers/MusicController.js";
-import {getMusicLove} from "../services/MusicBaseService.GetMusicLove.js";
+import MusicController from "../controllers/MusicController.js";
 
 const router = express.Router();
 
 //CURD
-router.post('/createNewMusic', createMusicApi);
-router.post('/uploadMusicByUser', uploadMusicByUserApi);
+router.post('/createNewMusic', MusicController.createMusicApi);
+router.post('/uploadMusicByUser', MusicController.uploadMusicByUserApi);
 
 //GET REQUEST
-router.get('/getAllMusic', getAllMusicsApi);
-router.post('/getMusicByArtist', getMusicByArtistApi);
-router.post('/getMusicByCategory', getMusicByCategoryApi);
-router.post('/getMusicHistory', getMusicHistoryApi);
-router.post('/getMusicLove', getMusicLoveApi)
+router.get('/getAllMusic', MusicController.getAllMusicsApi);
+router.post('/getMusicByArtist', MusicController.getMusicByArtistApi);
+router.post('/getMusicByCategory', MusicController.getMusicByCategoryApi);
+router.post('/getMusicHistory', MusicController.getMusicHistoryApi);
+router.post('/getMusicLove', MusicController.getMusicLoveApi)
 
 //GENERATE
-router.post('/generateUserPlaylist', generateUserPlaylistApi);
-router.post('/generateRecentPlaylist', generateRecentPlaylistApi);
-router.post('/generateThrowBackPlaylist', generateThrowBackPlaylistApi);
+router.post('/generateUserPlaylist', MusicController.generateUserPlaylistApi);
+router.post('/generateRecentPlaylist', MusicController.generateRecentPlaylistApi);
+router.post('/generateThrowBackPlaylist', MusicController.generateThrowBackPlaylistApi);
+
 export default router;

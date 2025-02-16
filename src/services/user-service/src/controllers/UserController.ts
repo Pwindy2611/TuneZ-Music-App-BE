@@ -4,7 +4,7 @@ import {UserBaseService} from '../services/UserBaseService.js';
 import { authentication, random } from '../utils/helpers/AuthenticationHelper.js';
 import {mailService} from "../utils/base/MailBase.js";
 
-class MusicController {
+class UserController {
     getAllUsersApi = async (_req: Request, res: Response) => {
         try {
             const users = await UserBaseService.getAllUsersService();
@@ -203,4 +203,4 @@ class MusicController {
     }
 }
 
-export default new MusicController();
+export default new UserController();
