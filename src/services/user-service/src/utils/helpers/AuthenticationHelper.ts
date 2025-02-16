@@ -8,6 +8,5 @@ export const authentication = (salt: string, password: string) => {
 }
 
 export const generateOtp = () => {
-     // Random OTP
     return crypto.randomInt(100000, 999999).toString();
 };

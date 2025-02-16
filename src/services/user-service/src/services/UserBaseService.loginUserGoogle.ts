@@ -1,5 +1,5 @@
 import { supabase } from "../config/supabase/SupbaBaseClient.js";
-import { UserDto } from "../Dtos/UserDto.js";
+import { UserDto } from "../dto/UserDto.js";
 import {IUserBaseService} from "../interface/IUserBaseService.js";
 
 /**
@@ -21,12 +21,12 @@ export const loginUserGoogle : IUserBaseService["loginUserGoogle"]= async (idTok
         });
 
         if (error) {
-            throw new Error("Lỗi xác thực với Supabase: " + error.message);
+            return Promise.reject(new Error("Lỗi xác thực với Supabase: " + error.message));
         }
 
         const user = data?.user;
         if (!user) {
-            throw new Error("Không tìm thấy thông tin người dùng.");
+            return Promise.reject(new Error("Không tìm thấy thông tin người dùng."));
         }
 
         // Tạo đối tượng UserDto

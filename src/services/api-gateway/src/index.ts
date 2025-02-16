@@ -3,11 +3,11 @@ import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import {historyProxy} from "./middleware/HistoryProxy";
-import {musicProxy} from "./middleware/MusicProxy";
-import {userProxy} from "./middleware/UserProxy";
-import {loveProxy} from "./middleware/LoveProxy";
-import {officialArtistProxy} from "./middleware/OfficialArtistProxy";
+import {historyProxy} from "./proxy/HistoryProxy";
+import {musicProxy} from "./proxy/MusicProxy";
+import {userProxy} from "./proxy/UserProxy";
+import {loveProxy} from "./proxy/LoveProxy";
+import {officialArtistProxy} from "./proxy/OfficialArtistProxy";
 
 const app = express();
 const port = process.env.PORT || 3000;

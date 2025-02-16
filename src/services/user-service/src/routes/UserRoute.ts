@@ -1,22 +1,21 @@
 import express from 'express';
-import {
-    getAllUsersApi,
-    registerApi,
-    loginWithGoogleApi,
-    sendForgetPasswordApi, sendOtpEmailApi,
-    sendVerificationEmailApi, verifyOtpEmailApi
-} from '../controllers/UserController.js';
-import { validateLogin, validateRegister } from '../utils/middlewares/AuthenticationValidate.js';
+import MusicController from '../controllers/UserController.js';
+import { authValidate } from '../utils/middlewares/AuthenticationValidate.js';
 
 const router = express.Router();
 
-router.get('/getAllUser', getAllUsersApi);
-router.post('/register', validateRegister, registerApi);
-router.post('/login/google', loginWithGoogleApi);
-router.post('/login', validateLogin);
-router.post('/sendEmailVerify', sendVerificationEmailApi);
-router.post('/sendEmailResetPassword', sendForgetPasswordApi);
-router.post('/sendOtpEmail', sendOtpEmailApi);
-router.post('/verifyOtp', verifyOtpEmailApi);
+//Register & Login
+router.post('/register', authValidate.validateRegister, MusicController.registerApi);
+router.post('/login', authValidate.validateLogin);
+router.post('/login/google', MusicController.loginWithGoogleApi);
+
+//Get Request
+router.get('/getAllUser', MusicController.getAllUsersApi);
+
+//Send Email
+router.post('/sendEmailVerify', MusicController.sendVerificationEmailApi);
+router.post('/sendEmailResetPassword', MusicController.sendForgetPasswordApi);
+router.post('/sendOtpEmail', MusicController.sendOtpEmailApi);
+router.post('/verifyOtp', MusicController.verifyOtpEmailApi);
 
 export default router;

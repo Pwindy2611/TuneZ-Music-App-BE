@@ -1,6 +1,6 @@
 import {database} from "../config/firebase/FireBaseConfig.js";
 import {IUserBaseService} from "../interface/IUserBaseService.js";
-import {UserDto} from "../Dtos/UserDto.js";
+import {UserDto} from "../dto/UserDto.js";
 
 export const getAllUsersService: IUserBaseService["getAllUsers"] = async () => {
     const usersRef = database.ref('users');
