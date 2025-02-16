@@ -1,1 +1,5 @@
-export {saveLoveMusic} from './LoveBaseService.SaveLoveMusic'
+import {saveLoveMusic} from './LoveBaseService.SaveLoveMusic'
+
+export const LoveBaseService = {
+    saveLoveMusic,
+}

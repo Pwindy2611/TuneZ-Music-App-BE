@@ -1,10 +1,8 @@
 import express from 'express';
-import {
-    saveHistoryApi
-} from "../controllers/HistoryController";
+import HistoryController from "../controllers/HistoryController";
 
 const router = express.Router();
 
-router.post('/saveHistory', saveHistoryApi);
+router.post('/saveHistory', HistoryController.saveHistoryApi);
 
 export default router;

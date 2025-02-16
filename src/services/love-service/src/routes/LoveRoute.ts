@@ -1,8 +1,8 @@
 import express from "express";
-import {saveLoveMusicApi} from "../controllers/LoveController";
+import LoveController from "../controllers/LoveController";
 
 const router = express.Router();
 
-router.post("/saveLoveMusic", saveLoveMusicApi);
+router.post('/saveLoveMusic', LoveController.saveLoveMusicApi);
 
 export default router;
