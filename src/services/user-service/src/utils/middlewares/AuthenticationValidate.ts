@@ -38,9 +38,9 @@ class AuthenticationValidate {
 
     validateLogin = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { token } = req.body;
+            const { idToken } = req.body;
 
-            const user = await auth.verifyIdToken(token);
+            const user = await auth.verifyIdToken(idToken);
 
             if (!user) {
                 res.status(400).json({status: 400, success: false, message: 'Invalid token' });

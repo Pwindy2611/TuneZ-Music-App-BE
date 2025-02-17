@@ -6,9 +6,7 @@ services:
     ports:
       - "3000:3000"
       - "9227:9227"  # debug port
-    command: npm run debug
-    environment:
-      - NODE_ENV=development
+    command: npm run start
     networks:
       - app_network
   
@@ -23,9 +21,7 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
-    command: npm run debug
-    environment:
-      - NODE_ENV=development
+    command: npm run start
     networks:
       - app_network
   
@@ -40,9 +36,7 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
-    command: npm run debug
-    environment:
-      - NODE_ENV=development
+    command: npm run start
     networks:
       - app_network
   
@@ -60,9 +54,7 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
-    command: npm run debug
-    environment:
-      - NODE_ENV=development
+    command: npm run start
     networks:
       - app_network
   
@@ -79,9 +71,7 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
-    command: npm run debug
-    environment:
-      - NODE_ENV=development
+    command: npm run start
     networks:
       - app_network
   
@@ -98,9 +88,7 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
-    command: npm run debug
-    environment:
-      - NODE_ENV=development
+    command: npm run start
     networks:
       - app_network
 
