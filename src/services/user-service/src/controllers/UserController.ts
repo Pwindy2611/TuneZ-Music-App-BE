@@ -1,7 +1,6 @@
 import {NextFunction, Request, Response} from 'express';
 import { auth } from "../config/firebase/FireBaseConfig.js";
 import {UserBaseService} from '../services/UserBaseService.js';
-import { authentication, random } from '../utils/helpers/AuthenticationHelper.js';
 import {mailService} from "../utils/base/MailBase.js";
 
 class UserController {
@@ -34,15 +33,10 @@ class UserController {
             const firebaseUser = await auth.getUserByEmail(email);
 
             // Tạo user mới
-            const salt = random();
             const newUser = await UserBaseService.createUserService({
-                userId: firebaseUser.uid,
+                _id: firebaseUser.uid,
                 email,
                 username,
-                authentication: {
-                    salt,
-                    password: authentication(salt, password),
-                },
             });
 
             // Trả về response thành công

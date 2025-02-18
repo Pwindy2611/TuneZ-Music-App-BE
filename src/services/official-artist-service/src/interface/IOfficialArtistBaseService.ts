@@ -1,5 +1,6 @@
 import {IOfficialArtist} from "./IOfficialArtist.js";
+import {IFile} from "./IFile.js";
 
 export interface IOfficialArtistBaseService {
-    createOfficialArtist(artist: IOfficialArtist) : Promise<string | null>
+    createOfficialArtist(artist: IOfficialArtist, imgFile: IFile) : Promise<string | null>
 }

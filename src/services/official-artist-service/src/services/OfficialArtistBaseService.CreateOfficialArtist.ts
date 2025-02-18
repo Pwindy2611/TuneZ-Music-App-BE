@@ -1,17 +1,26 @@
 import {IOfficialArtistBaseService} from "../interface/IOfficialArtistBaseService.js";
 import {generateId} from "../utils/helpers/AuthenticationHelper.js";
 import {database} from "../config/firebase/FireBaseConfig.js"
-export const createOfficialArtist: IOfficialArtistBaseService["createOfficialArtist"] = async (artist) => {
+import UploadBase from "../utils/base/UploadBase.js";
+export const createOfficialArtist: IOfficialArtistBaseService["createOfficialArtist"] = async (artist, imgFile) => {
     try{
-        artist.offAristId = generateId();
+        
+        artist._id = generateId();
+        
+        const uploadImgData = await UploadBase.uploadFile(imgFile, artist._id);
+        const imgPath = await UploadBase.getSignedFileUrl(uploadImgData);
+
+        artist.profile.profileImage = imgPath ?? "";
         artist.createdAt = new Date().toISOString();
         artist.updatedAt = new Date().toISOString();
+
         
-        const artistRef = database.ref(`officialArtist/${artist.offAristId}`)
+        
+        const artistRef = database.ref(`officialArtist/${artist._id}`)
         
         await artistRef.set(artist);
         
-        return artist.offAristId;
+        return artist._id;
     }catch (error){
         if (error instanceof Error) {
             throw new Error("Error creating new official artist: " + error.message);

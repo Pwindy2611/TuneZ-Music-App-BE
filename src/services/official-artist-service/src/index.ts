@@ -5,6 +5,8 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
 import officialArtistRouter from './routes/OfficialArtistRoute.js'
+import 'reflect-metadata';
+
 
 const app = express();
 const port = process.env.PORT || 3002; 

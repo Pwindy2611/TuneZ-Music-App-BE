@@ -1,4 +1,5 @@
 import {IsBoolean, IsNotEmpty, IsString, validateOrReject} from "class-validator";
+import {IOfficialArtist} from "../interface/IOfficialArtist.js";
 
 export class CreateOfficialArtistDto {
     @IsNotEmpty()
@@ -8,9 +9,15 @@ export class CreateOfficialArtistDto {
     @IsBoolean()
     verified: boolean;
     
-    constructor(name: string, verified: boolean) {
-        this.name = name;
-        this.verified = verified;
+    profile: {
+        bio: string;
+        profileImage?: string;
+        genres: string[];
+    }
+    constructor(artist: IOfficialArtist) {
+        this.name = artist.name;
+        this.verified = artist.verified;
+        this.profile = artist.profile;
     }
 
     async validate() {

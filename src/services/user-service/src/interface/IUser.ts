@@ -1,13 +1,16 @@
 import {UserRole} from "../enum/UserRole.js";
+import {SubscriptionType} from "../enum/SubscriptionType.js";
 
 export interface IUser {
-    userId: string;
+    _id: string;
     email: string;
     username: string;
-    authentication: {
-        salt: string;
-        password: string;
-    };
     role?: UserRole;
+    
+    account? : {
+        subscriptionType: SubscriptionType,
+        createdAt: Date,
+        lastLogin: Date,
+    };
     sessionToken?: string | null;
 }

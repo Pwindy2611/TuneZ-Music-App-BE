@@ -1,6 +1,8 @@
 import {database} from "../config/firebase/FireBaseConfig.js";
 import {IUserBaseService} from "../interface/IUserBaseService.js";
 import {UserDto} from "../dto/UserDto.js";
+import {SubscriptionType} from "../enum/SubscriptionType.js";
+import {IUser} from "../interface/IUser.js";
 
 export const getAllUsersService: IUserBaseService["getAllUsers"] = async () => {
     const usersRef = database.ref('users');
@@ -11,13 +13,7 @@ export const getAllUsersService: IUserBaseService["getAllUsers"] = async () => {
 
     const usersData = snapshot.val();
     return Object.values(usersData).map(user => {
-        const {userId, email, username, role, sessionToken} = user as {
-            userId: string;
-            email: string;
-            username: string;
-            role: string;
-            sessionToken: string;
-        };
-        return new UserDto(userId, email, username, role, sessionToken);
+        const typedUser = user as IUser;
+        return new UserDto(typedUser);
     });
 };
