@@ -29,10 +29,10 @@ class FetchBase {
 
     async fetchMusicIdsFromHistory(userId: string, limit: number) {
         const historySnapshot = await firestore
-            .collection(`history`)
+            .collection(`users`)
             .doc(userId)
-            .collection('data')
-            .orderBy('listendAt', 'desc')
+            .collection('history')
+            .orderBy('listenAt', 'desc')
             .limit(limit)
             .get();
 
@@ -41,10 +41,10 @@ class FetchBase {
 
     async fetchMusicIdsFromLove(userId: string, limit: number) {
         const historySnapshot = await firestore
-            .collection(`love`)
+            .collection(`users`)
             .doc(userId)
-            .collection('data')
-            .orderBy('listendAt', 'desc')
+            .collection('love')
+            .orderBy('listenAt', 'desc')
             .limit(limit)
             .get();
 

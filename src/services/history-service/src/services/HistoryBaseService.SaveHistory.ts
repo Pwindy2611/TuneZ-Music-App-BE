@@ -5,13 +5,13 @@ import * as admin from 'firebase-admin';
 export const saveHistory : IHistoryBaseService ["saveHistory"] = async (history)=> {
     try{
         const historyRef =  await firestore
-            .collection('history')
+            .collection('users')
             .doc(history.userId)
-            .collection('data')
+            .collection('history')
             .add(
                 {
                     musicId: history.musicId,
-                    listendAt: admin.firestore.FieldValue.serverTimestamp(),
+                    listenAt: admin.firestore.FieldValue.serverTimestamp(),
                 }
             )
         return historyRef.id;

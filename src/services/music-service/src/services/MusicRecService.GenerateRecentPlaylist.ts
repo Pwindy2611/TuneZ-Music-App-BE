@@ -20,7 +20,8 @@ export const generateRecentPlaylist: IMusicRecService["generateRecentPlaylist"] 
 
         const topMusicIds = sortedMusicIds.slice(0, playlistLimit);
 
-        return await FetchBase.fetchMusicDetails(topMusicIds);
+        const musicDetails = await FetchBase.fetchMusicDetails(topMusicIds);
+        return musicDetails.length > 0 ? musicDetails : null;
     }
     catch (error: unknown) {
         if (error instanceof Error) {

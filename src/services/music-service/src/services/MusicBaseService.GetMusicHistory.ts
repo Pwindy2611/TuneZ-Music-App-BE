@@ -5,11 +5,9 @@ export const getMusicHistory: IMusicBaseService["getMusicHistory"] = async (user
     try {
         const musicIds = await FetchBase.fetchMusicIdsFromHistory(userId, 50);
         const uniqueMusicIds = [...new Set(musicIds)];
-        const musicHistory = await FetchBase.fetchMusicDetails(uniqueMusicIds);
-        
-        if(!musicHistory) return null;
-        
-        return musicHistory;
+
+        const musicDetails = await FetchBase.fetchMusicDetails(uniqueMusicIds);
+        return musicDetails.length > 0 ? musicDetails : null;
     } catch (error) {
         console.error("Error fetching music history:", error);
         throw error;
