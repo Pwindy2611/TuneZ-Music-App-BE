@@ -14,16 +14,12 @@ export const uploadMusicByUser: IMusicBaseService["uploadMusicByUser"] = async (
         if(! await auth.getUser(<string>music.userId)){
             return Promise.reject(new Error(("Error creating new music: User is not exist")));
         }
-        
-        // Upload music file
-        const uploadMusicData = await UploadBase.uploadFile(musicFile, musicId);
-        const musicPath = await UploadBase.getSignedFileUrl(uploadMusicData);
 
-        // Upload image file
-        const uploadImgData = await UploadBase.uploadFile(imgFile, musicId);
-        const imgPath = await UploadBase.getSignedFileUrl(uploadImgData);
-        
-        // Lưu thông tin vào database
+        const [musicPath, imgPath] = await Promise.all([
+            UploadBase.uploadAndGetUrl(musicFile, musicId),
+            UploadBase.uploadAndGetUrl(imgFile, musicId)
+        ]);
+
         await musicRef.set({
             musicId,
             ...music,

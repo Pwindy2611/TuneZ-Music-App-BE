@@ -1,4 +1,4 @@
-import { cloudinary } from '../../config/cloudinary/CloudinaryConfig.js';
+import { cloudinaryInstance } from '../../config/cloudinary/CloudinaryConfig.js';
 import { PassThrough } from 'stream';
 
 class UploadBase {
@@ -19,7 +19,7 @@ class UploadBase {
 
     uploadToCloudinary = async (file: { originalName: string; buffer: Buffer }, _id: string): Promise<string> => {
         return new Promise((resolve, reject) => {
-            const uploadStream = cloudinary.uploader.upload_stream(
+            const uploadStream = cloudinaryInstance.uploader.upload_stream(
                 {
                     folder: `artist-storage/files/${_id}`,
                     public_id: file.originalName.replace(/\.[^/.]+$/, ""), // Bỏ extension

@@ -1,4 +1,4 @@
-import { cloudinary } from '../../config/cloudinary/CloudinaryConfig.js';
+import { cloudinaryInstance } from '../../config/cloudinary/CloudinaryConfig.js';
 import { PassThrough } from 'stream';
 
 class UploadBase {
@@ -19,7 +19,7 @@ class UploadBase {
 
     uploadToCloudinary = async (file: { originalName: string; buffer: Buffer }, musicId: string): Promise<string> => {
         return new Promise((resolve, reject) => {
-            const uploadStream = cloudinary.uploader.upload_stream(
+            const uploadStream = cloudinaryInstance.uploader.upload_stream(
                 {
                     folder: `music-storage/files/${musicId}`,
                     public_id: file.originalName.replace(/\.[^/.]+$/, ""), // Bỏ extension
@@ -46,6 +46,12 @@ class UploadBase {
         console.error("Invalid file info provided.");
         return null;
     };
+
+    async uploadAndGetUrl(file: any, id: string) {
+        const uploadData = await this.uploadFile(file, id);
+        return await this.getSignedFileUrl(uploadData);
+    }
+
 }
 
 export default new UploadBase();

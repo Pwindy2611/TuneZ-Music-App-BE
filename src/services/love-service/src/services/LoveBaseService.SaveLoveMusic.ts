@@ -6,9 +6,9 @@ import * as admin from "firebase-admin";
 export const saveLoveMusic: ILoveBaseService["saveLoveMusic"] = async (love) => {
     try {
         const loveRef = firestore
-            .collection('love')
+            .collection('users')
             .doc(love.userId)
-            .collection('data');
+            .collection('love');
 
         const querySnapshot = await loveRef.where('musicId', '==', love.musicId).get();
 
@@ -18,7 +18,7 @@ export const saveLoveMusic: ILoveBaseService["saveLoveMusic"] = async (love) => 
 
         const newDocRef = await loveRef.add({
             musicId: love.musicId,
-            listendAt: admin.firestore.FieldValue.serverTimestamp(),
+            listenAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 
         return newDocRef.id;

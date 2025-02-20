@@ -5,11 +5,10 @@ export const getMusicLove: IMusicBaseService["getMusicLove"] = async (userId) =>
     try {
         const musicIds = await FetchBase.fetchMusicIdsFromLove(userId, 50);
         const uniqueMusicIds = [...new Set(musicIds)];
-        const musicLove = await FetchBase.fetchMusicDetails(uniqueMusicIds);
 
-        if(!musicLove) return null;
+        const musicDetails = await FetchBase.fetchMusicDetails(uniqueMusicIds);
+        return musicDetails.length > 0 ? musicDetails : null;
 
-        return musicLove;
     } catch (error) {
         console.error("Error fetching music history:", error);
         throw error;

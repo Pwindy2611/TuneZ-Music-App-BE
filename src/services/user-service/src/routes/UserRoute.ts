@@ -7,7 +7,6 @@ const router = express.Router();
 //Register & Login
 router.post('/register', authValidate.validateRegister, MusicController.registerApi);
 router.post('/login', authValidate.validateLogin);
-router.post('/login/google', MusicController.loginWithGoogleApi);
 
 //Get Request
 router.get('/getAllUser', MusicController.getAllUsersApi);

@@ -18,15 +18,11 @@ export const createMusic: IMusicBaseService["createMusic"] = async (music, music
             return Promise.reject(new Error(("Error creating new music: Official Artist is not exist")));
         }
 
-        // Upload music file
-        const uploadMusicData = await UploadBase.uploadFile(musicFile, musicId);
-        const musicPath = await UploadBase.getSignedFileUrl(uploadMusicData);
+        const [musicPath, imgPath] = await Promise.all([
+            UploadBase.uploadAndGetUrl(musicFile, musicId),
+            UploadBase.uploadAndGetUrl(imgFile, musicId)
+        ]);
 
-        // Upload image file
-        const uploadImgData = await UploadBase.uploadFile(imgFile, musicId);
-        const imgPath = await UploadBase.getSignedFileUrl(uploadImgData);
-        
-        // Lưu thông tin vào database
         await musicRef.set({
             musicId,
             ...music,
