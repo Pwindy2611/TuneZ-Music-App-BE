@@ -11,7 +11,7 @@ const app = express();
 const port = process.env.PORT || 3003; 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://api-gateway:3000',
     credentials: true }));
 app.use(compression());
 app.use(cookieParser());

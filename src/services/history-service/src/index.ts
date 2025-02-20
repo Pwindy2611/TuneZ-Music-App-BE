@@ -10,7 +10,9 @@ const app = express();
 const port = process.env.PORT || 3004;
 
 // Middleware
-app.use(cors({ credentials: true }));
+app.use(cors({
+    origin: 'http://api-gateway:3000',
+    credentials: true }));
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
