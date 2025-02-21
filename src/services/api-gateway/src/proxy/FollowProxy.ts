@@ -1,9 +1,9 @@
 import proxy from "express-http-proxy";
 
-export const loveProxy = proxy('http://love-service:3005', {
+export const followProxy = proxy('http://follow-service:3006', {
     proxyReqPathResolver: (req) => {
-        const newPath = req.url.replace(/^\/love/, '');
-        console.log(`[PROXY] Forwarding to love-service: ${newPath}`);
+        const newPath = req.url.replace(/^\/follow($|\/)/, '/');
+        console.log(`[PROXY] Forwarding to follow-service: ${newPath}`);
         return newPath;
     },
     proxyReqOptDecorator: (proxyReqOpts, _req) => {
@@ -16,7 +16,7 @@ export const loveProxy = proxy('http://love-service:3005', {
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-        console.log(`[PROXY] Response received from love-service: ${proxyRes.statusCode}`);
+        console.log(`[PROXY] Response received from follow-service: ${proxyRes.statusCode}`);
         try {
             const data = JSON.parse(proxyResData.toString('utf8'));
             return JSON.stringify(data);

@@ -11,9 +11,7 @@ export const historyProxy = proxy('http://history-service:3004', {
         return proxyReqOpts;
     },
     userResDecorator: async (proxyRes, proxyResData, req, res) => {
-        // Loại bỏ header CORS từ response của service (nếu có)
         res.removeHeader('access-control-allow-origin');
-        // Thêm header CORS hợp lệ cho client
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');

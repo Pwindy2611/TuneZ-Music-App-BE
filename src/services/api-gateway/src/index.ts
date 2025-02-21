@@ -7,6 +7,8 @@ import {historyProxy} from "./proxy/HistoryProxy";
 import {musicProxy} from "./proxy/MusicProxy";
 import {userProxy} from "./proxy/UserProxy";
 import {loveProxy} from "./proxy/LoveProxy";
+import {followProxy} from "./proxy/FollowProxy";
+
 import {officialArtistProxy} from "./proxy/OfficialArtistProxy";
 
 const app = express();
@@ -42,6 +44,8 @@ app.use('/history', historyProxy);
 app.use('/offartist', officialArtistProxy)
 
 app.use('/love', loveProxy)
+
+app.use('/follow', followProxy)
 
 // Health check endpoint
 app.get('/health', (_req, res) => {

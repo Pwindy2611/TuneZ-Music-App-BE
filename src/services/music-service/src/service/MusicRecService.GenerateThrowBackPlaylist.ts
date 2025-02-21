@@ -18,8 +18,8 @@ export const generateThrowBackPlaylist: IMusicRecService ["generateThrowBackPlay
             .collection(`history`)
             .doc(userId)
             .collection('data')
-            .where('listendAt', '<', cutoffTimestamp)
-            .orderBy('listendAt', 'desc')
+            .where('listenAt', '<', cutoffTimestamp)
+            .orderBy('listenAt', 'desc')
             .limit(historyLimit)
             .get();
 

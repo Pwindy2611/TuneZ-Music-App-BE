@@ -12,9 +12,7 @@ export const userProxy = proxy('http://user-service:3001', {
         return proxyReqOpts;
     },
     userResDecorator: async (proxyRes, proxyResData, req, res) => {
-        // Xóa bỏ header CORS từ service nếu có
         res.removeHeader('access-control-allow-origin');
-        // Thêm header CORS hợp lệ cho client
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');

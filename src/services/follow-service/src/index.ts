@@ -4,10 +4,10 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import 'reflect-metadata';
-import HistoryRoute from "./route/HistoryRoute";
+import FollowRoute from "./route/FollowRoute";
 
 const app = express();
-const port = process.env.PORT || 3004;
+const port = process.env.PORT || 3006;
 
 // Middleware
 app.use(cors({
@@ -18,11 +18,11 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
-    console.log(`[History Api] Request method: ${req.method}, path: ${req.path}`);
+    console.log(`[Follow Api] Request method: ${req.method}, path: ${req.path}`);
     next();
 });
 //Route
-app.use(HistoryRoute);
+app.use(FollowRoute);
 
 // Health check endpoint
 app.get('/health', (_req, res) => {
@@ -31,5 +31,5 @@ app.get('/health', (_req, res) => {
 
 // Start the server
 app.listen(port, () => {
-    console.log(`History service is running on http://localhost:${port}/`);
+    console.log(`Follow service is running on http://localhost:${port}/`);
 });

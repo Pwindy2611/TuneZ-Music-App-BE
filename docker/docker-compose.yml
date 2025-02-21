@@ -92,7 +92,8 @@ services:
     ports:
       - "3006:3000"
     depends_on:
-      - music-service
+      - user-service
+      - official-artist-service
     env_file:
       - ../.env
     volumes:

@@ -1,6 +1,7 @@
 import {IMusicBaseService} from "../interface/IMusicBaseService.js";
 import {database} from "../config/firebase/FireBaseConfig.js";
 import FetchBase from "../util/base/FetchBase.js";
+import {child} from "@firebase/database";
 
 export const getMusicByCategory: IMusicBaseService["getMusicByCategory"] = async (category) => {
     try {
@@ -11,8 +12,13 @@ export const getMusicByCategory: IMusicBaseService["getMusicByCategory"] = async
             return snapshot.val();
         }
 
-        const musicData = snapshot.val()
-        const musicIds = Object.keys(musicData);
+        let musicIds: string[] = [];
+
+        snapshot.forEach(child => {
+            if(child.val().songType?.toString() === "official"){
+                musicIds.push(child.val().musicId?.toString());
+            }
+        })
 
         return await FetchBase.fetchMusicDetails(musicIds);
     } catch (error: unknown) {

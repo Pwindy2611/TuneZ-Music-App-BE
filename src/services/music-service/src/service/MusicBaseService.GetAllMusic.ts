@@ -15,7 +15,8 @@ export const getAllMusic: IMusicBaseService["getAllMusic"] = async () => {
         const musicData = snapshot.val()
         const musicIds = Object.keys(musicData);
 
-        return await FetchBase.fetchMusicDetails(musicIds);
+        const musicDetails = await FetchBase.fetchMusicDetails(musicIds);
+        return musicDetails.length > 0 ? musicDetails : null;
     } catch (error: unknown) {
         if (error instanceof Error) {
             throw new Error("Error retrieving all music: " + error.message);

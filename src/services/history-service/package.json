@@ -1,7 +1,7 @@
 {
     "name": "history-service",
     "version": "1.0.0",
-    "description": "API Gateway for TuneZ Music App",
+    "description": "History serivce for TuneZ Music App",
     "main": "src/index.ts",
     "scripts": {
         "start": "tsx src/index.ts",
