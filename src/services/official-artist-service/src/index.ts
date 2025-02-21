@@ -4,7 +4,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
-import officialArtistRouter from './routes/OfficialArtistRoute.js'
+import officialArtistRouter from './route/OfficialArtistRoute.js'
 import 'reflect-metadata';
 
 

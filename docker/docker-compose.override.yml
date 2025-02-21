@@ -29,3 +29,8 @@ services:
     ports:
       - "9232:9227"
     command: npm run debug
+
+  follow-service:
+    ports:
+      - "9233:9227"
+    command: npm run debug

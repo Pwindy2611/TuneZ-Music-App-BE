@@ -4,7 +4,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
-import musicRoute from './routes/MusicRoute.js';
+import musicRoute from './route/MusicRoute.js';
 import 'reflect-metadata';
 
 const app = express();
