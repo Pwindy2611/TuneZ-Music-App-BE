@@ -2,12 +2,19 @@ import {database} from "../config/firebase/FireBaseConfig.js";
 import {IUserBaseService} from "../interface/IUserBaseService.js";
 import {UserRole} from "../enum/UserRole.js";
 import {SubscriptionType} from "../enum/SubscriptionType.js";
+import * as dotenv from "dotenv";
 
+dotenv.config();
 export const createUserService : IUserBaseService["createUser"] = async (user): Promise<string> => {
     try {
         const userRef = database.ref(`users/${user._id}`);
         const role = UserRole.LISTENER;
         const sessionToken = null;
+        let profilePictureUrl = process.env.DEFAULT_USER_PROFILE_PATH;
+
+        if (user.profilePictureUrl) {
+            profilePictureUrl = user.profilePictureUrl;
+        }
         const account = {
             subscriptionType: SubscriptionType.NORMAL,
             createdAt: new Date().toISOString(),
@@ -17,6 +24,7 @@ export const createUserService : IUserBaseService["createUser"] = async (user): 
             ...user,
             account,
             role,
+            profilePictureUrl,
             sessionToken
         });
 

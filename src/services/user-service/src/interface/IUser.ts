@@ -6,7 +6,7 @@ export interface IUser {
     email: string;
     username: string;
     role?: UserRole;
-    
+    profilePictureUrl?: string;
     account? : {
         subscriptionType: SubscriptionType,
         createdAt: Date,

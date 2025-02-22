@@ -8,29 +8,41 @@ export class FollowUserDto {
 
     @IsString()
     @IsNotEmpty()
+    userName: string;
+
+    @IsString()
+    @IsNotEmpty()
     followingId: string;
 
-    constructor(userId: string, followingId: string) {
+    @IsString()
+    @IsNotEmpty()
+    followingName: string;
+
+    @IsString()
+    @IsNotEmpty()
+    followType: string;
+
+    constructor(userId: string, userName: string, followingId: string, followingName: string, followType: string) {
         this.userId = userId;
         this.followingId = followingId;
+        this.followingName = followingName;
+        this.userName = userName;
+        this.followType = followType;
     }
 
     async validate() {
         try {
             await validateOrReject(this);
 
-            // Check if userId exists in Firebase Authentication
             try {
                 await auth.getUser(this.userId);
             } catch (error) {
                 return Promise.reject(new Error(`Invalid userId: ${error.message}`));
             }
 
-            // Check if followingId exists in Firebase Authentication
             try {
                 await auth.getUser(this.followingId);
             } catch (error) {
-                // If not found in Authentication, check in Realtime Database
                 const officialArtistRef = database.ref(`/officialArtist/${this.followingId}`);
                 const snapshot = await officialArtistRef.once('value');
                 if (!snapshot.exists()) {

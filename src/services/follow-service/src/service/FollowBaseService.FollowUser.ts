@@ -1,10 +1,15 @@
 import { IFollowBaseService } from "../interface/IFollowBaseService";
 import { firestore } from "../config/firebase/FireBaseConfig"
 import * as admin from "firebase-admin";
+import {FollowType} from "../enum/FollowType";
 
 export const followUser: IFollowBaseService["followUser"] = async (follow) => {
     try {
-        const { userId, followingId } = follow;
+        const { userId, userName, followingId, followingName, followType} = follow;
+
+        if (followType !== "user" && followType !== "officialArtist") {
+            return Promise.reject(new Error('Invalid following type'));
+        }
 
         const followQuery = await firestore
             .collection('users')
@@ -27,7 +32,9 @@ export const followUser: IFollowBaseService["followUser"] = async (follow) => {
             .doc();
 
         batch.set(followingRef, {
+            followingName: followingName,
             followingId: followingId,
+            followType: followType,
             followAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 
@@ -38,9 +45,11 @@ export const followUser: IFollowBaseService["followUser"] = async (follow) => {
             .doc();
 
         batch.set(followerRef, {
+            followerName: userName,
             followerId: userId,
+            followType: FollowType.USER,
             followAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
+         });
 
         await batch.commit();
 

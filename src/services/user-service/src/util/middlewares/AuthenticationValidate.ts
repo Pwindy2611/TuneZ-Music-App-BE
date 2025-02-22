@@ -63,6 +63,7 @@ class AuthenticationValidate {
                     _id: firebaseUser.uid,
                     email: firebaseUser.email ?? "",
                     username: firebaseUser.displayName ?? "",
+                    profilePictureUrl: firebaseUser.photoURL ?? "",
                 });
                 console.log(`Created new user for ${user.email} with provider: ${user.firebase.sign_in_provider}`);
             }
