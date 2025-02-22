@@ -11,15 +11,12 @@ class FetchBase {
             if (!musicData) return null;
 
             return new GetMusicResponseDto(
+                musicData.musicId,
                 musicData.name,
                 musicData.artist,
-                musicData.duration,
                 musicData.category,
-                musicData.loveCount || 0,
-                musicData.playCount || 0,
-                musicData.musicPath,
+                musicData.duration,
                 musicData.imgPath,
-                musicData.songType,
             );
         });
 
@@ -50,7 +47,6 @@ class FetchBase {
 
         return historySnapshot.empty ? [] : historySnapshot.docs.map(doc => doc.data().musicId);
     }
-    
 }
 
 export default new FetchBase();

@@ -18,5 +18,6 @@ router.post('/getMusicLove', MusicController.getMusicLoveApi)
 router.post('/generateUserPlaylist', MusicController.generateUserPlaylistApi);
 router.post('/generateRecentPlaylist', MusicController.generateRecentPlaylistApi);
 router.post('/generateThrowBackPlaylist', MusicController.generateThrowBackPlaylistApi);
+router.post('/generateFollowPlaylist', MusicController.generateFollowedArtistsPlaylistApi);
 
 export default router;

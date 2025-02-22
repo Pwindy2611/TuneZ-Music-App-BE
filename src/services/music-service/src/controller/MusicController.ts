@@ -427,6 +427,35 @@ class MusicController {
             });
         }
     }
+    generateFollowedArtistsPlaylistApi = async (req: Request, res: Response) => {
+        try {
+            const {userId} = req.body;
+
+            const followedArtistsMusicPlaylist = await MusicRecService.generateFollowedArtistsPlaylist(userId, 20);
+
+            if(!followedArtistsMusicPlaylist) {
+                res.status(404).json({
+                    status: 404,
+                    success: false,
+                    message: `No music found with: ${userId}`,
+                });
+                return;
+            }
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: `Generate music playlist successfully`,
+                musics: followedArtistsMusicPlaylist,
+            })
+        }catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Error generate music playlist ${error}`,
+            });
+        }
+    }
 }
 
 export default new MusicController();

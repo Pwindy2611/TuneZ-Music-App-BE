@@ -7,7 +7,16 @@ export const followUser: IFollowBaseService["followUser"] = async (follow) => {
     try {
         const { userId, userName, followingId, followingName, followType} = follow;
 
-        if (followType !== "user" && followType !== "officialArtist") {
+        let followingCollectionRef;
+        let followerCollectionRef;
+
+        if (followType === "user") {
+            followingCollectionRef = firestore.collection('users').doc(userId).collection('following').doc();
+            followerCollectionRef = firestore.collection('users').doc(followingId).collection('followers').doc();
+        } else if (followType === "officialArtist") {
+            followingCollectionRef = firestore.collection('users').doc(userId).collection('following').doc();
+            followerCollectionRef = firestore.collection('officialArtists').doc(followingId).collection('followers').doc();
+        } else {
             return Promise.reject(new Error('Invalid following type'));
         }
 
@@ -25,26 +34,15 @@ export const followUser: IFollowBaseService["followUser"] = async (follow) => {
 
         const batch = firestore.batch();
 
-        const followingRef = firestore
-            .collection('users')
-            .doc(userId)
-            .collection('following')
-            .doc();
 
-        batch.set(followingRef, {
+        batch.set(followingCollectionRef, {
             followingName: followingName,
             followingId: followingId,
             followType: followType,
             followAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 
-        const followerRef = firestore
-            .collection('users')
-            .doc(followingId)
-            .collection('followers')
-            .doc();
-
-        batch.set(followerRef, {
+        batch.set(followerCollectionRef, {
             followerName: userName,
             followerId: userId,
             followType: FollowType.USER,
@@ -53,7 +51,7 @@ export const followUser: IFollowBaseService["followUser"] = async (follow) => {
 
         await batch.commit();
 
-        return followingRef.id;
+        return followingCollectionRef.id;
     } catch (error) {
         console.error('Error in followUser:', error);
         throw error;
