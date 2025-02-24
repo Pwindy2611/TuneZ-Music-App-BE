@@ -2,6 +2,7 @@ import {IFollowBaseService} from "../interface/IFollowBaseService";
 import {database, firestore} from "../config/firebase/FireBaseConfig";
 import {GetFollowResponseDto} from "../dto/GetFollowResponseDto";
 import {getFollowersCount} from "./FollowBaseService.GetFollowersCount";
+import {IFollowing} from "../interface/IFollowing";
 
 export const getFollowingUsers: IFollowBaseService ["getFollowingUsers"] = async (userId) => {
     try {
@@ -18,7 +19,17 @@ export const getFollowingUsers: IFollowBaseService ["getFollowingUsers"] = async
         }
 
         const followingUsersPromises = followSnapshot.docs.map(async doc => {
-            const userRef = database.ref(`/users/${doc.data().followingId}`);
+            const followingData: IFollowing = doc.data() as IFollowing;
+            let userRef;
+
+            if (followingData.followType === 'user') {
+                userRef = database.ref(`/users/${followingData.followingId}`);
+            } else if (followingData.followType === 'officialArtist') {
+                userRef = database.ref(`/officialArtist/${followingData.followingId}`);
+            } else {
+                throw new Error('Invalid follow type');
+            }
+
             const userSnapshot = await userRef.get();
             const userData = userSnapshot.val();
 

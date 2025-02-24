@@ -195,7 +195,7 @@ class MusicController {
 
     getMusicByArtistApi = async (req: Request, res: Response) => {
         try {
-            const { artist } = req.body;
+            const artist  = req.query.artist as string;
 
             if (!artist) {
                 res.status(400).json({
@@ -235,7 +235,7 @@ class MusicController {
 
     getMusicByCategoryApi = async (req: Request, res: Response) => {
         try {
-            const { category } = req.body;
+            const category  = req.query.category as string;
 
             if (!category) {
                 res.status(400).json({
@@ -275,7 +275,7 @@ class MusicController {
 
     getMusicHistoryApi = async (req: Request, res: Response) => {
         try {
-            const {userId} = req.body;
+            const userId = req.query.userId as string;
 
             const musicHistory = await MusicBaseService.getMusicHistory(userId);
 
@@ -306,7 +306,7 @@ class MusicController {
 
     getMusicLoveApi = async (req: Request, res: Response) => {
         try {
-            const {userId} = req.body;
+            const userId = req.query.userId as string;
 
             const musicLove = await getMusicLove(userId);
 

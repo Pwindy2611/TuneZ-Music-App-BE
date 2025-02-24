@@ -9,10 +9,10 @@ router.post('/uploadMusicByUser', MusicController.uploadMusicByUserApi);
 
 //GET REQUEST
 router.get('/getAllMusic', MusicController.getAllMusicsApi);
-router.post('/getMusicByArtist', MusicController.getMusicByArtistApi);
-router.post('/getMusicByCategory', MusicController.getMusicByCategoryApi);
-router.post('/getMusicHistory', MusicController.getMusicHistoryApi);
-router.post('/getMusicLove', MusicController.getMusicLoveApi)
+router.get('/getMusicByArtist', MusicController.getMusicByArtistApi);
+router.get('/getMusicByCategory', MusicController.getMusicByCategoryApi);
+router.get('/getMusicHistory', MusicController.getMusicHistoryApi);
+router.get('/getMusicLove', MusicController.getMusicLoveApi)
 
 //GENERATE
 router.post('/generateUserPlaylist', MusicController.generateUserPlaylistApi);

@@ -28,7 +28,6 @@ class FirebaseSingleton {
             throw new Error(`Error reading the service account key: ${error.message}`);
         }
 
-        // Kiểm tra xem Firebase đã được khởi tạo chưa
         const app = getApps().length === 0
             ? initializeApp({
                 credential: cert(serviceAccount as any),

@@ -6,7 +6,7 @@ import {mailService} from "../util/base/MailBase.js";
 class UserController {
     getAllUsersApi = async (_req: Request, res: Response) => {
         try {
-            const users = await UserBaseService.getAllUsersService();
+            const users = await UserBaseService.getAllUsersService.execute();
             res.status(200).json({ status: 200, users });
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -33,7 +33,7 @@ class UserController {
             const firebaseUser = await auth.getUserByEmail(email);
 
             // Tạo user mới
-            const newUser = await UserBaseService.createUserService({
+            const newUser = await UserBaseService.createUserService.execute({
                 _id: firebaseUser.uid,
                 email,
                 username,

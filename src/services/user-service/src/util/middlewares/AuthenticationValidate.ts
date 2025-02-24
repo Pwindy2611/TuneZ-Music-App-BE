@@ -28,7 +28,7 @@ class AuthenticationValidate {
             res.status(400).json({ status: 400, success: false, message: 'Must have >= 3 & <= 16' });
             return;
         }
-        const existingUser = await UserBaseService.getUserByEmailService(email);
+        const existingUser = await UserBaseService.getUserByEmailService.execute(email);
 
         if (existingUser) {
             res.status(400).json({status: 400, success: false, message: 'User already exists' });
@@ -55,11 +55,11 @@ class AuthenticationValidate {
                 return;
             }
 
-            const existingUser = await UserBaseService.getUserByEmailService(user.email ?? "");
+            const existingUser = await UserBaseService.getUserByEmailService.execute(user.email ?? "");
 
             if (!existingUser && user.firebase.sign_in_provider !== "password") {
                 const firebaseUser = await auth.getUser(user.uid);
-                await UserBaseService.createUserService({
+                await UserBaseService.createUserService.execute({
                     _id: firebaseUser.uid,
                     email: firebaseUser.email ?? "",
                     username: firebaseUser.displayName ?? "",

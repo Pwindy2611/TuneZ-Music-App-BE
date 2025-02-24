@@ -1,5 +1,5 @@
 export interface IFollowing {
-    userId: string;
     followingId: string;
+    followType: string;
     followAt?: Date
 }

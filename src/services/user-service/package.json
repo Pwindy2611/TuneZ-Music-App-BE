@@ -30,6 +30,7 @@
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.9",
     "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.8.0",
     "tunez-be": "file:"
   },
   "devDependencies": {

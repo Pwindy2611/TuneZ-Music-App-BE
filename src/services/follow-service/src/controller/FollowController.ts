@@ -28,7 +28,7 @@ class FollowController {
     }
     async getFollowingCountApi(req: Request, res: Response) {
         try {
-            const { userId } = req.body;
+            const userId  = req.query.userId as string;
 
             const count = await FollowBaseService.getFollowingCount(userId);
 
@@ -48,7 +48,7 @@ class FollowController {
     }
     async getFollowersCountApi(req: Request, res: Response) {
         try {
-            const { userId } = req.body;
+            const  userId  = req.query.userId as string;
 
             const count = await FollowBaseService.getFollowersCount(userId);
 
@@ -68,7 +68,7 @@ class FollowController {
     }
     async getFollowingUserApi(req: Request, res: Response) {
         try {
-            const {userId} = req.body;
+            const userId = req.query.userId as string;
 
             const followingList = await FollowBaseService.getFollowingUsers(userId);
 
@@ -96,7 +96,7 @@ class FollowController {
     }
     async getFollowersApi(req:Request, res: Response){
         try {
-            const {userId} = req.body;
+            const userId = req.query.userId as string;
 
             const followersList = await FollowBaseService.getFollowers(userId);
 

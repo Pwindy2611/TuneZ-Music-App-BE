@@ -1,19 +1,19 @@
-import {database} from "../config/firebase/FireBaseConfig.js";
 import {IUserBaseService} from "../interface/IUserBaseService.js";
+import { injectable, inject } from "tsyringe";
+import {IUserBaseRepository} from "../interface/IUserBaseRepository.js";
 import {UserDto} from "../dto/UserDto.js";
-import {SubscriptionType} from "../enum/SubscriptionType.js";
-import {IUser} from "../interface/IUser.js";
 
-export const getAllUsersService: IUserBaseService["getAllUsers"] = async () => {
-    const usersRef = database.ref('users');
-    const snapshot = await usersRef.get();
-    if (!snapshot.exists()) {
-        return null;
+@injectable()
+export class GetAllUsersService implements IUserBaseService<void, UserDto[] | null> {
+    constructor(
+        @inject("UserBaseRepository") private repository: IUserBaseRepository
+    ){}
+    execute = async (): Promise<UserDto[] | null> => {
+        try {
+            return await this.repository.getAllUsers();
+        }catch (error) {
+            throw new Error(`Error while getting all users: ${error.message}`);
+        }
     }
+}
 
-    const usersData = snapshot.val();
-    return Object.values(usersData).map(user => {
-        const typedUser = user as IUser;
-        return new UserDto(typedUser);
-    });
-};
