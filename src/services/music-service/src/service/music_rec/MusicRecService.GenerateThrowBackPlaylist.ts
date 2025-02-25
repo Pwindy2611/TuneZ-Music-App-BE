@@ -1,8 +1,8 @@
-import {IMusicRecService} from "../interface/IMusicRecService.js";
-import {firestore} from '../config/firebase/FireBaseConfig.js'
+import {IMusicRecService} from "../../interface/IMusicRecService.js";
+import {firestore} from '../../config/firebase/FireBaseConfig.js'
 import { Timestamp } from 'firebase-admin/firestore';
-import FetchBase from "../util/base/FetchBase.js";
-import {auth} from "../config/firebase/FireBaseConfig.js";
+import FetchBase from "../../util/base/FetchBase.js";
+import {auth} from "../../config/firebase/FireBaseConfig.js";
 
 export const generateThrowBackPlaylist: IMusicRecService ["generateThrowBackPlaylist"] = async (userId: string, playlistLimit: number = 20, historyLimit: number = 100) => {
     try {

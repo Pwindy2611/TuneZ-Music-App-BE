@@ -1,7 +1,7 @@
-import {IMusicBaseService} from "../interface/IMusicBaseService.js";
-import {generateId} from "../util/helpers/AuthenticationHelper.js";
-import {database, auth} from "../config/firebase/FireBaseConfig.js";
-import UploadBase from "../util/base/UploadBase.js";
+import {IMusicBaseService} from "../../interface/IMusicBaseService.js";
+import {generateId} from "../../util/helpers/AuthenticationHelper.js";
+import {database, auth} from "../../config/firebase/FireBaseConfig.js";
+import UploadBase from "../../util/base/UploadBase.js";
 
 export const uploadMusicByUser: IMusicBaseService["uploadMusicByUser"] = async (music, musicFile, imgFile) => {
     try {

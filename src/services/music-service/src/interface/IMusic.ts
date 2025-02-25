@@ -1,5 +1,6 @@
 import {SongType} from '../enum/SongType.js'
 export interface IMusic {
+    musicId?: string;
     name: string;
     songType: SongType
     artist: string;
@@ -7,4 +8,8 @@ export interface IMusic {
     category: string;
     userId?: string;
     officialArtistId?: string;
+    playCount?: number;
+    loveCount?: number;
+    musicPath?: string;
+    imgPath?: string;
 }   

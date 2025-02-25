@@ -1,4 +1,4 @@
-import "reflect-metadata";
+import "reflect-metadata"
 import { container } from "tsyringe";
 import { CreateUserService } from "./UserBaseService.CreateUser.js";
 import { GetAllUsersService } from "./UserBaseService.GetAllUsers.js";

@@ -1,13 +1,13 @@
 import multer from 'multer'
 import {Request, Response} from "express";
-import {MusicBaseService} from "../service/MusicBaseService.js";
+import {MusicBaseService} from "../service/music_base/MusicBaseService.js";
 import {IMusicFile} from "../interface/IMusicFile.js";
 import {CreateMusicDto} from "../dto/CreateMusicDto.js";
 import {IMusic} from "../interface/IMusic.js";
 import {SongType} from "../enum/SongType.js";
 import {UploadMusicDto} from "../dto/UploadMusicDto.js";
-import {MusicRecService} from "../service/MusicRecService.js";
-import {getMusicLove} from "../service/MusicBaseService.GetMusicLove.js";
+import {MusicRecService} from "../service/music_rec/MusicRecService.js";
+import {getMusicLove} from "../service/music_base/MusicBaseService.GetMusicLove.js";
 
 
 const uploadMulter = multer({
@@ -69,7 +69,7 @@ class MusicController {
                     buffer: imgFile.buffer,
                 }
 
-                const newMusic = await MusicBaseService.createMusic(musicData, musicObject, imgObject);
+                const newMusic = await MusicBaseService.createMusic.execute(musicData, musicObject, imgObject);
 
                 res.status(201).json({
                     status: 201,
@@ -175,7 +175,7 @@ class MusicController {
 
     getAllMusicsApi = async (_req: Request, res: Response) => {
         try {
-            const musics = await MusicBaseService.getAllMusic();
+            const musics = await MusicBaseService.getAllMusic.execute();
 
             res.status(200).json({
                 status: 200,
@@ -206,7 +206,7 @@ class MusicController {
                 return;
             }
 
-            const musicsByArtist = await MusicBaseService.getMusicByArtist(artist);
+            const musicsByArtist = await MusicBaseService.getMusicByArtist.execute(artist);
 
             if (!musicsByArtist) {
                 res.status(404).json({
@@ -246,7 +246,7 @@ class MusicController {
                 return;
             }
 
-            const musicsByCategory = await MusicBaseService.getMusicByCategory(category);
+            const musicsByCategory = await MusicBaseService.getMusicByCategory.execute(category);
 
             if (!musicsByCategory) {
                 res.status(404).json({

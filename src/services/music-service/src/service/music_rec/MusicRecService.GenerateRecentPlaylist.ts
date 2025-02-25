@@ -1,6 +1,6 @@
-import {IMusicRecService} from "../interface/IMusicRecService.js";
-import FetchBase from "../util/base/FetchBase.js";
-import {auth} from "../config/firebase/FireBaseConfig.js";
+import {IMusicRecService} from "../../interface/IMusicRecService.js";
+import FetchBase from "../../util/base/FetchBase.js";
+import {auth} from "../../config/firebase/FireBaseConfig.js";
 
 export const generateRecentPlaylist: IMusicRecService["generateRecentPlaylist"] = async (userId, playlistLimit: number = 20, historyLimit: number = 50) => {
     try {

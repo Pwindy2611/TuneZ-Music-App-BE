@@ -10,7 +10,7 @@ export const followProxy = proxy('http://follow-service:3006', {
         console.log(`[PROXY] Requesting: ${proxyReqOpts.protocol}//${proxyReqOpts.host}${proxyReqOpts.path}`);
         return proxyReqOpts;
     },
-    userResDecorator: async (proxyRes, proxyResData, req, res) => {
+    userResDecorator: async (proxyRes, proxyResData, _req, res) => {
         res.removeHeader('access-control-allow-origin');
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');

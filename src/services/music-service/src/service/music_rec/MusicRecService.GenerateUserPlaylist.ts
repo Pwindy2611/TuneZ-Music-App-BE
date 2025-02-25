@@ -1,8 +1,8 @@
-import {IMusicRecService} from "../interface/IMusicRecService.js";
-import HistoryBase from "../util/base/HistoryBase.js";
-import {MusicBaseService} from "./MusicBaseService.js";
-import {GetMusicResponseDto} from "../dto/GetMusicResponseDto.js";
-import {auth} from '../config/firebase/FireBaseConfig.js'
+import {IMusicRecService} from "../../interface/IMusicRecService.js";
+import HistoryBase from "../../util/base/HistoryBase.js";
+import {MusicBaseService} from "../music_base/MusicBaseService.js";
+import {GetMusicResponseDto} from "../../dto/GetMusicResponseDto.js";
+import {auth} from '../../config/firebase/FireBaseConfig.js'
 export const generateUserPlaylist: IMusicRecService ["generateUserPlayList"] = async (userId) => {
     try{
         if(! await auth.getUser(<string>userId)){

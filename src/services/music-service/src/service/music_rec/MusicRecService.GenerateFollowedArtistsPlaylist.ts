@@ -1,7 +1,7 @@
-import {IMusicRecService} from "../interface/IMusicRecService.js";
-import {auth, firestore} from "../config/firebase/FireBaseConfig.js";
-import {GetMusicResponseDto} from "../dto/GetMusicResponseDto.js";
-import {MusicBaseService} from "./MusicBaseService.js";
+import {IMusicRecService} from "../../interface/IMusicRecService.js";
+import {auth, firestore} from "../../config/firebase/FireBaseConfig.js";
+import {GetMusicResponseDto} from "../../dto/GetMusicResponseDto.js";
+import {MusicBaseService} from "../music_base/MusicBaseService.js";
 
 export const generateFollowedArtistsPlaylist: IMusicRecService["generateFollowedArtistsPlaylist"] = async (userId, playlistLimit ) => {
     try{
@@ -17,7 +17,7 @@ export const generateFollowedArtistsPlaylist: IMusicRecService["generateFollowed
         if (artists.length === 0) return null;
 
         const artistMusicPromises = artists.map(async (artistName) => {
-            const musicDetails: GetMusicResponseDto[] = await MusicBaseService.getMusicByArtist(artistName) ?? [];
+            const musicDetails: GetMusicResponseDto[] = await MusicBaseService.getMusicByArtist.execute(artistName) ?? [];
             return { artistName, musicDetails };
         });
 

@@ -1,5 +1,5 @@
-import FetchBase from '../util/base/FetchBase.js'
-import {IMusicBaseService} from "../interface/IMusicBaseService.js";
+import FetchBase from '../../util/base/FetchBase.js'
+import {IMusicBaseService} from "../../interface/IMusicBaseService.js";
 
 export const getMusicLove: IMusicBaseService["getMusicLove"] = async (userId) => {
     try {
