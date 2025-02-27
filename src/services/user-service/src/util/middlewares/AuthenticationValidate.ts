@@ -4,6 +4,7 @@ import {UserBaseService} from '../../service/UserBaseService.js';
 import {validateEmail, validatePassword, validateUsername} from '../base/RegexBase.js';
 import {saveSessionTokenToDatabase} from "../base/TokenBase.js";
 import {mailService} from '../base/MailBase.js'
+import * as admin from 'firebase-admin';
 
 class AuthenticationValidate {
     validateRegister = async (req: Request, res: Response, next: NextFunction) => {
@@ -42,7 +43,7 @@ class AuthenticationValidate {
             const { idToken } = req.body;
 
             const user = await auth.verifyIdToken(idToken);
-            
+
             if (!user) {
                 res.status(400).json({status: 400, success: false, message: 'Invalid token' });
                 return;

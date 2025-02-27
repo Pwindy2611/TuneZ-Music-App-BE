@@ -16,11 +16,11 @@ export const generateUserPlaylist: IMusicRecService ["generateUserPlayList"] = a
         }
 
         const artistPromises = topArtists.map(artist =>
-            MusicBaseService.getMusicByArtist(artist).then(songs => ({ artist, songs: songs ?? [] }))
+            MusicBaseService.getMusicByArtist.execute(artist).then(songs => ({ artist, songs: songs ?? [] }))
         );
 
         const categoryPromises = topCategories.map(category =>
-            MusicBaseService.getMusicByCategory(category).then(songs => ({ category, songs: songs ?? [] }))
+            MusicBaseService.getMusicByCategory.execute(category).then(songs => ({ category, songs: songs ?? [] }))
         );
 
         const [artistResults, categoryResults] = await Promise.all([

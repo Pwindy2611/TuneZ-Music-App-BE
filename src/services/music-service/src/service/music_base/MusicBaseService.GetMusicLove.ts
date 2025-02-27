@@ -1,16 +1,11 @@
 import FetchBase from '../../util/base/FetchBase.js'
 import {IMusicBaseService} from "../../interface/IMusicBaseService.js";
-
-export const getMusicLove: IMusicBaseService["getMusicLove"] = async (userId) => {
-    try {
-        const musicIds = await FetchBase.fetchMusicIdsFromLove(userId, 50);
-        const uniqueMusicIds = [...new Set(musicIds)];
-
-        const musicDetails = await FetchBase.fetchMusicDetails(uniqueMusicIds);
-        return musicDetails.length > 0 ? musicDetails : null;
-
-    } catch (error) {
-        console.error("Error fetching music history:", error);
-        throw error;
-    }
-};
+import {mediator} from "../../config/container/Container.js";
+import {GetMusicLoveQuery} from "../query/GetMusicLoveQuery.js";
+import {singleton} from "tsyringe";
+@singleton()
+export class GetMusicLoveService {
+    execute: IMusicBaseService["getMusicLove"] = async (userId) => {
+        return await mediator.send(new GetMusicLoveQuery(userId));
+    };
+}

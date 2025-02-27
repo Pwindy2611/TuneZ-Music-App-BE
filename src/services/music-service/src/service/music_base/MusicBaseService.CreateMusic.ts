@@ -1,6 +1,6 @@
 import {IMusicBaseService} from "../../interface/IMusicBaseService.js";
 import {generateId} from "../../util/helpers/AuthenticationHelper.js";
-import {mediator, repository} from "../mediator/Container.js";
+import {mediator, repository} from "../../config/container/Container.js";
 import {CreateMusicCommand} from "../command/CreateMusicCommand.js";
 import {singleton} from "tsyringe";
 @singleton()

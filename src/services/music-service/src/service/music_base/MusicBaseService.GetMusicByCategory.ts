@@ -1,5 +1,5 @@
 import {IMusicBaseService} from "../../interface/IMusicBaseService.js";
-import {mediator} from "../mediator/Container.js";
+import {mediator} from "../../config/container/Container.js";
 import {GetMusicByCategoryQuery} from "../query/GetMusicByCategoryQuery.js";
 import {singleton} from "tsyringe";
 @singleton()

@@ -1,5 +1,5 @@
 import {IMusicBaseRepository} from "../interface/IMusicBaseRepository.js";
-import {database} from "../config/firebase/FireBaseConfig.js";
+import {auth, database} from "../config/firebase/FireBaseConfig.js";
 import FetchBase from "../util/base/FetchBase.js";
 import {singleton} from "tsyringe";
 import UploadBase from "../util/base/UploadBase.js";
@@ -23,6 +23,30 @@ export class MusicBaseRepository implements IMusicBaseRepository {
             duration: musicData.duration,
             category: musicData.category,
             officialArtistId: musicData.officialArtistId,
+            playCount: musicData.playCount?? 0,
+            loveCount: musicData.loveCount?? 0,
+            musicPath: musicPath ?? '',
+            imgPath: imgPath?? ''
+        }
+        await musicRef.set(newMusicData);
+        return musicData.musicId;
+    }
+    async uploadMusic(musicData: any): Promise<string> {
+        const musicRef = database.ref(`musics/${musicData.musicId}`);
+
+        const [musicPath, imgPath] = await Promise.all([
+            UploadBase.uploadAndGetUrl(musicData.musicFile, musicData.musicId),
+            UploadBase.uploadAndGetUrl(musicData.imgFile, musicData.musicId)
+        ]);
+
+        const newMusicData: IMusic = {
+            musicId: musicData.musicId,
+            name: musicData.name,
+            songType: musicData.songType,
+            artist: musicData.artist,
+            duration: musicData.duration,
+            category: musicData.category,
+            userId: musicData.userId,
             playCount: musicData.playCount?? 0,
             loveCount: musicData.loveCount?? 0,
             musicPath: musicPath ?? '',
@@ -98,6 +122,9 @@ export class MusicBaseRepository implements IMusicBaseRepository {
         const snapshot = await artistRef.once("value");
 
         return snapshot.exists();
+    }
+    async isUserExist(userId: string): Promise<boolean> {
+        return !!(await auth.getUser(userId));
     }
 
 }
