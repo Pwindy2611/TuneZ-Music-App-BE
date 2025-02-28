@@ -1,21 +1,19 @@
-// UserBaseService.CreateUser.ts
 import { injectable, inject } from "tsyringe";
-import { IUserBaseRepository } from "../interface/IUserBaseRepository.js";
 import { IUser } from "../interface/IUser.js";
 import { UserRole } from "../enum/UserRole.js";
 import { SubscriptionType } from "../enum/SubscriptionType.js";
 import dotenv from "dotenv";
 import {IUserBaseService} from "../interface/IUserBaseService.js";
+import {UserBaseRepository} from "../repository/UserBaseRepository.js";
 
 dotenv.config();
 
 @injectable()
-export class CreateUserService implements IUserBaseService<IUser, string> {
+export class CreateUserService {
     constructor(
-        @inject("UserBaseRepository") private repository: IUserBaseRepository
-    ) {}
+        @inject("UserBaseRepository") private repository: UserBaseRepository) {}
 
-    execute = async (user: IUser): Promise<string> => {
+    execute: IUserBaseService["createUser"] = async (user) => {
         try {
             const role = UserRole.LISTENER;
             const sessionToken = null;

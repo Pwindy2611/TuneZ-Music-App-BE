@@ -1,13 +1,12 @@
 import { injectable, inject } from "tsyringe";
-import {IUserBaseRepository} from "../interface/IUserBaseRepository.js";
 import {IUserBaseService} from "../interface/IUserBaseService.js";
-import {IUser} from "../interface/IUser.js";
+import {UserBaseRepository} from "../repository/UserBaseRepository.js";
 @injectable()
-export class GetUserByEmailService implements IUserBaseService<string, IUser | null>{
-    constructor(@inject("UserBaseRepository") private repository: IUserBaseRepository) {
+export class GetUserByEmailService{
+    constructor(@inject("UserBaseRepository") private repository: UserBaseRepository) {
     }
 
-    execute = async (email: string): Promise<IUser | null> => {
+    execute: IUserBaseService["getUserByEmail"] = async (email) => {
          try {
              return await this.repository.getUserByEmail(email);
          }catch (error) {

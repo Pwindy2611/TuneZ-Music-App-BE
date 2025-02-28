@@ -1,14 +1,12 @@
 import {IUserBaseService} from "../interface/IUserBaseService.js";
 import { injectable, inject } from "tsyringe";
-import {IUserBaseRepository} from "../interface/IUserBaseRepository.js";
-import {UserDto} from "../dto/UserDto.js";
+import {UserBaseRepository} from "../repository/UserBaseRepository.js";
 
 @injectable()
-export class GetAllUsersService implements IUserBaseService<void, UserDto[] | null> {
+export class GetAllUsersService {
     constructor(
-        @inject("UserBaseRepository") private repository: IUserBaseRepository
-    ){}
-    execute = async (): Promise<UserDto[] | null> => {
+        @inject("UserBaseRepository") private repository: UserBaseRepository){}
+    execute: IUserBaseService["getAllUsers"] = async () => {
         try {
             return await this.repository.getAllUsers();
         }catch (error) {

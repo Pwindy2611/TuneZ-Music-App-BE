@@ -1,8 +1,8 @@
 import {IUserBaseRepository} from "../interface/IUserBaseRepository.js";
 import {IUser} from "../interface/IUser.js";
 import {UserDto} from "../dto/UserDto.js";
-import {database} from "../config/firebase/FireBaseConfig.js";
-import { injectable } from "tsyringe";
+import {auth, database} from "../config/firebase/FireBaseConfig.js";
+import {injectable} from "tsyringe";
 
 @injectable()
 export class UserBaseRepository implements IUserBaseRepository {
@@ -37,6 +37,12 @@ export class UserBaseRepository implements IUserBaseRepository {
         } else {
             return null;
         }
+    }
+
+    async getUserCustomToken(email: string): Promise<string | null> {
+        const user = await auth.getUserByEmail(email);
+        const token = await auth.createCustomToken(user.uid)
+        return token || null;
     }
 
 }

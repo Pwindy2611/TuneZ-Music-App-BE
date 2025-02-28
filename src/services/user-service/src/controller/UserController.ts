@@ -17,6 +17,18 @@ class UserController {
         }
     };
 
+    getUserCustomTokenApi = async (req: Request, res: Response) => {
+        try {
+            const email = req.query.email as string;
+
+            const token = await UserBaseService.getUserCustomToken.execute(email);
+
+            res.status(200).json({ status: 200, token });
+
+        }catch (error) {
+            res.status(500).json({ status: 500, success: false, message: error.message });
+        }
+    }
     registerApi = async (req: Request, res: Response) => {
         try {
             const { email, password, username } = req.body;
@@ -27,19 +39,16 @@ class UserController {
                 displayName: username,
             });
 
-            // Gửi email xác minh
             const link = await auth.generateEmailVerificationLink(email);
             await mailService.sendVerificationEmail(email, link);
             const firebaseUser = await auth.getUserByEmail(email);
 
-            // Tạo user mới
             const newUser = await UserBaseService.createUserService.execute({
                 _id: firebaseUser.uid,
                 email,
                 username,
             });
 
-            // Trả về response thành công
             res.status(201).json({
                 status: 201,
                 success: true,

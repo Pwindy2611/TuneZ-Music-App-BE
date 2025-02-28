@@ -44,6 +44,8 @@ class AuthenticationValidate {
 
             const user = await auth.verifyIdToken(idToken);
 
+            const expiresIn = 60 * 60 * 24 * 14 * 1000;
+
             if (!user) {
                 res.status(400).json({status: 400, success: false, message: 'Invalid token' });
                 return;
@@ -69,15 +71,20 @@ class AuthenticationValidate {
                 console.log(`Created new user for ${user.email} with provider: ${user.firebase.sign_in_provider}`);
             }
             
-            const firebaseToken = await auth.createCustomToken(user.uid);
+            const sessionCookie = await auth.createSessionCookie(idToken,{expiresIn});
 
-            await saveSessionTokenToDatabase(user.uid, firebaseToken);
+            await saveSessionTokenToDatabase(user.uid, sessionCookie);
+
+
+            res.cookie('session', sessionCookie, {
+                maxAge: expiresIn,
+                httpOnly: true,
+            });
 
             res.status(200).json({
                 status: 200,
                 success: true,
                 message: "Login successful",
-                firebaseToken,
             });
         } catch (error: unknown) {
             if (error instanceof Error) {

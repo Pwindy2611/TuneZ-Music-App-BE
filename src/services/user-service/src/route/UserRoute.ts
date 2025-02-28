@@ -10,6 +10,7 @@ router.post('/login', authValidate.validateLogin);
 
 //Get Request
 router.get('/getAllUser', MusicController.getAllUsersApi);
+router.get('/getUserCustomToken', MusicController.getUserCustomTokenApi);
 
 //Send Email
 router.post('/sendEmailVerify', MusicController.sendVerificationEmailApi);
