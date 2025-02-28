@@ -6,4 +6,5 @@ export interface IMusicBaseRepository {
     getMusicHistory(userId: string): Promise<any>;
     getMusicLove(userId: string): Promise<any>;
     isOfficialArtistExist(artistId: string): Promise<boolean>;
+    isUserExist(userId: string): Promise<boolean>;
 }

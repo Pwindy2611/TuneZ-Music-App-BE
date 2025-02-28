@@ -1,9 +1,9 @@
 import {IMusicBaseService} from "../../interface/IMusicBaseService.js";
 import {generateId} from "../../util/helpers/AuthenticationHelper.js";
-import {mediator, repository} from "../../config/container/Container.js";
-import {CreateMusicCommand} from "../command/CreateMusicCommand.js";
-import {singleton} from "tsyringe";
-@singleton()
+import {musicBaseMediator, musicBaseRepository} from "../../config/container/Container.js";
+import {CreateMusicCommand} from "./command/CreateMusicCommand.js";
+import {Lifecycle, scoped} from "tsyringe";
+@scoped(Lifecycle.ResolutionScoped)
 export class CreateMusicService{
 
     execute: IMusicBaseService["createMusic"] = async (music, musicFile, imgFile) => {
@@ -11,7 +11,7 @@ export class CreateMusicService{
         const loveCount = 0;
         const playCount = 0;
 
-        if(!await repository.isOfficialArtistExist(<string>music.officialArtistId)) {
+        if(!await musicBaseRepository.isOfficialArtistExist(<string>music.officialArtistId)) {
             return Promise.reject(new Error(("Error creating new music: Official Artist is not exist")));
         }
 
@@ -23,7 +23,7 @@ export class CreateMusicService{
             musicFile,
             imgFile
         }
-        return await mediator.send(new CreateMusicCommand(musicData));
+        return await musicBaseMediator.send(new CreateMusicCommand(musicData));
     };
 }
 

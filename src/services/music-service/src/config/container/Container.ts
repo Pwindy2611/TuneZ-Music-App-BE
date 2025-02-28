@@ -1,13 +1,12 @@
 import "reflect-metadata"
 import { container } from "tsyringe";
 import { MusicBaseRepository } from "../../repository/MusicBaseRepository.js";
-import { Mediator } from "../../service/mediator/Mediator.js";
+import { MusicBaseMediator } from "../../service/MusicBaseMediator.js";
+import {MusicRecMediator} from "../../service/MusicRecMediator.js";
 
-//REPOSITORIES
-container.registerSingleton(MusicBaseRepository);
-container.registerSingleton(Mediator);
 
-const mediator = container.resolve(Mediator) ;
-const repository = container.resolve(MusicBaseRepository);
+const musicBaseMediator = container.resolve(MusicBaseMediator);
+const musicRecMediator = container.resolve(MusicRecMediator);
+const musicBaseRepository = container.resolve(MusicBaseRepository);
 
-export {mediator, repository, container}
+export {musicBaseMediator, musicRecMediator, musicBaseRepository, container}

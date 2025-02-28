@@ -1,49 +1,10 @@
 import {IMusicRecService} from "../../interface/IMusicRecService.js";
-import HistoryBase from "../../util/base/HistoryBase.js";
-import {MusicBaseService} from "../music_base/MusicBaseService.js";
-import {GetMusicResponseDto} from "../../dto/GetMusicResponseDto.js";
-import {auth} from '../../config/firebase/FireBaseConfig.js'
-export const generateUserPlaylist: IMusicRecService ["generateUserPlayList"] = async (userId) => {
-    try{
-        if(! await auth.getUser(<string>userId)){
-            return Promise.reject(new Error(("Error creating new music: User is not exist")));
-        }
-        
-        const {topArtists, topCategories} = await HistoryBase.getUserPreferences(userId)
-
-        if (!topArtists.length && !topCategories.length) {
-            return null;
-        }
-
-        const artistPromises = topArtists.map(artist =>
-            MusicBaseService.getMusicByArtist.execute(artist).then(songs => ({ artist, songs: songs ?? [] }))
-        );
-
-        const categoryPromises = topCategories.map(category =>
-            MusicBaseService.getMusicByCategory.execute(category).then(songs => ({ category, songs: songs ?? [] }))
-        );
-
-        const [artistResults, categoryResults] = await Promise.all([
-            Promise.all(artistPromises),
-            Promise.all(categoryPromises)
-        ]);
-
-        const playlistsByArtist: Record<string, GetMusicResponseDto[]> = {};
-        artistResults.forEach(({ artist, songs }) => {
-            playlistsByArtist[artist] = songs;
-        });
-
-        const playlistsByCategory: Record<string, GetMusicResponseDto[]> = {};
-        categoryResults.forEach(({ category, songs }) => {
-            playlistsByCategory[category] = songs;
-        });
-
-        return { playlistsByArtist, playlistsByCategory };
-        
-    }catch (error: unknown) {
-        if (error instanceof Error) {
-            throw new Error("Error generating user playlist: " + error.message);
-        }
-        throw new Error("Unknown error occurred while generating user playlist.");
+import {musicRecMediator} from "../../config/container/Container.js";
+import {GenerateUserPlaylistQuery} from "./query/GenerateUserPlaylistQuery.js";
+import {singleton} from "tsyringe";
+@singleton()
+export class GenerateUserPlaylistService {
+    execute: IMusicRecService["generateUserPlayList"] = async (userId) => {
+        return musicRecMediator.send(new GenerateUserPlaylistQuery(userId));
     }
 }

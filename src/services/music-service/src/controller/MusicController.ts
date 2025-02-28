@@ -338,7 +338,7 @@ class MusicController {
         try {
             const {userId} = req.body;
 
-            const userMusicPlaylist = await MusicRecService.generateUserPlaylist(userId)
+            const userMusicPlaylist = await MusicRecService.generateUserPlaylist.execute(userId)
 
             if(!userMusicPlaylist) {
                 res.status(404).json({
@@ -369,7 +369,7 @@ class MusicController {
         try {
             const {userId} = req.body;
 
-            const recentMusicPlaylist = await MusicRecService.generateRecentPlaylist(userId, 20, 50);
+            const recentMusicPlaylist = await MusicRecService.generateRecentPlaylist.execute(userId, 20, 50);
 
             if(!recentMusicPlaylist) {
                 res.status(404).json({
@@ -400,7 +400,7 @@ class MusicController {
         try {
             const {userId} = req.body;
 
-            const throwBackMusicPlaylist = await MusicRecService.generateThrowBackPlaylist(userId, 20, 50);
+            const throwBackMusicPlaylist = await MusicRecService.generateThrowBackPlaylist.execute(userId, 20, 50);
 
             if(!throwBackMusicPlaylist) {
                 res.status(404).json({
@@ -430,7 +430,7 @@ class MusicController {
         try {
             const {userId} = req.body;
 
-            const followedArtistsMusicPlaylist = await MusicRecService.generateFollowedArtistsPlaylist(userId, 20);
+            const followedArtistsMusicPlaylist = await MusicRecService.generateFollowedArtistsPlaylist.execute(userId, 20);
 
             if(!followedArtistsMusicPlaylist) {
                 res.status(404).json({
