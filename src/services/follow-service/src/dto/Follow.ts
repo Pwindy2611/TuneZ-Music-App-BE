@@ -1,32 +1,22 @@
-import { IsString, IsNotEmpty, validateOrReject } from 'class-validator';
+import {IsString, IsNotEmpty, validateOrReject, IsArray} from 'class-validator';
 import { auth, database } from '../config/firebase/FireBaseConfig';
 
-export class FollowUserDto {
+export class Follow {
     @IsString()
     @IsNotEmpty()
     userId: string;
 
-    @IsString()
+    @IsArray()
     @IsNotEmpty()
-    userName: string;
-
-    @IsString()
-    @IsNotEmpty()
-    followingId: string;
-
-    @IsString()
-    @IsNotEmpty()
-    followingName: string;
+    followingIds: string[];
 
     @IsString()
     @IsNotEmpty()
     followType: string;
 
-    constructor(userId: string, userName: string, followingId: string, followingName: string, followType: string) {
+    constructor(userId: string, followingIds: string[], followType: string) {
         this.userId = userId;
-        this.followingId = followingId;
-        this.followingName = followingName;
-        this.userName = userName;
+        this.followingIds = followingIds;
         this.followType = followType;
     }
 
@@ -41,14 +31,17 @@ export class FollowUserDto {
             }
 
             try {
-                await auth.getUser(this.followingId);
-            } catch (error) {
-                const officialArtistRef = database.ref(`/officialArtist/${this.followingId}`);
-                const snapshot = await officialArtistRef.once('value');
-                if (!snapshot.exists()) {
-                    return Promise.reject(new Error('Invalid followingId: User or official artist not found'));
+                for (const followingId of this.followingIds) {
+                    const officialArtistRef = database.ref(`/officialArtist/${followingId}`);
+                    const snapshot = await officialArtistRef.once('value');
+                    if (!snapshot.exists()) {
+                        await auth.getUser(followingId);
+                    }
                 }
+            } catch (error) {
+                return Promise.reject(new Error(`Invalid followingId: ${error.message}`));
             }
+
 
             return true;
         } catch (errors) {

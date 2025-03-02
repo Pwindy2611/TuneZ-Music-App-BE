@@ -6,6 +6,6 @@ import {GenerateFollowedArtistsPlaylistQuery} from "../query/GenerateFollowedArt
 export class GenerateFollowedArtistsPlaylistHandler {
     constructor(@inject(MusicRecRepository) private musicRepo: MusicRecRepository) {}
     async execute(query: GenerateFollowedArtistsPlaylistQuery) {
-        return await this.musicRepo.generateFollowedArtistsPlaylist(query.userId, query.playlistLimit);
+        return await this.musicRepo.generateFollowedArtistsPlaylist(query.userId);
     }
 }

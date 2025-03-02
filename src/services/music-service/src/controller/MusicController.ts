@@ -430,7 +430,7 @@ class MusicController {
         try {
             const {userId} = req.body;
 
-            const followedArtistsMusicPlaylist = await MusicRecService.generateFollowedArtistsPlaylist.execute(userId, 20);
+            const followedArtistsMusicPlaylist = await MusicRecService.generateFollowedArtistsPlaylist.execute(userId);
 
             if(!followedArtistsMusicPlaylist) {
                 res.status(404).json({

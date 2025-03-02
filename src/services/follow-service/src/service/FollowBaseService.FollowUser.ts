@@ -5,53 +5,45 @@ import {FollowType} from "../enum/FollowType";
 
 export const followUser: IFollowBaseService["followUser"] = async (follow) => {
     try {
-        const { userId, userName, followingId, followingName, followType} = follow;
+        const { userId, followingIds, followType} = follow;
 
-        let followingCollectionRef;
-        let followerCollectionRef;
+        for (const followingId of followingIds) {
+            const followingCollectionRef = firestore.collection('users').doc(userId).collection('following').doc();
 
-        if (followType === "user") {
-            followingCollectionRef = firestore.collection('users').doc(userId).collection('following').doc();
-            followerCollectionRef = firestore.collection('users').doc(followingId).collection('followers').doc();
-        } else if (followType === "officialArtist") {
-            followingCollectionRef = firestore.collection('users').doc(userId).collection('following').doc();
-            followerCollectionRef = firestore.collection('officialArtists').doc(followingId).collection('followers').doc();
-        } else {
-            return Promise.reject(new Error('Invalid following type'));
+            const followQuery = await firestore
+                .collection('users')
+                .doc(userId)
+                .collection('following')
+                .where('followingId', '==', followingId)
+                .limit(1)
+                .get();
+
+            if (!followQuery.empty) {
+                await Promise.reject(new Error('User is already following this account'));
+            }
+
+            const followerCollection = followType === "user"
+                ? firestore.collection('users')
+                : firestore.collection('officialArtists');
+
+            const followerCollectionRef = followerCollection.doc(followingId).collection('followers').doc();
+
+            const batch = firestore.batch();
+
+            batch.set(followingCollectionRef, {
+                followingId: followingId,
+                followType: followType,
+                followAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+
+            batch.set(followerCollectionRef, {
+                followerId: userId,
+                followType: FollowType.USER,
+                followAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+
+            await batch.commit();
         }
-
-        const followQuery = await firestore
-            .collection('users')
-            .doc(userId)
-            .collection('following')
-            .where('followingId', '==', followingId)
-            .limit(1)
-            .get();
-
-        if (!followQuery.empty) {
-            return Promise.reject(new Error('User is already following this account'));
-        }
-
-        const batch = firestore.batch();
-
-
-        batch.set(followingCollectionRef, {
-            followingName: followingName,
-            followingId: followingId,
-            followType: followType,
-            followAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
-
-        batch.set(followerCollectionRef, {
-            followerName: userName,
-            followerId: userId,
-            followType: FollowType.USER,
-            followAt: admin.firestore.FieldValue.serverTimestamp(),
-         });
-
-        await batch.commit();
-
-        return followingCollectionRef.id;
     } catch (error) {
         console.error('Error in followUser:', error);
         throw error;

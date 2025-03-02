@@ -7,5 +7,5 @@ export interface IMusicRecService {
     } | null>;
     generateRecentPlaylist(userId: string, playlistLimit: number, historyLimit: number): Promise<GetMusicResponseDto[] | null>;
     generateThrowBackPlaylist(userId: string, playlistLimit: number, historyLimit: number): Promise<GetMusicResponseDto[] | null>;
-    generateFollowedArtistsPlaylist(userId: string, playlistLimit: number): Promise<{playlistByFollowed: Record<string, GetMusicResponseDto[]>} | null>;
+    generateFollowedArtistsPlaylist(userId: string): Promise<{playlistByFollowed: Record<string, GetMusicResponseDto[]>} | null>;
 }

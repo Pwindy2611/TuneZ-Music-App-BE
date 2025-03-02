@@ -1,8 +1,8 @@
 import {GetFollowResponseDto} from "../dto/GetFollowResponseDto";
-import {FollowUserDto} from "../dto/FollowUserDto";
+import {Follow} from "../dto/Follow";
 
 export interface IFollowBaseService {
-    followUser(follow : FollowUserDto): Promise<string>;
+    followUser(follow : Follow): Promise<void>;
     getFollowingCount(userId: string): Promise<number>;
     getFollowersCount(userId: string): Promise<number>;
     getFollowingUsers(userId: string): Promise<GetFollowResponseDto[]>;

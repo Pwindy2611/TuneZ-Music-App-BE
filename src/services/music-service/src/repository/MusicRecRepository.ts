@@ -1,6 +1,6 @@
 import {singleton} from "tsyringe";
 import {IMusicRecRepository} from "../interface/IMusicRecRepository.js";
-import {auth, firestore} from "../config/firebase/FireBaseConfig.js";
+import {auth, database, firestore} from "../config/firebase/FireBaseConfig.js";
 import {GetMusicResponseDto} from "../dto/GetMusicResponseDto.js";
 import {MusicBaseService} from "../service/music_base/MusicBaseService.js";
 import FetchBase from "../util/base/FetchBase.js";
@@ -9,7 +9,7 @@ import HistoryBase from "../util/base/HistoryBase.js";
 
 @singleton()
 export class MusicRecRepository implements IMusicRecRepository {
-    async generateFollowedArtistsPlaylist(userId: string, playlistLimit?: number): Promise<any> {
+    async generateFollowedArtistsPlaylist(userId: string): Promise<any> {
         try {
             if(!await this.isUserExist(userId)) {
                 return Promise.reject(new Error("User not found"));
@@ -18,22 +18,34 @@ export class MusicRecRepository implements IMusicRecRepository {
             const followingRef = firestore.collection('users').doc(userId).collection('following');
             const followingSnapshot = await followingRef.where('followType', '==', 'officialArtist').get();
 
-            const artists = followingSnapshot.docs.map(doc => doc.data().followingName);
+            const artistIds  = followingSnapshot.docs.map(doc => doc.data().followingId);
 
-            if (artists.length === 0) return null;
+            if (artistIds .length === 0) return null;
 
-            const artistMusicPromises = artists.map(async (artistName) => {
-                const musicDetails: GetMusicResponseDto[] = await MusicBaseService.getMusicByArtist.execute(artistName) ?? [];
-                return { artistName, musicDetails };
+            const artistPromises = artistIds.map(async (artistId) => {
+                const artistRef = database.ref(`/officialArtist/${artistId}`);
+                const snapshot = await artistRef.once('value');
+                if (!snapshot.exists()) return null;
+
+                return {
+                    artistId,
+                    artistName: snapshot.val().name
+                };
             });
 
-            const artistMusicArray = await Promise.all(artistMusicPromises);
+            const artists = (await Promise.all(artistPromises)).filter((artist): artist is { artistId: string; artistName: string } => artist !== null);
+
+            const artistMusicPromises = artists.map(async ({ artistId, artistName }) => {
+                const musicDetails: GetMusicResponseDto[] = await MusicBaseService.getMusicByArtist.execute(artistName) ?? [];
+                return { artistId, artistName, musicDetails };
+            });
+
+            const artistMusicDetails = await Promise.all(artistMusicPromises);
 
             const playlistByFollowed: Record<string, GetMusicResponseDto[]> = {};
-            artistMusicArray.forEach(item => {
+            artistMusicDetails.forEach(item => {
                 if (item.musicDetails && item.musicDetails.length > 0) {
-                    const artistName = item.musicDetails[0].artist;
-                    playlistByFollowed[artistName] = item.musicDetails;
+                    playlistByFollowed[item.artistName] = item.musicDetails;
                 }
             });
 
@@ -41,7 +53,6 @@ export class MusicRecRepository implements IMusicRecRepository {
         }catch (error) {
             throw new Error(error.message);
         }
-
     }
 
     async generateRecentPlaylist(userId: string, playlistLimit: number, historyLimit: number): Promise<any> {

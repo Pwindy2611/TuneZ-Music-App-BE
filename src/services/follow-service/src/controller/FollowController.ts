@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import {FollowUserDto} from "../dto/FollowUserDto";
+import {Follow} from "../dto/Follow";
 import {FollowBaseService} from "../service/FollowBaseService";
 class FollowController {
     async followUserApi(req: Request, res: Response) {
         try {
-            const { userId, userName, followingId, followingName, followType} = req.body;
+            const { userId, followingIds, followType} = req.body;
 
-            const followUserDto = new FollowUserDto(userId, userName, followingId, followingName, followType);
+            const followUserDto = new Follow(userId, followingIds, followType);
 
             await followUserDto.validate();
 

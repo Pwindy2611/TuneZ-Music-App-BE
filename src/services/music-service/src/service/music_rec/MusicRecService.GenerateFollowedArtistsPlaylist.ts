@@ -8,7 +8,7 @@ import {singleton} from "tsyringe";
 
 @singleton()
 export class GenerateFollowedArtistsPlaylistService{
-    execute: IMusicRecService["generateFollowedArtistsPlaylist"] = async (userId, playlistLimit ) => {
-        return await musicRecMediator.send(new GenerateFollowedArtistsPlaylistQuery(userId, playlistLimit)  );
+    execute: IMusicRecService["generateFollowedArtistsPlaylist"] = async (userId) => {
+        return await musicRecMediator.send(new GenerateFollowedArtistsPlaylistQuery(userId)  );
     }
 }
