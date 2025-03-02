@@ -34,3 +34,8 @@ services:
     ports:
       - "9233:9227"
     command: npm run debug
+
+  playlist-service:
+    ports:
+      - "9234:9227"
+    command: npm run debug

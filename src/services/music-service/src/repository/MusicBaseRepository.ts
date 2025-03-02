@@ -8,15 +8,15 @@ import {IMusic} from "../interface/IMusic.js";
 @singleton()
 export class MusicBaseRepository implements IMusicBaseRepository {
     async createMusic(musicData: any): Promise<string> {
-        const musicRef = database.ref(`musics/${musicData.musicId}`);
+        const musicRef = database.ref(`musics`).push();
+        const musicId = musicRef.key as string;
 
         const [musicPath, imgPath] = await Promise.all([
-            UploadBase.uploadAndGetUrl(musicData.musicFile, musicData.musicId),
-            UploadBase.uploadAndGetUrl(musicData.imgFile, musicData.musicId)
+            UploadBase.uploadAndGetUrl(musicData.musicFile, musicId),
+            UploadBase.uploadAndGetUrl(musicData.imgFile, musicId)
         ]);
 
         const newMusicData: IMusic = {
-            musicId: musicData.musicId,
             name: musicData.name,
             songType: musicData.songType,
             artist: musicData.artist,
@@ -29,18 +29,17 @@ export class MusicBaseRepository implements IMusicBaseRepository {
             imgPath: imgPath?? ''
         }
         await musicRef.set(newMusicData);
-        return musicData.musicId;
+        return musicId;
     }
     async uploadMusic(musicData: any): Promise<string> {
-        const musicRef = database.ref(`musics/${musicData.musicId}`);
-
+        const musicRef = database.ref(`musics`).push();
+        const musicId = musicRef.key as string;
         const [musicPath, imgPath] = await Promise.all([
-            UploadBase.uploadAndGetUrl(musicData.musicFile, musicData.musicId),
-            UploadBase.uploadAndGetUrl(musicData.imgFile, musicData.musicId)
+            UploadBase.uploadAndGetUrl(musicData.musicFile, musicId),
+            UploadBase.uploadAndGetUrl(musicData.imgFile, musicId)
         ]);
 
         const newMusicData: IMusic = {
-            musicId: musicData.musicId,
             name: musicData.name,
             songType: musicData.songType,
             artist: musicData.artist,
@@ -53,7 +52,7 @@ export class MusicBaseRepository implements IMusicBaseRepository {
             imgPath: imgPath?? ''
         }
         await musicRef.set(newMusicData);
-        return musicData.musicId;
+        return musicId;
     }
 
     async getAllMusic(): Promise<any> {

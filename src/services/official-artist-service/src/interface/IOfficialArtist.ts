@@ -1,5 +1,4 @@
 export interface IOfficialArtist {
-    _id?: string;
     name: string;
     verified: boolean;
     profile: {

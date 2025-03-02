@@ -1,26 +1,34 @@
 import {IOfficialArtistBaseService} from "../interface/IOfficialArtistBaseService.js";
-import {generateId} from "../util/helpers/AuthenticationHelper.js";
 import {database} from "../config/firebase/FireBaseConfig.js"
 import UploadBase from "../util/base/UploadBase.js";
+import {IOfficialArtist} from "../interface/IOfficialArtist.js";
 export const createOfficialArtist: IOfficialArtistBaseService["createOfficialArtist"] = async (artist, imgFile) => {
-    try{
-        
-        artist._id = generateId();
-        
-        const uploadImgData = await UploadBase.uploadFile(imgFile, artist._id);
-        const imgPath = await UploadBase.getSignedFileUrl(uploadImgData);
+    try {
+        const artistRef = database.ref("officialArtist").push();
+        const artistId = artistRef.key as string;
 
-        artist.profile.profileImage = imgPath ?? "";
-        artist.createdAt = new Date().toISOString();
-        artist.updatedAt = new Date().toISOString();
+        let imgPath = "";
+        if (imgFile) {
+            const uploadImgData = await UploadBase.uploadFile(imgFile, artistId);
+            imgPath = await UploadBase.getSignedFileUrl(uploadImgData) ?? "";
+        }
 
-        
-        
-        const artistRef = database.ref(`officialArtist/${artist._id}`)
-        
-        await artistRef.set(artist);
-        
-        return artist._id;
+        const newArtist: IOfficialArtist = {
+            name: artist.name,
+            verified: artist.verified ?? false,
+            profile: {
+                bio: artist.profile.bio ?? "",
+                profileImage: imgPath, // Ảnh sau khi upload
+                genres: artist.profile.genres ?? []
+            },
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+
+
+        await artistRef.set(newArtist);
+
+        return artistId;
     }catch (error){
         if (error instanceof Error) {
             throw new Error("Error creating new official artist: " + error.message);
