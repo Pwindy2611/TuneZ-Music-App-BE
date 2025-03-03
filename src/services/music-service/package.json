@@ -1,12 +1,12 @@
 {
-  "name": "tunez-be",
+  "name": "music-service",
   "version": "1.0.0",
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
     "start": "tsx src/index.ts",
     "dev": "npx tsx watch src/index.ts",
-    "debug": "node --inspect=0.0.0.0:9228 --nolazy --loader tsx src/index.ts",
+    "debug": "node --inspect=0.0.0.0:9227 --nolazy --import tsx src/index.ts",
     "build": "npx"
   },
   "keywords": [],
@@ -28,11 +28,11 @@
     "express": "^5.0.0",
     "firebase": "^11.1.0",
     "firebase-admin": "^13.0.2",
-    "mega": "^0.2.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.9",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.8.0"
   },
   "devDependencies": {
     "@types/compression": "^1.7.5",

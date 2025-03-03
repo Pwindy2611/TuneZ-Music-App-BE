@@ -4,14 +4,17 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
-import musicRoute from './routes/MusicRoute.js';
+import musicRoute from './route/MusicRoute.js';
 import 'reflect-metadata';
+import './config/container/MusicBaseService.HandlerRegister.js'
+import './config/container/MusicRecService.HandlerRegister.js'
+
 
 const app = express();
 const port = process.env.PORT || 3003; 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://api-gateway:3000',
     credentials: true }));
 app.use(compression());
 app.use(cookieParser());

@@ -1,31 +1,22 @@
 export class GetMusicResponseDto {
+    _id: string;
     name: string;
-    songType: string;
     artist: string;
-    duration: number;
     category: string;
-    loveCount: number;
-    playCount: number;
-    musicPath: string;
+    duration: number;
     imgPath: string;
     
-    constructor(name: string, 
-                artist: string, 
+    constructor(_id: string,
+                name: string,
+                artist: string,
+                category: string,
                 duration: number, 
-                category: string, 
-                loveCount: number, 
-                playCount: number, 
-                musicPath: string, 
-                imgPath: string,
-                songType: string,) {
-        this.name = name;
+                imgPath: string,) {
+        this._id = _id;
         this.artist = artist;
-        this.duration = duration;
+        this.name = name;
         this.category = category;
-        this.loveCount = loveCount;
-        this.playCount = playCount;
-        this.musicPath = musicPath;
+        this.duration = duration;
         this.imgPath = imgPath;
-        this.songType = songType;
     }
 }

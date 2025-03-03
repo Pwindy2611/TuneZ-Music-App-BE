@@ -4,13 +4,13 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
-import loveRoute from "./routes/LoveRoute";
+import loveRoute from "./route/LoveRoute";
 const app = express();
 const port = process.env.PORT || 3005; 
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://api-gateway:3000',
     credentials: true }));
 app.use(compression());
 app.use(cookieParser());
@@ -31,5 +31,5 @@ app.get('/health', (_req, res) => {
 // Start the server
 const server = http.createServer(app);
 server.listen(port, () => {
-    console.log(`User service is running on http://localhost:${port}/`);
+    console.log(`Love service is running on http://localhost:${port}/`);
 });

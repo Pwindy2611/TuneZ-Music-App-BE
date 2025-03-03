@@ -1,12 +1,12 @@
 {
-    "name": "api-gateway",
+    "name": "love-service",
     "version": "1.0.0",
-    "description": "API Gateway for TuneZ Music App",
+    "description": "Love Service for TuneZ Music App",
     "main": "src/index.ts",
     "scripts": {
         "start": "tsx src/index.ts",
         "dev": "npx tsx watch src/index.ts",
-        "debug": "node --inspect=0.0.0.0:9227 --nolazy --loader tsx src/index.ts",
+        "debug": "node --inspect=0.0.0.0:9227 --nolazy --import tsx src/index.ts",
         "build": "npx"
     },
     "keywords": [],

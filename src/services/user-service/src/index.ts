@@ -4,15 +4,17 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
-import userRoute from './routes/UserRoute.js';
+import userRoute from './route/UserRoute.js';
 
 const app = express();
 const port = process.env.PORT || 3001; 
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true }));
+    origin: 'http://api-gateway:3000',
+    credentials: true,
+}));
+
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());

@@ -5,15 +5,10 @@ services:
       context: ../src/services/api-gateway
     ports:
       - "3000:3000"
-    depends_on:
-      - user-service
-      - official-artist-service
-      - music-service
-      - history-service
-      - love-service
+    command: npm run start
     networks:
-      - app_network 
-
+      - app_network
+  
   user-service:
     build:
       context: ../src/services/user-service
@@ -24,9 +19,10 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
     networks:
-      - app_network  
-    
+      - app_network
+  
   official-artist-service:
     build:
       context: ../src/services/official-artist-service
@@ -37,6 +33,7 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
     networks:
       - app_network
   
@@ -53,9 +50,10 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
     networks:
-      - app_network  
-    
+      - app_network
+  
   history-service:
     build:
       context: ../src/services/history-service
@@ -68,9 +66,10 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
     networks:
       - app_network
-      
+  
   love-service:
     build:
       context: ../src/services/love-service
@@ -83,9 +82,28 @@ services:
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
     networks:
       - app_network
 
+  follow-service:
+    build:
+      context: ../src/services/follow-service
+    ports:
+      - "3006:3000"
+    depends_on:
+      - user-service
+      - official-artist-service
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+
 networks:
   app_network:
-    driver: bridge 
+    driver: bridge
