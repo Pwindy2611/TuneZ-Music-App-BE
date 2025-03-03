@@ -8,6 +8,7 @@ import {musicProxy} from "./proxy/MusicProxy";
 import {userProxy} from "./proxy/UserProxy";
 import {loveProxy} from "./proxy/LoveProxy";
 import {followProxy} from "./proxy/FollowProxy";
+import {playlistProxy} from "./proxy/PlaylistProxy";
 
 import {officialArtistProxy} from "./proxy/OfficialArtistProxy";
 
@@ -46,6 +47,8 @@ app.use('/offartist', officialArtistProxy)
 app.use('/love', loveProxy)
 
 app.use('/follow', followProxy)
+
+app.use('/playlists', playlistProxy)
 
 // Health check endpoint
 app.get('/health', (_req, res) => {

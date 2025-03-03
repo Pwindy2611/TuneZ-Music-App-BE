@@ -103,6 +103,26 @@ services:
     networks:
       - app_network
 
+  playlist-service:
+    build:
+      context: ../src/services/playlist-service
+    ports:
+      - "3007:3000"
+    depends_on:
+      - music-service
+      - follow-service
+      - love-service
+      - history-service
+      - user-service
+      - official-artist-service
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
 
 networks:
   app_network:
