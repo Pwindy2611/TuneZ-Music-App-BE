@@ -6,7 +6,6 @@ import {CreateMusicDto} from "../dto/CreateMusicDto.js";
 import {IMusic} from "../interface/IMusic.js";
 import {SongType} from "../enum/SongType.js";
 import {UploadMusicDto} from "../dto/UploadMusicDto.js";
-import {MusicRecService} from "../service/music_rec/MusicRecService.js";
 
 
 const uploadMulter = multer({
@@ -330,128 +329,6 @@ class MusicController {
                 status: 500,
                 success: false,
                 message: 'Internal Server Error',
-            });
-        }
-    }
-
-    generateUserPlaylistApi = async (req: Request, res: Response) => {
-        try {
-            const {userId} = req.body;
-
-            const userMusicPlaylist = await MusicRecService.generateUserPlaylist.execute(userId)
-
-            if(!userMusicPlaylist) {
-                res.status(404).json({
-                    status: 404,
-                    success: false,
-                    message: `No music found with: ${userId}`,
-                });
-                return;
-            }
-
-            res.status(200).json({
-                status: 200,
-                success: true,
-                message: `Generate music playlist successfully with : ${userId}`,
-                musics: userMusicPlaylist,
-            });
-        }catch (error: unknown) {
-            console.error('Error generate music playlist:', error);
-            res.status(500).json({
-                status: 500,
-                success: false,
-                message: `Error generate music playlist ${error}`,
-            });
-        }
-    }
-
-    generateRecentPlaylistApi = async (req: Request, res: Response) => {
-        try {
-            const {userId} = req.body;
-
-            const recentMusicPlaylist = await MusicRecService.generateRecentPlaylist.execute(userId, 20, 50);
-
-            if(!recentMusicPlaylist) {
-                res.status(404).json({
-                    status: 404,
-                    success: false,
-                    message: `No music found with: ${userId}`,
-                });
-                return;
-            }
-
-            res.status(200).json({
-                status: 200,
-                success: true,
-                message: `Generate music playlist successfully with : ${userId}`,
-                musics: recentMusicPlaylist,
-            });
-        }catch (error: unknown) {
-            console.error('Error generate music playlist:', error);
-            res.status(500).json({
-                status: 500,
-                success: false,
-                message: `Error generate music playlist ${error}`,
-            });
-        }
-    }
-
-    generateThrowBackPlaylistApi = async (req: Request, res: Response) => {
-        try {
-            const {userId} = req.body;
-
-            const throwBackMusicPlaylist = await MusicRecService.generateThrowBackPlaylist.execute(userId, 20, 50);
-
-            if(!throwBackMusicPlaylist) {
-                res.status(404).json({
-                    status: 404,
-                    success: false,
-                    message: `No music found with: ${userId}`,
-                });
-                return;
-            }
-
-            res.status(200).json({
-                status: 200,
-                success: true,
-                message: `Generate music playlist successfully with : ${userId}`,
-                musics: throwBackMusicPlaylist,
-            });
-        }catch (error: unknown) {
-            console.error('Error generate music playlist:', error);
-            res.status(500).json({
-                status: 500,
-                success: false,
-                message: `Error generate music playlist ${error}`,
-            });
-        }
-    }
-    generateFollowedArtistsPlaylistApi = async (req: Request, res: Response) => {
-        try {
-            const {userId} = req.body;
-
-            const followedArtistsMusicPlaylist = await MusicRecService.generateFollowedArtistsPlaylist.execute(userId);
-
-            if(!followedArtistsMusicPlaylist) {
-                res.status(404).json({
-                    status: 404,
-                    success: false,
-                    message: `No music found with: ${userId}`,
-                });
-                return;
-            }
-
-            res.status(200).json({
-                status: 200,
-                success: true,
-                message: `Generate music playlist successfully`,
-                musics: followedArtistsMusicPlaylist,
-            })
-        }catch (error) {
-            res.status(500).json({
-                status: 500,
-                success: false,
-                message: `Error generate music playlist ${error}`,
             });
         }
     }

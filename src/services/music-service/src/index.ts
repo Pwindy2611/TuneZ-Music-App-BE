@@ -7,7 +7,6 @@ import http from 'http';
 import musicRoute from './route/MusicRoute.js';
 import 'reflect-metadata';
 import './config/container/MusicBaseService.HandlerRegister.js'
-import './config/container/MusicRecService.HandlerRegister.js'
 
 
 const app = express();
