@@ -11,9 +11,9 @@ class PlaylistController {
 
             await createPlaylistDto.validate();
 
-            const playlist = await PlaylistBaseService.createPlaylist(title, type, value);
+            await PlaylistBaseService.createPlaylist(title, type, value);
 
-            res.status(201).json({status: 201, success: true, message: 'Playlist created successfully', data: playlist });
+            res.status(201).json({status: 201, success: true, message: 'Playlist created successfully'});
 
         }catch (error) {
             res.status(500).json({ error: error.message });

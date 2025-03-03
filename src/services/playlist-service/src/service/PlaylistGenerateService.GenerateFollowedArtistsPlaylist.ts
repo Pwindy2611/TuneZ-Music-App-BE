@@ -1,13 +1,13 @@
 import {IPlaylistGenerateService} from "../interface/IPlaylistGenerateService.js";
-import {auth, database, firestore} from "../config/firebase/FireBaseConfig.js";
 import {GetMusicResponseDto} from "../dto/GetMusicResponseDto.js";
 import FetchBase from "../util/base/FetchBase.js";
 import PlaylistCacheService from "./PlaylistCacheService.js";
 import {PlaylistBaseService} from "./PlaylistBaseService.js";
+import {generateRepo} from "../repository/PlaylistGenerateRepository.js";
 
 export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generateFollowedArtistsPlaylist"] = async (userId) => {
     try {
-        if(!await auth.getUser(userId)) {
+        if(!await generateRepo.isUserExists(userId)) {//
             return Promise.reject(new Error("User not found"));
         }
 
@@ -17,28 +17,22 @@ export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generate
             return cachedPlaylist;
         }
 
-        const followingRef = firestore.collection('users').doc(userId).collection('following');
-        const followingSnapshot = await followingRef.where('followType', '==', 'officialArtist').get();
 
-        const artistIds  = followingSnapshot.docs.map(doc => doc.data().followingId);
+        const artistIds  = await generateRepo.getIdsArtistFollowed(userId);
 
         if (artistIds .length === 0) return null;
 
         const artistPromises = artistIds.map(async (artistId) => {
-            const artistRef = database.ref(`/officialArtist/${artistId}`);
-            const snapshot = await artistRef.once('value');
-            if (!snapshot.exists()) return null;
-
+            const name = await generateRepo.getArtistName(artistId)
             return {
-                artistId,
-                artistName: snapshot.val().name
+                artistName: name
             };
         });
 
-        const artists = (await Promise.all(artistPromises)).filter((artist): artist is { artistId: string; artistName: string } => artist !== null);
+        const artists = (await Promise.all(artistPromises)).filter((artist): artist is {artistName: string } => artist !== null);
 
 
-        const artistMusicPromises = artists.map(async ({ artistId, artistName }) => {
+        const artistMusicPromises = artists.map(async ({artistName }) => {
             const artistPlaylists = await PlaylistBaseService.getPlaylistByFilter('value', artistName);
 
             if (!artistPlaylists || artistPlaylists.length === 0) {

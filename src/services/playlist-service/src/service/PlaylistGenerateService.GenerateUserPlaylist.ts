@@ -1,15 +1,15 @@
 import {IPlaylistGenerateService} from "../interface/IPlaylistGenerateService.js";
 import HistoryBase from "../util/base/HistoryBase.js";
-import {auth} from "../config/firebase/FireBaseConfig.js";
 import {PlaylistBaseService} from "./PlaylistBaseService.js";
 import FetchBase from "../util/base/FetchBase.js";
 import {IPlaylist} from "../interface/IPlaylist.js";
 import {GetMusicResponseDto} from "../dto/GetMusicResponseDto.js";
 import PlaylistCacheService from "./PlaylistCacheService.js";
+import {generateRepo} from "../repository/PlaylistGenerateRepository.js";
 
 export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylist"] = async (userId) => {
     try {
-        if (!await auth.getUser(userId)) {
+        if (!await generateRepo.isUserExists(userId)) {
             return Promise.reject(new Error("User not found"));
         }
 

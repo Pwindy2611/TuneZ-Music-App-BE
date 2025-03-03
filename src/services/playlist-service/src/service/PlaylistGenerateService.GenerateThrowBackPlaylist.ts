@@ -1,13 +1,12 @@
 import {IPlaylistGenerateService} from "../interface/IPlaylistGenerateService.js";
-import {auth, firestore} from "../config/firebase/FireBaseConfig.js";
-import {Timestamp} from "firebase-admin/firestore";
 import FetchBase from "../util/base/FetchBase.js";
 import {PlaylistBaseService} from "./PlaylistBaseService.js";
 import PlaylistCacheService from "./PlaylistCacheService.js";
+import {generateRepo} from "../repository/PlaylistGenerateRepository.js";
 
 export const generateThrowBackPlaylist: IPlaylistGenerateService["generateThrowBackPlaylist"] = async (userId, playlistLimit, historyLimit) => {
     try {
-        if(!await auth.getUser(userId)) {
+        if(!await generateRepo.isUserExists(userId)) {
             return Promise.reject(new Error("User not found"));
         }
 
@@ -25,20 +24,7 @@ export const generateThrowBackPlaylist: IPlaylistGenerateService["generateThrowB
             return null;
         }
 
-        const cutoffDate = new Date();
-        cutoffDate.setMonth(cutoffDate.getMonth() - 6);
-        const cutoffTimestamp = Timestamp.fromDate(cutoffDate);
-
-        const historySnapshot = await firestore
-            .collection(`history`)
-            .doc(userId)
-            .collection('data')
-            .where('listenAt', '<', cutoffTimestamp)
-            .orderBy('listenAt', 'desc')
-            .limit(historyLimit)
-            .get();
-
-        const musicIds = historySnapshot.docs.map(doc => doc.data().musicId);
+        const musicIds = await generateRepo.getThrowBackMusicIds(userId, historyLimit);
 
         const frequencyMap: Record<string, number> = {};
         musicIds.forEach(id => {

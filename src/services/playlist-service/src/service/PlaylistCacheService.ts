@@ -1,6 +1,6 @@
 import { IPlaylistCacheService } from "../interface/IPlaylistCacheService.js";
-import { firestore } from "../config/firebase/FireBaseConfig.js";
 import { Timestamp } from "firebase-admin/firestore";
+import {cacheRepo} from "../repository/PlaylistCacheRepository.js";
 
 class PlaylistCacheService implements IPlaylistCacheService {
     private readonly COLLECTION_NAME = "playlistCache";
@@ -8,47 +8,7 @@ class PlaylistCacheService implements IPlaylistCacheService {
 
     async cleanExpiredCache(): Promise<void> {
         try {
-            const currentTime = Timestamp.now();
-            const usersSnapshot = await firestore.collection('users').get();
-
-            const batchOperations = [];
-            let currentBatch = firestore.batch();
-            let operationCount = 0;
-
-            const BATCH_LIMIT = 500;
-
-            for (const userDoc of usersSnapshot.docs) {
-                const userId = userDoc.id;
-
-                const expiredCachesSnapshot = await firestore
-                    .collection('users')
-                    .doc(userId)
-                    .collection(this.COLLECTION_NAME)
-                    .where('expiryTime', '<', currentTime)
-                    .get();
-
-                expiredCachesSnapshot.docs.forEach(cacheDoc => {
-                    currentBatch.delete(cacheDoc.ref);
-                    operationCount++;
-
-                    if (operationCount >= BATCH_LIMIT) {
-                        batchOperations.push(currentBatch.commit());
-                        currentBatch = firestore.batch();
-                        operationCount = 0;
-                    }
-                });
-            }
-
-            if (operationCount > 0) {
-                batchOperations.push(currentBatch.commit());
-            }
-
-            if (batchOperations.length > 0) {
-                await Promise.all(batchOperations);
-                console.log(`Cleaned expired caches from ${batchOperations.length} batches`);
-            } else {
-                console.log("No expired caches to clean");
-            }
+            await cacheRepo.cleanExpiredCache(this.COLLECTION_NAME);
         } catch (error) {
             console.error(`Error cleaning expired cache: ${error.message}`);
             throw new Error(`Error cleaning expired cache: ${error.message}`);
@@ -63,12 +23,7 @@ class PlaylistCacheService implements IPlaylistCacheService {
         try {
             const cacheId = this.getCacheId(userId, playlistValue, playlistType);
 
-            const cacheDoc = await firestore
-                .collection('users')
-                .doc(userId)
-                .collection(this.COLLECTION_NAME)
-                .doc(cacheId)
-                .get();
+            const cacheDoc = await cacheRepo.getFromCache(userId, cacheId, this.COLLECTION_NAME);
 
             if (!cacheDoc.exists) {
                 return null;
@@ -88,26 +43,22 @@ class PlaylistCacheService implements IPlaylistCacheService {
         }
     }
 
-    async saveToCache(userId: string, playlistValue: string, playlistData: any, playlistType?: string): Promise<any | null> {
+    async saveToCache(userId: string, playlistValue: string, playlistData: any, playlistType?: string): Promise<void> {
         try {
             const cacheId = this.getCacheId(userId, playlistValue, playlistType);
 
             const expiryTime = new Date();
             expiryTime.setHours(expiryTime.getHours() + this.EXPIRY_HOURS);
             const plainPlaylistData = JSON.parse(JSON.stringify(playlistData));
-            await firestore
-                .collection('users')
-                .doc(userId)
-                .collection(this.COLLECTION_NAME)
-                .doc(cacheId)
-                .set({
-                    playlistValue,
-                    playlistData: plainPlaylistData,
-                    createdAt: Timestamp.now(),
-                    expiryTime: Timestamp.fromDate(expiryTime)
-                });
 
-            return null;
+            const newCacheData = {
+                playlistValue,
+                playlistData: plainPlaylistData,
+                createdAt: Timestamp.now(),
+                expiryTime: Timestamp.fromDate(expiryTime)
+            }
+
+            await cacheRepo.saveToCache(userId, cacheId, newCacheData, this.COLLECTION_NAME);
         } catch (error) {
             throw new Error(`Error saving to cache: ${error.message}`);
         }
