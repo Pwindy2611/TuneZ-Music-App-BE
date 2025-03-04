@@ -21,7 +21,7 @@ class UserController {
         try {
             const email = req.query.email as string;
             const cookie = req.cookies.session as string;
-            const userIdentifier = cookie || email;
+            const userIdentifier = email || cookie ;
 
             const token = await UserBaseService.getUserCustomToken.execute(userIdentifier);
 
