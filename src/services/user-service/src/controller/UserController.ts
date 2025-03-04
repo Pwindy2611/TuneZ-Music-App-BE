@@ -25,6 +25,10 @@ class UserController {
 
             const token = await UserBaseService.getUserCustomToken.execute(userIdentifier);
 
+            if(!token){
+                res.status(401).json({ status: 401, success: false, message: 'Unauthorized' });
+                return;
+            }
             res.status(200).json({ status: 200, token });
 
         }catch (error) {
