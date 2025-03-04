@@ -44,15 +44,9 @@ export class UserBaseRepository implements IUserBaseRepository {
 
         if (isEmail) {
             const user = await auth.getUserByEmail(userIdentifier);
-
-            if (user) {
-                return await auth.createCustomToken(user.uid);
-            } else {
-                const session = await auth?.verifySessionCookie(userIdentifier);
-                return await auth.createCustomToken(session?.uid);
-            }
+            return await auth.createCustomToken(user.uid);
         } else {
-            const session = await auth?.verifySessionCookie(userIdentifier);
+            const session = await auth.verifySessionCookie(userIdentifier);
             return await auth.createCustomToken(session?.uid);
         }
     }

@@ -11,7 +11,7 @@ export class GetUserCustomTokenService {
             const userIdentifier = cookie || email;
             return userIdentifier ? await this.repository.getUserCustomToken(userIdentifier) : null;
         }catch (error) {
-            throw new Error("Failed to get user custom token");
+            throw new Error(`Failed to get user custom token: ${error.message}`);
         }
     }
 }
