@@ -26,14 +26,14 @@ class MusicController {
         ]),
         async (req: Request, res: Response) => {
             try {
-                const { name, artist, duration, category, officialArtistId } = req.body;
+                const { name, artist, duration, genres, officialArtistId } = req.body;
 
                 const musicData: IMusic = {
                     name,
                     songType: SongType.OFFICIAL,
                     artist,
                     duration: Number(duration),
-                    category,
+                    genres: genres,
                     officialArtistId
                 };
 
@@ -102,14 +102,14 @@ class MusicController {
         ]),
         async (req: Request, res: Response) => {
             try {
-                const { name, artist, duration, category, userId } = req.body;
+                const { name, artist, duration, genres, userId } = req.body;
 
                 const musicData: IMusic = {
                     name,
                     songType: SongType.USER_GENERATED,
                     artist,
                     duration: Number(duration),
-                    category,
+                    genres: genres,
                     userId
                 };
 
@@ -231,26 +231,26 @@ class MusicController {
         }
     };
 
-    getMusicByCategoryApi = async (req: Request, res: Response) => {
+    getMusicByGenresApi = async (req: Request, res: Response) => {
         try {
-            const category  = req.query.category as string;
+            const genres  = req.query.genres as string;
 
-            if (!category) {
+            if (!genres) {
                 res.status(400).json({
                     status: 400,
                     success: false,
-                    message: 'Category is required',
+                    message: 'Genres is required',
                 });
                 return;
             }
 
-            const musicsByCategory = await MusicBaseService.getMusicByCategory.execute(category);
+            const musicsByGenres = await MusicBaseService.getMusicByCategory.execute(genres);
 
-            if (!musicsByCategory) {
+            if (!musicsByGenres) {
                 res.status(404).json({
                     status: 404,
                     success: false,
-                    message: `No music found for category: ${category}`,
+                    message: `No music found for Genres: ${genres}`,
                 });
                 return;
             }
@@ -258,11 +258,11 @@ class MusicController {
             res.status(200).json({
                 status: 200,
                 success: true,
-                message: `Fetched music by category: ${category}`,
-                musics: musicsByCategory,
+                message: `Fetched music by Genres: ${genres}`,
+                musics: musicsByGenres,
             });
         } catch (error: unknown) {
-            console.error('Error fetching music by category:', error);
+            console.error('Error fetching music by Genres:', error);
             res.status(500).json({
                 status: 500,
                 success: false,

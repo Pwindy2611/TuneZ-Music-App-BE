@@ -1,5 +1,4 @@
 import {IMusicBaseService} from "../../interface/IMusicBaseService.js";
-import {generateId} from "../../util/helpers/AuthenticationHelper.js";
 import {musicBaseMediator, musicBaseRepository} from "../../config/container/Container.js";
 import {CreateMusicCommand} from "./command/CreateMusicCommand.js";
 import {Lifecycle, scoped} from "tsyringe";
@@ -7,7 +6,6 @@ import {Lifecycle, scoped} from "tsyringe";
 export class CreateMusicService{
 
     execute: IMusicBaseService["createMusic"] = async (music, musicFile, imgFile) => {
-        const musicId = generateId();
         const loveCount = 0;
         const playCount = 0;
 
@@ -16,7 +14,6 @@ export class CreateMusicService{
         }
 
         const musicData = {
-            musicId,
             ...music,
             loveCount,
             playCount,

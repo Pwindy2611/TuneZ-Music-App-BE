@@ -84,6 +84,7 @@ class OfficialArtistController {
 
             if(artists.length === 0){
                 res.status(404).json({status: 404, success: false, message: 'No official artists found'});
+                return;
             }
             res.status(200).json({status: 200, success: true, artists});
         }catch (error) {

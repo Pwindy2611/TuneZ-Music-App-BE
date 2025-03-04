@@ -39,10 +39,21 @@ export class UserBaseRepository implements IUserBaseRepository {
         }
     }
 
-    async getUserCustomToken(email: string): Promise<string | null> {
-        const user = await auth.getUserByEmail(email);
-        const token = await auth.createCustomToken(user.uid)
-        return token || null;
-    }
+    async getUserCustomToken(userIdentifier: string): Promise<string | null> {
+        const isEmail = /\S+@\S+\.\S+/.test(userIdentifier);
 
+        if (isEmail) {
+            const user = await auth.getUserByEmail(userIdentifier);
+
+            if (user) {
+                return await auth.createCustomToken(user.uid);
+            } else {
+                const session = await auth?.verifySessionCookie(userIdentifier);
+                return await auth.createCustomToken(session?.uid);
+            }
+        } else {
+            const session = await auth?.verifySessionCookie(userIdentifier);
+            return await auth.createCustomToken(session?.uid);
+        }
+    }
 }

@@ -26,6 +26,7 @@ class PlaylistController {
             const userPlaylists = await PlaylistGenerateService.generateUserPlaylist(userId);
             if(!userPlaylists){
                 res.status(404).json({ status: 404, success: false, message: 'No playlists found for the user' });
+                return;
             }
 
             res.status(200).json({ status: 200, success: true, message: 'User playlists fetched successfully', data: userPlaylists });
@@ -40,6 +41,7 @@ class PlaylistController {
 
             if(!recentPlaylist){
                 res.status(404).json({ status: 404, success: false, message: 'No recent playlists found for the user' });
+                return;
             }
             res.status(200).json({ status: 200, success: true, message: 'Recent playlists fetched successfully', data: recentPlaylist });
         }catch (error) {
@@ -53,6 +55,7 @@ class PlaylistController {
 
             if(!throwBackPlaylist){
                 res.status(404).json({ status: 404, success: false, message: 'No throw back playlists found for the user' });
+                return;
             }
             res.status(200).json({ status: 200, success: true, message: 'Throw back playlists fetched successfully', data: throwBackPlaylist });
         }catch (error) {
@@ -66,6 +69,7 @@ class PlaylistController {
             const followedArtistsPlaylists = await PlaylistGenerateService.generateFollowedArtistsPlaylist(userId);
             if(!followedArtistsPlaylists){
                 res.status(404).json({ status: 404, success: false, message: 'No playlists found for the followed artists' });
+                return;
             }
             res.status(200).json({ status: 200, success: true, message: 'Followed artists playlists fetched successfully', data: followedArtistsPlaylists  });
         }catch (error) {

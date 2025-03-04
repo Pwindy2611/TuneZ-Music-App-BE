@@ -11,10 +11,10 @@ class FetchBase {
             if (!musicData) return null;
 
             return new GetMusicResponseDto(
-                musicData.musicId,
+                musicSnap.key as string,
                 musicData.name,
                 musicData.artist,
-                musicData.category,
+                musicData.genres,
                 musicData.duration,
                 musicData.imgPath,
             );

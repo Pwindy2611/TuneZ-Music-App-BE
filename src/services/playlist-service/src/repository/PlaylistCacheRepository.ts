@@ -63,7 +63,7 @@ export class PlaylistCacheRepository implements IPlaylistCacheRepository{
             .collection(collectionName)
             .doc(cacheId)
             .set({
-                playlistData
+                ...playlistData
             });
     }
 }

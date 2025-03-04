@@ -3,7 +3,7 @@ import FollowController from "../controller/FollowController";
 const router = express.Router();
 
 //Follow Requests
-router.post('/followingUser', FollowController.followUserApi)
+router.post('/addFollowing', FollowController.addFollowApi)
 
 //Get Requests
 router.get('/getFollowingCount', FollowController.getFollowingCountApi)

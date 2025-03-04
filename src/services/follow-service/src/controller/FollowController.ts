@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import {Follow} from "../dto/Follow";
 import {FollowBaseService} from "../service/FollowBaseService";
 class FollowController {
-    async followUserApi(req: Request, res: Response) {
+    async addFollowApi(req: Request, res: Response) {
         try {
             const { userId, followingIds, followType} = req.body;
 
@@ -15,7 +15,7 @@ class FollowController {
             res.status(201).json({
                 status: 201,
                 success: true,
-                message: 'Follow user successful',
+                message: 'Follow  successful',
                 data: newFollow
             });
         }catch (error) {
@@ -78,6 +78,7 @@ class FollowController {
                     success: false,
                     message: 'No following user found'
                 })
+                return;
             }
 
             res.status(200).json({
@@ -106,6 +107,7 @@ class FollowController {
                     success: false,
                     message: 'No followers user found'
                 })
+                return;
             }
 
             res.status(200).json({

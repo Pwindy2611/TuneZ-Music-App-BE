@@ -10,7 +10,7 @@ router.post('/uploadMusicByUser', MusicController.uploadMusicByUserApi);
 //GET REQUEST
 router.get('/getAllMusic', MusicController.getAllMusicsApi);
 router.get('/getMusicByArtist', MusicController.getMusicByArtistApi);
-router.get('/getMusicByCategory', MusicController.getMusicByCategoryApi);
+router.get('/getMusicByGenres', MusicController.getMusicByGenresApi);
 router.get('/getMusicHistory', MusicController.getMusicHistoryApi);
 router.get('/getMusicLove', MusicController.getMusicLoveApi)
 

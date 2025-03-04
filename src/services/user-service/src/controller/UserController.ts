@@ -20,8 +20,10 @@ class UserController {
     getUserCustomTokenApi = async (req: Request, res: Response) => {
         try {
             const email = req.query.email as string;
+            const cookie = req.headers.cookie as string;
+            const userIdentifier = cookie || email;
 
-            const token = await UserBaseService.getUserCustomToken.execute(email);
+            const token = await UserBaseService.getUserCustomToken.execute(userIdentifier);
 
             res.status(200).json({ status: 200, token });
 

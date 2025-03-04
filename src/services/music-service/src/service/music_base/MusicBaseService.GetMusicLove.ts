@@ -1,4 +1,3 @@
-import FetchBase from '../../util/base/FetchBase.js'
 import {IMusicBaseService} from "../../interface/IMusicBaseService.js";
 import {musicBaseMediator} from "../../config/container/Container.js";
 import {GetMusicLoveQuery} from "./query/GetMusicLoveQuery.js";

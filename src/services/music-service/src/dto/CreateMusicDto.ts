@@ -15,7 +15,7 @@ export class CreateMusicDto implements IMusic {
     duration: number;
 
     @IsString()
-    category: string;
+    genres: string;
 
     @IsString()
     officialArtistId?: string;
@@ -24,7 +24,7 @@ export class CreateMusicDto implements IMusic {
         this.name = music.name;
         this.artist = music.artist;
         this.duration = music.duration;
-        this.category = music.category;
+        this.genres = music.genres;
         this.songType = music.songType;
         this.officialArtistId = music.officialArtistId;
     }

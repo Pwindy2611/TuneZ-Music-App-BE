@@ -4,7 +4,7 @@ export interface IMusic {
     songType: SongType
     artist: string;
     duration: number;
-    category: string;
+    genres: string;
     userId?: string;
     officialArtistId?: string;
     playCount?: number;

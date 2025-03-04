@@ -1,12 +1,12 @@
 import {inject, injectable} from "tsyringe";
 import {MusicBaseRepository} from "../../../repository/MusicBaseRepository.js";
-import {GetMusicByCategoryQuery} from "../query/GetMusicByCategoryQuery.js";
+import {GetMusicByGenresQuery} from "../query/GetMusicByGenresQuery.js";
 
 @injectable()
-export class GetMusicByCategoryHandler {
+export class GetMusicByGenresHandler {
     constructor(@inject(MusicBaseRepository) private musicRepo: MusicBaseRepository) {}
 
-    async execute(query: GetMusicByCategoryQuery) {
-        return this.musicRepo.getMusicByCategory(query.category);
+    async execute(query: GetMusicByGenresQuery) {
+        return this.musicRepo.getMusicByGenres(query.genre);
     }
 }

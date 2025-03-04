@@ -3,7 +3,7 @@ import { firestore } from "../config/firebase/FireBaseConfig"
 import * as admin from "firebase-admin";
 import {FollowType} from "../enum/FollowType";
 
-export const followUser: IFollowBaseService["followUser"] = async (follow) => {
+export const addFollow: IFollowBaseService["addFollow"] = async (follow) => {
     try {
         const { userId, followingIds, followType} = follow;
 
@@ -45,7 +45,7 @@ export const followUser: IFollowBaseService["followUser"] = async (follow) => {
             await batch.commit();
         }
     } catch (error) {
-        console.error('Error in followUser:', error);
+        console.error('Error in follow:', error);
         throw error;
     }
 }

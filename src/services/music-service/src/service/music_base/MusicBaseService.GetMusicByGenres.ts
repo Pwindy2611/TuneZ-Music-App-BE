@@ -1,10 +1,10 @@
 import {IMusicBaseService} from "../../interface/IMusicBaseService.js";
 import {musicBaseMediator} from "../../config/container/Container.js";
-import {GetMusicByCategoryQuery} from "./query/GetMusicByCategoryQuery.js";
+import {GetMusicByGenresQuery} from "./query/GetMusicByGenresQuery.js";
 import {singleton} from "tsyringe";
 @singleton()
 export class GetMusicByCategoryService{
-    execute: IMusicBaseService["getMusicByCategory"] = async (category) => {
-        return await musicBaseMediator.send(new GetMusicByCategoryQuery(category));
+    execute: IMusicBaseService["getMusicByGenres"] = async (category) => {
+        return await musicBaseMediator.send(new GetMusicByGenresQuery(category));
     }
 }

@@ -11,7 +11,7 @@ class FetchBase {
             if (!musicData) return null;
 
             return new GetMusicResponseDto(
-                musicData.musicId,
+                musicSnap.key as string,
                 musicData.name,
                 musicData.artist,
                 musicData.category,
@@ -40,7 +40,14 @@ class FetchBase {
         const snapshot = await musicRef.orderByChild('artist').equalTo(artist).limitToFirst(limit).get();
 
         if (!snapshot.exists()) return [];
-        return Object.values(snapshot.val()).map((doc: any) => doc.musicId);
+        return Object.keys(snapshot.val());
+    }
+    async fetchMusicIdsFromGenre(genre: string, limit: number) {
+        const musicRef = database.ref('musics');
+        const snapshot = await musicRef.orderByChild('genre').equalTo(genre).limitToFirst(limit).get();
+
+        if (!snapshot.exists()) return [];
+        return Object.keys(snapshot.val());
     }
 
     async fetchMusicIdsFromCategory(category: string, limit: number) {
@@ -48,7 +55,7 @@ class FetchBase {
         const snapshot = await musicRef.orderByChild('category').equalTo(category).limitToFirst(limit).get();
 
         if (!snapshot.exists()) return [];
-        return Object.values(snapshot.val()).map((doc: any) => doc.musicId);
+        return Object.keys(snapshot.val());
     }
     async fetchMusicIdsFromLove(userId: string, limit: number) {
         const historySnapshot = await firestore

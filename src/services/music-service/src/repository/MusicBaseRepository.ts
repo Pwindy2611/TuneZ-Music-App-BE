@@ -21,7 +21,7 @@ export class MusicBaseRepository implements IMusicBaseRepository {
             songType: musicData.songType,
             artist: musicData.artist,
             duration: musicData.duration,
-            category: musicData.category,
+            genres: musicData.genres,
             officialArtistId: musicData.officialArtistId,
             playCount: musicData.playCount?? 0,
             loveCount: musicData.loveCount?? 0,
@@ -44,7 +44,7 @@ export class MusicBaseRepository implements IMusicBaseRepository {
             songType: musicData.songType,
             artist: musicData.artist,
             duration: musicData.duration,
-            category: musicData.category,
+            genres: musicData.genres,
             userId: musicData.userId,
             playCount: musicData.playCount?? 0,
             loveCount: musicData.loveCount?? 0,
@@ -74,7 +74,7 @@ export class MusicBaseRepository implements IMusicBaseRepository {
 
         snapshot.forEach(child => {
             if (child.val().songType?.toString() === "official") {
-                musicIds.push(child.val().musicId?.toString());
+                musicIds.push(child.key);
             }
         });
 
@@ -82,19 +82,19 @@ export class MusicBaseRepository implements IMusicBaseRepository {
         return musicDetails.length > 0 ? musicDetails : null;
     }
 
-    async getMusicByCategory(category: string): Promise<any> {
+    async getMusicByGenres(genre:string): Promise<any> {
         const musicRef = database.ref("musics");
-        const snapshot = await musicRef.orderByChild("category").equalTo(category).get();
+        const snapshot = await musicRef.orderByChild("genres").equalTo(genre).get();
 
         if (!snapshot.exists()) {
-            return snapshot.val();
+            return null;
         }
 
         let musicIds: string[] = [];
 
         snapshot.forEach(child => {
             if(child.val().songType?.toString() === "official"){
-                musicIds.push(child.val().musicId?.toString());
+                musicIds.push(child.key);
             }
         })
 

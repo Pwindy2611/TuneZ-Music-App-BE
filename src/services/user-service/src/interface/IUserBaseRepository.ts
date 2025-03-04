@@ -5,5 +5,5 @@ export interface IUserBaseRepository {
     createUser(user: IUser): Promise<void>;
     getUserByEmail(email: string): Promise<IUser | null>;
     getAllUsers(): Promise<UserDto[] | null>;
-    getUserCustomToken(email: string): Promise<string | null>;
+    getUserCustomToken(userIdentifier: string): Promise<string | null>;
 }

@@ -42,7 +42,8 @@ export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylis
         const populatePlaylistsWithSongs = async (
             playlists: IPlaylist[],
             fetchSongsFn: (value: string) => Promise<GetMusicResponseDto[]>
-        ): Promise<Record<string, GetMusicResponseDto[]>> => {
+        ): Promise<Record<string, GetMusicResponseDto[]>> =>
+        {
             const populatedPlaylists: Record<string, GetMusicResponseDto[]> = {};
 
             await Promise.all(playlists.map(async (playlist) => {
