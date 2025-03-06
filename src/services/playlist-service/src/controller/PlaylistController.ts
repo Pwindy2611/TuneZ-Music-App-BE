@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import {CreatePlaylistDto} from "../dto/CreatePlaylistDto.js";
-import {PlaylistBaseService} from "../service/PlaylistBaseService.js";
-import {PlaylistGenerateService} from "../service/PlaylistGenerateService.js";
+import {PlaylistBaseService} from "../service/base/PlaylistBaseService.js";
+import PlaylistGenerateService from "../service/PlaylistGenerateService.js";
 class PlaylistController {
     async createPlaylistApi(req: Request, res: Response) {
         try {
@@ -19,7 +19,7 @@ class PlaylistController {
             res.status(500).json({ error: error.message });
         }
     }
-    async generateUserPlaylistApi(req: Request, res: Response) {
+    /*async generateUserPlaylistApi(req: Request, res: Response) {
         try {
             const userId = req.query.userId as string;
 
@@ -72,6 +72,23 @@ class PlaylistController {
                 return;
             }
             res.status(200).json({ status: 200, success: true, message: 'Followed artists playlists fetched successfully', data: followedArtistsPlaylists  });
+        }catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }*/
+
+    async generatePlaylistApi(req: Request, res: Response) {
+        try {
+            const userId = req.query.userId as string;
+
+            const playlists = await PlaylistGenerateService.generate(userId);
+
+            if(!playlists){
+                res.status(404).json({ status: 404, success: false, message: 'No playlists found for the user' });
+                return;
+            }
+
+            res.status(200).json({ status: 200, success: true, message: 'Playlists fetched successfully', data: playlists });
         }catch (error) {
             res.status(500).json({ error: error.message });
         }

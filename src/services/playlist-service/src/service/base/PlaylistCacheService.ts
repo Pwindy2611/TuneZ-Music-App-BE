@@ -1,6 +1,6 @@
-import { IPlaylistCacheService } from "../interface/IPlaylistCacheService.js";
+import { IPlaylistCacheService } from "../../interface/IPlaylistCacheService.js";
 import { Timestamp } from "firebase-admin/firestore";
-import {cacheRepo} from "../repository/PlaylistCacheRepository.js";
+import {cacheRepo} from "../../repository/PlaylistCacheRepository.js";
 
 class PlaylistCacheService implements IPlaylistCacheService {
     private readonly COLLECTION_NAME = "playlistCache";

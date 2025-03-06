@@ -1,8 +1,8 @@
-import {IPlaylistGenerateService} from "../interface/IPlaylistGenerateService.js";
-import FetchBase from "../util/base/FetchBase.js";
-import {PlaylistBaseService} from "./PlaylistBaseService.js";
-import PlaylistCacheService from "./PlaylistCacheService.js";
-import {generateRepo} from "../repository/PlaylistGenerateRepository.js";
+import {IPlaylistGenerateService} from "../../interface/IPlaylistGenerateService.js";
+import FetchBase from "../../util/base/FetchBase.js";
+import {PlaylistBaseService} from "../base/PlaylistBaseService.js";
+import PlaylistCacheService from "../base/PlaylistCacheService.js";
+import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 
 export const generateThrowBackPlaylist: IPlaylistGenerateService["generateThrowBackPlaylist"] = async (userId, playlistLimit, historyLimit) => {
     try {
@@ -26,6 +26,10 @@ export const generateThrowBackPlaylist: IPlaylistGenerateService["generateThrowB
 
         const musicIds = await generateRepo.getThrowBackMusicIds(userId, historyLimit);
 
+        if(musicIds.length <= 0){
+            return null;
+        }
+
         const frequencyMap: Record<string, number> = {};
         musicIds.forEach(id => {
             frequencyMap[id] = (frequencyMap[id] || 0) + 1;
@@ -37,7 +41,7 @@ export const generateThrowBackPlaylist: IPlaylistGenerateService["generateThrowB
             .slice(0, playlistLimit);
 
         const musicDetails = await FetchBase.fetchMusicDetails(sortedIds);
-        const result = musicDetails.length > 0 ? {[throwbackPlaylist.title]: musicDetails} : null;
+        const result = musicDetails.length > 0 ? {throwbackPlaylist: {[throwbackPlaylist.title]: musicDetails}} : null;
 
         if (result) {
             await PlaylistCacheService.saveToCache(userId, 'throwback', result);

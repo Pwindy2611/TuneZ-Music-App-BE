@@ -6,19 +6,19 @@ class HistoryBase{
         const history = await FetchBase.fetchMusicDetails(musicIds);
 
         const artistCount: Record<string, number> = {};
-        const categoryCount: Record<string, number> = {};
+        const genresCount: Record<string, number> = {};
 
         history.forEach(record => {
             if(record.artist){
                 artistCount[record.artist] = (artistCount[record.artist] || 0) + 1;
             }
 
-            if(record.category){
-                categoryCount[record.category] = (categoryCount[record.category] || 0) + 1;
+            if(record.genres){
+                genresCount[record.genres] = (genresCount[record.genres] || 0) + 1;
             }
         })
 
-        return { artistCount, categoryCount };
+        return { artistCount, genresCount };
     }
 
     getTopItems(count: Record<string, number>, topN = 3) {
@@ -28,12 +28,17 @@ class HistoryBase{
     }
 
     async getUserPreferences(userId: string) {
-        const { artistCount, categoryCount } = await this.analyzeUserHistory(userId);
+        const { artistCount, genresCount } = await this.analyzeUserHistory(userId);
 
         const topArtists = this.getTopItems(artistCount, 3);
-        const topCategories = this.getTopItems(categoryCount, 3);
+        const topGenres = this.getTopItems(genresCount, 3);
 
-        return { topArtists, topCategories };
+        return { topArtists, topGenres };
+    }
+
+    async getHistoryCount(userId: string) {
+         const history = await FetchBase.fetchMusicIdsFromHistory(userId, 50);
+         return history.length;
     }
 }
 

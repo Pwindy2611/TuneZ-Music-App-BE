@@ -1,5 +1,5 @@
-import {IPlaylistBaseService} from "../interface/IPlaylistBaseService.js";
-import {baseRepo} from "../repository/PlaylistBaseRepository.js";
+import {IPlaylistBaseService} from "../../interface/IPlaylistBaseService.js";
+import {baseRepo} from "../../repository/PlaylistBaseRepository.js";
 
 export const getPlaylistByFilter: IPlaylistBaseService["getPlaylistByFilter"] = async (key, values) => {
     try {

@@ -1,9 +1,9 @@
-import {IPlaylistGenerateService} from "../interface/IPlaylistGenerateService.js";
-import {generateRepo} from "../repository/PlaylistGenerateRepository.js";
-import PlaylistCacheService from "./PlaylistCacheService.js";
-import {PlaylistBaseService} from "./PlaylistBaseService.js";
-import FetchBase from "../util/base/FetchBase.js";
-import {GetMusicResponseDto} from "../dto/GetMusicResponseDto.js";
+import {IPlaylistGenerateService} from "../../interface/IPlaylistGenerateService.js";
+import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
+import PlaylistCacheService from "../base/PlaylistCacheService.js";
+import {PlaylistBaseService} from "../base/PlaylistBaseService.js";
+import FetchBase from "../../util/base/FetchBase.js";
+import {GetMusicResponseDto} from "../../dto/GetMusicResponseDto.js";
 
 export const generateFollowedGenresPlaylist: IPlaylistGenerateService["generateFollowedGenresPlaylist"] = async (userId) => {
     try {
@@ -19,7 +19,7 @@ export const generateFollowedGenresPlaylist: IPlaylistGenerateService["generateF
 
         const artistIds  = await generateRepo.getIdsArtistFollowed(userId);
 
-        if (artistIds .length === 0) return null;
+        if (artistIds.length === 0) return null;
 
         const artistPromises = artistIds.map(async (artistId) => {
             const genre = await generateRepo.getGenresFromArtist(artistId)
@@ -48,15 +48,15 @@ export const generateFollowedGenresPlaylist: IPlaylistGenerateService["generateF
 
         const artistMusicDetails = await Promise.all(artistMusicPromises);
 
-        const playlistByFollowed: Record<string, GetMusicResponseDto[]> = {};
+        const followedPlaylistByGenres: Record<string, GetMusicResponseDto[]> = {};
         artistMusicDetails.flat().forEach(({ title, musicDetails }) => {
-            if (!playlistByFollowed[title]) {
-                playlistByFollowed[title] = [];
+            if (!followedPlaylistByGenres[title]) {
+                followedPlaylistByGenres[title] = [];
             }
-            playlistByFollowed[title].push(...musicDetails);
+            followedPlaylistByGenres[title].push(...musicDetails);
         });
 
-        const result = Object.keys(playlistByFollowed).length > 0 ? { playlistByFollowed } : null;
+        const result = Object.keys(followedPlaylistByGenres).length > 0 ? { followedPlaylistByGenres } : null;
 
         if(result){
             await PlaylistCacheService.saveToCache(userId, 'followed-genres', result);

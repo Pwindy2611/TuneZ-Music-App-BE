@@ -1,11 +1,16 @@
-import {generateUserPlaylist} from "./PlaylistGenerateService.GenerateUserPlaylist.js";
-import {generateRecentPlaylist} from "./PlaylistGenerateService.GenerateRecentPlaylist.js";
-import {generateThrowBackPlaylist} from "./PlaylistGenerateService.GenerateThrowBackPlaylist.js";
-import {generateFollowedArtistsPlaylist} from "./PlaylistGenerateService.GenerateFollowedArtistsPlaylist.js";
+import {PlaylistFactory} from "./factory/PlaylistFactory.js";
 
-export const PlaylistGenerateService = {
-    generateUserPlaylist,
-    generateRecentPlaylist,
-    generateThrowBackPlaylist,
-    generateFollowedArtistsPlaylist
+class PlaylistGenerateService {
+    async generate(userId: string) {
+        const playlistGroups = await PlaylistFactory.getPlaylistGroup(userId);
+
+        let playlists: any[] = [];
+        for(const group of playlistGroups) {
+            const generatedPlaylist = await group.generatePlaylist(userId);
+            playlists = playlists.concat(generatedPlaylist);
+        }
+        return playlists;
+    }
 }
+
+export default new PlaylistGenerateService();
