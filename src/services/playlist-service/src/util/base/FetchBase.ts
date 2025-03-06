@@ -45,7 +45,7 @@ class FetchBase {
     }
     async fetchMusicIdsFromGenre(genre: string, limit: number) {
         const musicRef = database.ref('musics');
-        const snapshot = await musicRef.orderByChild('genre').equalTo(genre).limitToFirst(limit).get();
+        const snapshot = await musicRef.orderByChild('genres').equalTo(genre).limitToFirst(limit).get();
 
         if (!snapshot.exists()) return [];
         return Object.keys(snapshot.val());

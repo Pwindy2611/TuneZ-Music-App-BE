@@ -1,5 +1,6 @@
 import {IPlaylistStrategy} from "../../interface/IPlaylistStrategy.js";
 import {FollowedArtistsPlaylistStrategy} from "../strategy/follow_group/FollowedArtistsPlaylistStrategy.js";
+import {FollowedGenresPlaylistStrategy} from "../strategy/follow_group/FollowedGenresPlaylistStrategy.js";
 
 export class FollowedGroup {
     private strategies: IPlaylistStrategy[];
@@ -7,7 +8,7 @@ export class FollowedGroup {
     constructor() {
         this.strategies = [
             new FollowedArtistsPlaylistStrategy(),
-            new FollowedArtistsPlaylistStrategy(),
+            new FollowedGenresPlaylistStrategy(),
         ];
     }
 
