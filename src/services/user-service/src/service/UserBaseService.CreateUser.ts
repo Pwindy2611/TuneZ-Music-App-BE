@@ -19,7 +19,7 @@ export class CreateUserService {
             const sessionToken = null;
             let profilePictureUrl = process.env.DEFAULT_USER_PROFILE_PATH;
 
-            if (user.profilePictureUrl) {
+            if (user.profilePictureUrl && user.profilePictureUrl.trim()!== "") {
                 profilePictureUrl = user.profilePictureUrl;
             }
 

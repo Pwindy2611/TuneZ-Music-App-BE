@@ -1,11 +1,11 @@
-import {IPlaylistGenerateService} from "../interface/IPlaylistGenerateService.js";
-import HistoryBase from "../util/base/HistoryBase.js";
-import {PlaylistBaseService} from "./PlaylistBaseService.js";
-import FetchBase from "../util/base/FetchBase.js";
-import {IPlaylist} from "../interface/IPlaylist.js";
-import {GetMusicResponseDto} from "../dto/GetMusicResponseDto.js";
-import PlaylistCacheService from "./PlaylistCacheService.js";
-import {generateRepo} from "../repository/PlaylistGenerateRepository.js";
+import {IPlaylistGenerateService} from "../../interface/IPlaylistGenerateService.js";
+import HistoryBase from "../../util/base/HistoryBase.js";
+import {PlaylistBaseService} from "../base/PlaylistBaseService.js";
+import FetchBase from "../../util/base/FetchBase.js";
+import {IPlaylist} from "../../interface/IPlaylist.js";
+import {GetMusicResponseDto} from "../../dto/GetMusicResponseDto.js";
+import PlaylistCacheService from "../base/PlaylistCacheService.js";
+import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 
 export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylist"] = async (userId) => {
     try {
@@ -21,21 +21,21 @@ export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylis
 
         console.log(`Generating new user preference playlist for user: ${userId}`);
 
-        const { topArtists, topCategories } = await HistoryBase.getUserPreferences(userId);
-        if (!topArtists.length && !topCategories.length) {
+        const { topArtists, topGenres } = await HistoryBase.getUserPreferences(userId);
+        if (!topArtists.length && !topGenres.length) {
             return null;
         }
 
         const artistPlaylists = await PlaylistBaseService.getPlaylistByFilter('value', topArtists);
-        const categoryPlaylists = await PlaylistBaseService.getPlaylistByFilter('value', topCategories);
+        const categoryPlaylists = await PlaylistBaseService.getPlaylistByFilter('value', topGenres);
 
         const fetchSongsByArtist = async (artist: string): Promise<GetMusicResponseDto[]> => {
             const musicIds = await FetchBase.fetchMusicIdsFromArtist(artist, 10);
             return await FetchBase.fetchMusicDetails(musicIds);
         };
 
-        const fetchSongsByCategory = async (category: string): Promise<GetMusicResponseDto[]> => {
-            const musicIds = await FetchBase.fetchMusicIdsFromCategory(category, 10);
+        const fetchSongsByCategory = async (genre: string): Promise<GetMusicResponseDto[]> => {
+            const musicIds = await FetchBase.fetchMusicIdsFromGenres(genre, 10);
             return await FetchBase.fetchMusicDetails(musicIds);
         };
 
@@ -54,9 +54,9 @@ export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylis
         };
 
         const playlistsByArtist = await populatePlaylistsWithSongs(artistPlaylists, fetchSongsByArtist);
-        const playlistsByCategory = await populatePlaylistsWithSongs(categoryPlaylists, fetchSongsByCategory);
+        const playlistsByGenres = await populatePlaylistsWithSongs(categoryPlaylists, fetchSongsByCategory);
 
-        const result = { playlistsByArtist, playlistsByCategory };
+        const result = { playlistsByArtist, playlistsByCategory: playlistsByGenres };
 
         await PlaylistCacheService.saveToCache(userId, 'userPreference', result);
 

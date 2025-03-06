@@ -1,5 +1,6 @@
 import {database, firestore} from '../../config/firebase/FireBaseConfig.js'
 import {GetMusicResponseDto} from "../../dto/GetMusicResponseDto.js";
+import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 
 class FetchBase {
     async fetchMusicDetails(musicIds: string[]): Promise<GetMusicResponseDto[]> {
@@ -14,7 +15,7 @@ class FetchBase {
                 musicSnap.key as string,
                 musicData.name,
                 musicData.artist,
-                musicData.category,
+                musicData.genres,
                 musicData.duration,
                 musicData.imgPath,
             );
@@ -44,15 +45,15 @@ class FetchBase {
     }
     async fetchMusicIdsFromGenre(genre: string, limit: number) {
         const musicRef = database.ref('musics');
-        const snapshot = await musicRef.orderByChild('genre').equalTo(genre).limitToFirst(limit).get();
+        const snapshot = await musicRef.orderByChild('genres').equalTo(genre).limitToFirst(limit).get();
 
         if (!snapshot.exists()) return [];
         return Object.keys(snapshot.val());
     }
 
-    async fetchMusicIdsFromCategory(category: string, limit: number) {
+    async fetchMusicIdsFromGenres(genre: string, limit: number) {
         const musicRef = database.ref('musics');
-        const snapshot = await musicRef.orderByChild('category').equalTo(category).limitToFirst(limit).get();
+        const snapshot = await musicRef.orderByChild('genres').equalTo(genre).limitToFirst(limit).get();
 
         if (!snapshot.exists()) return [];
         return Object.keys(snapshot.val());
@@ -67,6 +68,11 @@ class FetchBase {
             .get();
 
         return historySnapshot.empty ? [] : historySnapshot.docs.map(doc => doc.data().musicId);
+    }
+
+    async getFollowedCount(userId: string) {
+        const follow = await generateRepo.getIdsArtistFollowed(userId);
+        return follow.length;
     }
 }
 

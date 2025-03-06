@@ -1,8 +1,8 @@
-import {IPlaylistGenerateService} from "../interface/IPlaylistGenerateService.js";
-import FetchBase from "../util/base/FetchBase.js";
-import {PlaylistBaseService} from "./PlaylistBaseService.js";
-import PlaylistCacheService from "./PlaylistCacheService.js";
-import {generateRepo} from "../repository/PlaylistGenerateRepository.js";
+import {IPlaylistGenerateService} from "../../interface/IPlaylistGenerateService.js";
+import FetchBase from "../../util/base/FetchBase.js";
+import {PlaylistBaseService} from "../base/PlaylistBaseService.js";
+import PlaylistCacheService from "../base/PlaylistCacheService.js";
+import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 
 export const generateRecentPlaylist: IPlaylistGenerateService["generateRecentPlaylist"] = async (userId, playlistLimit, historyLimit) => {
     try {
@@ -25,6 +25,8 @@ export const generateRecentPlaylist: IPlaylistGenerateService["generateRecentPla
         }
         const musicIds = await FetchBase.fetchMusicIdsFromHistory(userId, historyLimit);
 
+        if(!musicIds) return null;
+
         const musicCount: { [key: string]: number } = {};
         musicIds.forEach(musicId => {
             musicCount[musicId] = (musicCount[musicId] || 0) + 1;
@@ -38,7 +40,7 @@ export const generateRecentPlaylist: IPlaylistGenerateService["generateRecentPla
 
         const musicDetails = await FetchBase.fetchMusicDetails(topMusicIds);
 
-        const result = musicDetails.length > 0 ? { [recentPlaylist.title]: musicDetails } : null;
+        const result = musicDetails.length > 0 ? { recentPlaylist: {[recentPlaylist.title] : musicDetails} } : null;
 
         if (result) {
             await PlaylistCacheService.saveToCache(userId, 'recent', result);

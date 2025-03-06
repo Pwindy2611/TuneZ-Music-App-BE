@@ -1,13 +1,13 @@
-import {IPlaylistGenerateService} from "../interface/IPlaylistGenerateService.js";
-import {GetMusicResponseDto} from "../dto/GetMusicResponseDto.js";
-import FetchBase from "../util/base/FetchBase.js";
-import PlaylistCacheService from "./PlaylistCacheService.js";
-import {PlaylistBaseService} from "./PlaylistBaseService.js";
-import {generateRepo} from "../repository/PlaylistGenerateRepository.js";
+import {IPlaylistGenerateService} from "../../interface/IPlaylistGenerateService.js";
+import {GetMusicResponseDto} from "../../dto/GetMusicResponseDto.js";
+import FetchBase from "../../util/base/FetchBase.js";
+import PlaylistCacheService from "../base/PlaylistCacheService.js";
+import {PlaylistBaseService} from "../base/PlaylistBaseService.js";
+import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 
 export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generateFollowedArtistsPlaylist"] = async (userId) => {
     try {
-          if(!await generateRepo.isUserExists(userId)) {//
+        if(!await generateRepo.isUserExists(userId)) {//
             return Promise.reject(new Error("User not found"));
         }
 
@@ -51,15 +51,15 @@ export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generate
 
         const artistMusicDetails = await Promise.all(artistMusicPromises);
 
-        const playlistByFollowed: Record<string, GetMusicResponseDto[]> = {};
+        const followedPlaylistByArtistName: Record<string, GetMusicResponseDto[]> = {};
         artistMusicDetails.flat().forEach(({ title, musicDetails }) => {
-            if (!playlistByFollowed[title]) {
-                playlistByFollowed[title] = [];
+            if (!followedPlaylistByArtistName[title]) {
+                followedPlaylistByArtistName[title] = [];
             }
-            playlistByFollowed[title].push(...musicDetails);
+            followedPlaylistByArtistName[title].push(...musicDetails);
         });
 
-        const result = Object.keys(playlistByFollowed).length > 0 ? { playlistByFollowed } : null;
+        const result = Object.keys(followedPlaylistByArtistName).length > 0 ? { followedPlaylistByArtistName } : null;
 
         if(result){
             await PlaylistCacheService.saveToCache(userId, 'followed-artists', result);

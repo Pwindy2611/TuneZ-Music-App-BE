@@ -2,7 +2,7 @@ export class GetMusicResponseDto {
     _id: string;
     name: string;
     artist: string;
-    category: string;
+    genres: string;
     duration: number;
     imgPath: string;
     
@@ -15,7 +15,7 @@ export class GetMusicResponseDto {
         this._id = _id;
         this.artist = artist;
         this.name = name;
-        this.category = category;
+        this.genres = category;
         this.duration = duration;
         this.imgPath = imgPath;
     }
