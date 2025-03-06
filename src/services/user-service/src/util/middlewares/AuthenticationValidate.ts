@@ -46,11 +46,13 @@ class AuthenticationValidate {
 
             const expiresIn = 60 * 60 * 24 * 14 * 1000;
 
+            let firstRegister = false;
+
             if (!user) {
                 res.status(400).json({status: 400, success: false, message: 'Invalid token' });
                 return;
             }
-            
+
             if (!(user.email_verified)) {
                 res.status(403).json({ success: false, message: "Email not verified" });
                 const link = await auth.generateEmailVerificationLink(user.email ?? "")
@@ -60,7 +62,8 @@ class AuthenticationValidate {
 
             const existingUser = await UserBaseService.getUserByEmailService.execute(user.email ?? "");
 
-            if (!existingUser && user.firebase.sign_in_provider !== "password") {
+            if (!existingUser) {
+                firstRegister = true;
                 const firebaseUser = await auth.getUser(user.uid);
                 await UserBaseService.createUserService.execute({
                     _id: firebaseUser.uid,
@@ -86,6 +89,7 @@ class AuthenticationValidate {
                 status: 200,
                 success: true,
                 message: "Login successful",
+                isFirstTimeLogin: firstRegister
             });
         } catch (error: unknown) {
             if (error instanceof Error) {

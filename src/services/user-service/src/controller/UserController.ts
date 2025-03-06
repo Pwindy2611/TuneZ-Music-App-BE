@@ -47,19 +47,11 @@ class UserController {
 
             const link = await auth.generateEmailVerificationLink(email);
             await mailService.sendVerificationEmail(email, link);
-            const firebaseUser = await auth.getUserByEmail(email);
-
-            const newUser = await UserBaseService.createUserService.execute({
-                _id: firebaseUser.uid,
-                email,
-                username,
-            });
 
             res.status(201).json({
                 status: 201,
                 success: true,
                 message: 'Register successfully',
-                user: newUser,
             });
         } catch (error: unknown) {
             if (error instanceof Error) {
