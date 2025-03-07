@@ -1,16 +1,38 @@
 import {IOfficialArtistBaseService} from "../interface/IOfficialArtistBaseService.js";
-import {database} from "../config/firebase/FireBaseConfig.js";
+import {database, firestore} from "../config/firebase/FireBaseConfig.js";
 import {IOfficialArtist} from "../interface/IOfficialArtist.js";
 
-export const getAllOfficialArtist: IOfficialArtistBaseService["getAllOfficialArtists"] = async () => {
+export const getAllOfficialArtist: IOfficialArtistBaseService["getAllOfficialArtists"] = async (userId) => {
     try {
+        if (!userId) {
+            return Promise.reject(new Error('User ID is required')) ;
+        }
+
+        const followRef = await firestore
+            .collection('users')
+            .doc(userId)
+            .collection('following')
+            .where('followType', '==', 'officialArtist')
+            .get();
+
+        const followingIds = followRef.docs.map(doc  => doc.data().followingId);
+
         const officialRef = database.ref('officialArtist');
-        const snapshot = await officialRef.once('value');
+        const snapshot = await officialRef.get();
 
         if (!snapshot.exists()) {
             return [];
         }
-        return snapshot.val() as IOfficialArtist[];
+        const officialArtistsObj = snapshot.val();
+
+        const officialArtists: any[] = Object.keys(officialArtistsObj).map(key => ({
+            key,
+            ...officialArtistsObj[key]
+        }));
+
+        const filteredOfficialArtists : IOfficialArtist[] = officialArtists.filter(artist => !followingIds.includes(artist.key));
+
+        return filteredOfficialArtists;
     }catch (error) {
         throw new Error(`Failed to get all official artists ${error.message}`);
     }

@@ -6,6 +6,7 @@ import {IPlaylist} from "../../interface/IPlaylist.js";
 import {GetMusicResponseDto} from "../../dto/GetMusicResponseDto.js";
 import PlaylistCacheService from "../base/PlaylistCacheService.js";
 import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
+import {PlaylistType} from "../../enum/PlaylistType.js";
 
 export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylist"] = async (userId) => {
     try {
@@ -26,8 +27,8 @@ export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylis
             return null;
         }
 
-        const artistPlaylists = await PlaylistBaseService.getPlaylistByFilter('value', topArtists);
-        const categoryPlaylists = await PlaylistBaseService.getPlaylistByFilter('value', topGenres);
+        const artistPlaylists = await PlaylistBaseService.getPlaylistByFilter(topArtists, PlaylistType.USER_ARTIST);
+        const categoryPlaylists = await PlaylistBaseService.getPlaylistByFilter(topGenres, PlaylistType.USER_GENRE);
 
         const fetchSongsByArtist = async (artist: string): Promise<GetMusicResponseDto[]> => {
             const musicIds = await FetchBase.fetchMusicIdsFromArtist(artist, 10);

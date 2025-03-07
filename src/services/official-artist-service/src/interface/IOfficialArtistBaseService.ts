@@ -3,5 +3,5 @@ import {IFile} from "./IFile.js";
 
 export interface IOfficialArtistBaseService {
     createOfficialArtist(artist: IOfficialArtist, imgFile: IFile) : Promise<string | null>
-    getAllOfficialArtists() : Promise<IOfficialArtist[]>
+    getAllOfficialArtists(userId: string) : Promise<IOfficialArtist[]>
 }

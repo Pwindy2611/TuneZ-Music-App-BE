@@ -4,6 +4,7 @@ import FetchBase from "../../util/base/FetchBase.js";
 import PlaylistCacheService from "../base/PlaylistCacheService.js";
 import {PlaylistBaseService} from "../base/PlaylistBaseService.js";
 import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
+import {PlaylistType} from "../../enum/PlaylistType.js";
 
 export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generateFollowedArtistsPlaylist"] = async (userId) => {
     try {
@@ -33,7 +34,7 @@ export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generate
 
 
         const artistMusicPromises = artists.map(async ({artistName }) => {
-            const artistPlaylists = await PlaylistBaseService.getPlaylistByFilter('value', artistName);
+            const artistPlaylists = await PlaylistBaseService.getPlaylistByFilter(artistName, PlaylistType.FOLLOWED_ARTIST);
 
             if (!artistPlaylists || artistPlaylists.length === 0) {
                 throw new Error(`No playlist found for artist: ${artistName}`);

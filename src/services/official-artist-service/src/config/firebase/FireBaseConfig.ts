@@ -2,6 +2,7 @@ import * as dotenv from "dotenv";
 import { initializeApp, cert, getApps, getApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getDatabase } from "firebase-admin/database";
+import {getFirestore} from "firebase-admin/firestore";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -11,6 +12,7 @@ class FirebaseSingleton {
     private static instance: FirebaseSingleton;
     public auth;
     public database;
+    public firestore;
 
     private constructor() {
         const serviceAccountPath = process.env.FIREBASE_KEY_PATH;
@@ -28,7 +30,6 @@ class FirebaseSingleton {
             throw new Error(`Error reading the service account key: ${error.message}`);
         }
 
-        // Kiểm tra xem Firebase đã được khởi tạo chưa
         const app = getApps().length === 0
             ? initializeApp({
                 credential: cert(serviceAccount as any),
@@ -39,6 +40,7 @@ class FirebaseSingleton {
 
         this.auth = getAuth(app);
         this.database = getDatabase(app);
+        this.firestore = getFirestore(app);
     }
 
     public static getInstance(): FirebaseSingleton {
@@ -51,3 +53,4 @@ class FirebaseSingleton {
 
 const firebaseInstance = FirebaseSingleton.getInstance();
 export const database = firebaseInstance.database;
+export const firestore = firebaseInstance.firestore;

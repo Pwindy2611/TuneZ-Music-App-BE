@@ -4,6 +4,7 @@ import PlaylistCacheService from "../base/PlaylistCacheService.js";
 import {PlaylistBaseService} from "../base/PlaylistBaseService.js";
 import FetchBase from "../../util/base/FetchBase.js";
 import {GetMusicResponseDto} from "../../dto/GetMusicResponseDto.js";
+import {PlaylistType} from "../../enum/PlaylistType.js";
 
 export const generateFollowedGenresPlaylist: IPlaylistGenerateService["generateFollowedGenresPlaylist"] = async (userId) => {
     try {
@@ -31,7 +32,7 @@ export const generateFollowedGenresPlaylist: IPlaylistGenerateService["generateF
         const artists = (await Promise.all(artistPromises)).filter((artist): artist is {genres: string} => artist !== null);
 
         const artistMusicPromises = artists.map(async ({genres}) => {
-            const artistPlaylists = await PlaylistBaseService.getPlaylistByFilter('value', genres);
+            const artistPlaylists = await PlaylistBaseService.getPlaylistByFilter(genres, PlaylistType.FOLLOWED_GENRE);
 
             if (!artistPlaylists || artistPlaylists.length === 0) {
                 throw new Error(`No playlist found for artist: ${genres}`);

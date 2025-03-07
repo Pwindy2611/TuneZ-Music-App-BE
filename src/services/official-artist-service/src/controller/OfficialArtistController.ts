@@ -78,9 +78,11 @@ class OfficialArtistController {
             }
         }
     ]
-    getAllOfficialArtistApi = async (_req: Request, res: Response) => {
+    getAllOfficialArtistApi = async (req: Request, res: Response) => {
         try {
-            const artists = await OfficialArtistBaseService.getAllOfficialArtist();
+            const userId = req.query.userId as string;
+
+            const artists = await OfficialArtistBaseService.getAllOfficialArtist(userId);
 
             if(artists.length === 0){
                 res.status(404).json({status: 404, success: false, message: 'No official artists found'});
