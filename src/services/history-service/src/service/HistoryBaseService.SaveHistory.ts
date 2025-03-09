@@ -1,5 +1,5 @@
 import {firestore} from "../config/firebase/FireBaseConfig";
-import {IHistoryBaseService} from "../interface/IHistoryBaseService";
+import {IHistoryBaseService} from "../interface/service/IHistoryBaseService";
 import * as admin from 'firebase-admin';
 
 export const saveHistory : IHistoryBaseService ["saveHistory"] = async (history)=> {

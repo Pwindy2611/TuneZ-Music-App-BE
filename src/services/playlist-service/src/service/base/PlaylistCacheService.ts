@@ -1,4 +1,4 @@
-import { IPlaylistCacheService } from "../../interface/IPlaylistCacheService.js";
+import { IPlaylistCacheService } from "../../interface/service/IPlaylistCacheService.js";
 import { Timestamp } from "firebase-admin/firestore";
 import {cacheRepo} from "../../repository/PlaylistCacheRepository.js";
 

@@ -1,4 +1,4 @@
-import {IPlaylistGenerateRepository} from "../interface/IPlaylistGenerateRepository.js";
+import {IPlaylistGenerateRepository} from "../interface/repository/IPlaylistGenerateRepository.js";
 import {auth, database, firestore} from "../config/firebase/FireBaseConfig.js";
 import {Timestamp} from "firebase-admin/firestore";
 

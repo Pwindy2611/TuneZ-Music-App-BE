@@ -1,11 +1,11 @@
 import multer from 'multer'
 import {Request, Response} from "express";
 import {MusicBaseService} from "../service/music_base/MusicBaseService.js";
-import {IMusicFile} from "../interface/IMusicFile.js";
-import {CreateMusicDto} from "../dto/CreateMusicDto.js";
-import {IMusic} from "../interface/IMusic.js";
+import {IMusicFile} from "../interface/object/IMusicFile.js";
+import {CreateMusicDto} from "../dto/request/CreateMusicDto.js";
+import {IMusic} from "../interface/object/IMusic.js";
 import {SongType} from "../enum/SongType.js";
-import {UploadMusicDto} from "../dto/UploadMusicDto.js";
+import {UploadMusicDto} from "../dto/request/UploadMusicDto.js";
 import {MusicUserService} from "../service/music_user/MusicUserService.js";
 
 

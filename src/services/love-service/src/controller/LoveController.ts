@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
-import {ILove} from "../interface/ILove";
-import {SaveMusicDto} from "../dto/SaveMusicDto";
+import {ILove} from "../interface/object/ILove";
+import {SaveMusicDto} from "../dto/request/SaveMusicDto";
 import {LoveBaseService} from "../service/LoveBaseService";
 
 class LoveController {

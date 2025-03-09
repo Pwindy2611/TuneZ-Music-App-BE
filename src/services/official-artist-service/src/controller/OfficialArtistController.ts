@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
-import {CreateOfficialArtistDto} from "../dto/CreateOfficialArtistDto.js";
+import {CreateOfficialArtistDto} from "../dto/request/CreateOfficialArtistDto.js";
 import {OfficialArtistBaseService} from "../service/OfficialArtistBaseService.js";
 import multer from "multer";
-import {IOfficialArtist} from "../interface/IOfficialArtist.js";
-import {IFile} from "../interface/IFile.js";
+import {IOfficialArtist} from "../interface/object/IOfficialArtist.js";
+import {IFile} from "../interface/object/IFile.js";
 import {OfficialArtistUserService} from "../service/OfficialArtistUserService.js";
 
 const uploadMulter = multer({

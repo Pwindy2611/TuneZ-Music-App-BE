@@ -1,4 +1,4 @@
-import { IFollowBaseService } from "../interface/IFollowBaseService";
+import { IFollowBaseService } from "../interface/service/IFollowBaseService";
 import { firestore } from "../config/firebase/FireBaseConfig"
 import * as admin from "firebase-admin";
 import {FollowType} from "../enum/FollowType";

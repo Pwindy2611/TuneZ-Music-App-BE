@@ -1,6 +1,6 @@
-import {IUserBaseRepository} from "../interface/IUserBaseRepository.js";
-import {IUser} from "../interface/IUser.js";
-import {UserDto} from "../dto/UserDto.js";
+import {IUserBaseRepository} from "../interface/repository/IUserBaseRepository.js";
+import {IUser} from "../interface/object/IUser.js";
+import {UserDto} from "../dto/response/UserDto.js";
 import {auth, database} from "../config/firebase/FireBaseConfig.js";
 import {injectable} from "tsyringe";
 

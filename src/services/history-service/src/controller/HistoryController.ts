@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
-import {IHistory} from "../interface/IHistory";
-import {SaveHistoryDto} from "../dto/SaveHistoryDto";
+import {IHistory} from "../interface/object/IHistory";
+import {SaveHistoryDto} from "../dto/request/SaveHistoryDto";
 import {HistoryBaseService} from "../service/HistoryBaseService";
 
 class HistoryController {

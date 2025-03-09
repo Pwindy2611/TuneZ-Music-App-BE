@@ -1,9 +1,9 @@
-import {IMusicBaseRepository} from "../interface/IMusicBaseRepository.js";
+import {IMusicBaseRepository} from "../interface/repository/IMusicBaseRepository.js";
 import {auth, database} from "../config/firebase/FireBaseConfig.js";
 import FetchBase from "../util/base/FetchBase.js";
 import {singleton} from "tsyringe";
 import UploadBase from "../util/base/UploadBase.js";
-import {IMusic} from "../interface/IMusic.js";
+import {IMusic} from "../interface/object/IMusic.js";
 
 @singleton()
 export class MusicBaseRepository implements IMusicBaseRepository {

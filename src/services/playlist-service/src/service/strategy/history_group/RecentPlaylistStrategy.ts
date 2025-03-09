@@ -1,4 +1,4 @@
-import {IPlaylistStrategy} from "../../../interface/IPlaylistStrategy.js";
+import {IPlaylistStrategy} from "../../../interface/object/IPlaylistStrategy.js";
 import {generateRecentPlaylist} from "../../generate_service/PlaylistGenerateService.GenerateRecentPlaylist.js";
 
 export class RecentPlaylistStrategy implements IPlaylistStrategy {

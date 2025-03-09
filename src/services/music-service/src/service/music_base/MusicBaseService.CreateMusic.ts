@@ -1,4 +1,4 @@
-import {IMusicBaseService} from "../../interface/IMusicBaseService.js";
+import {IMusicBaseService} from "../../interface/service/IMusicBaseService.js";
 import {musicBaseMediator, musicBaseRepository} from "../../config/container/Container.js";
 import {CreateMusicCommand} from "./command/CreateMusicCommand.js";
 import {Lifecycle, scoped} from "tsyringe";

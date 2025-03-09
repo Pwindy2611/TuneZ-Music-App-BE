@@ -1,8 +1,8 @@
 import {database, firestore} from '../../config/firebase/FireBaseConfig.js'
-import {GetMusicResponseDto} from "../../dto/GetMusicResponseDto.js";
+import {MusicResponseDto} from "../../dto/response/MusicResponseDto.js";
 
 class FetchBase {
-    async fetchMusicDetails(musicIds: string[]): Promise<GetMusicResponseDto[]> {
+    async fetchMusicDetails(musicIds: string[]): Promise<MusicResponseDto[]> {
         const musicPromises = musicIds.map(async (musicId) => {
             const musicRef = database.ref(`musics/${musicId}`);
             const musicSnap = await musicRef.get();
@@ -10,7 +10,7 @@ class FetchBase {
 
             if (!musicData) return null;
 
-            return new GetMusicResponseDto(
+            return new MusicResponseDto(
                 musicSnap.key as string,
                 musicData.name,
                 musicData.artist,
@@ -21,7 +21,7 @@ class FetchBase {
         });
 
         const results = await Promise.all(musicPromises);
-        return results.filter(item => item !== null) as GetMusicResponseDto[];
+        return results.filter(item => item !== null) as MusicResponseDto[];
     }
 
     async fetchMusicIdsFromHistory(userId: string, limit: number) {

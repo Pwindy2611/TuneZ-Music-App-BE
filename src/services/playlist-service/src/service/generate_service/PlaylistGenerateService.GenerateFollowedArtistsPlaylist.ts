@@ -1,5 +1,5 @@
-import {IPlaylistGenerateService} from "../../interface/IPlaylistGenerateService.js";
-import {GetMusicResponseDto} from "../../dto/GetMusicResponseDto.js";
+import {IPlaylistGenerateService} from "../../interface/service/IPlaylistGenerateService.js";
+import {MusicResponseDto} from "../../dto/response/MusicResponseDto.js";
 import FetchBase from "../../util/base/FetchBase.js";
 import PlaylistCacheService from "../base/PlaylistCacheService.js";
 import {PlaylistBaseService} from "../base/PlaylistBaseService.js";
@@ -52,7 +52,7 @@ export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generate
 
         const artistMusicDetails = await Promise.all(artistMusicPromises);
 
-        const followedPlaylistByArtistName: Record<string, GetMusicResponseDto[]> = {};
+        const followedPlaylistByArtistName: Record<string, MusicResponseDto[]> = {};
         artistMusicDetails.flat().forEach(({ title, musicDetails }) => {
             if (!followedPlaylistByArtistName[title]) {
                 followedPlaylistByArtistName[title] = [];

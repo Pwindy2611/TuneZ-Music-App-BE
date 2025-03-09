@@ -1,9 +1,9 @@
-import {IPlaylistGenerateService} from "../../interface/IPlaylistGenerateService.js";
+import {IPlaylistGenerateService} from "../../interface/service/IPlaylistGenerateService.js";
 import HistoryBase from "../../util/base/HistoryBase.js";
 import {PlaylistBaseService} from "../base/PlaylistBaseService.js";
 import FetchBase from "../../util/base/FetchBase.js";
-import {IPlaylist} from "../../interface/IPlaylist.js";
-import {GetMusicResponseDto} from "../../dto/GetMusicResponseDto.js";
+import {IPlaylist} from "../../interface/object/IPlaylist.js";
+import {MusicResponseDto} from "../../dto/response/MusicResponseDto.js";
 import PlaylistCacheService from "../base/PlaylistCacheService.js";
 import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 import {PlaylistType} from "../../enum/PlaylistType.js";
@@ -30,22 +30,22 @@ export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylis
         const artistPlaylists = await PlaylistBaseService.getPlaylistByFilter(topArtists, PlaylistType.USER_ARTIST);
         const categoryPlaylists = await PlaylistBaseService.getPlaylistByFilter(topGenres, PlaylistType.USER_GENRE);
 
-        const fetchSongsByArtist = async (artist: string): Promise<GetMusicResponseDto[]> => {
+        const fetchSongsByArtist = async (artist: string): Promise<MusicResponseDto[]> => {
             const musicIds = await FetchBase.fetchMusicIdsFromArtist(artist, 10);
             return await FetchBase.fetchMusicDetails(musicIds);
         };
 
-        const fetchSongsByCategory = async (genre: string): Promise<GetMusicResponseDto[]> => {
+        const fetchSongsByCategory = async (genre: string): Promise<MusicResponseDto[]> => {
             const musicIds = await FetchBase.fetchMusicIdsFromGenres(genre, 10);
             return await FetchBase.fetchMusicDetails(musicIds);
         };
 
         const populatePlaylistsWithSongs = async (
             playlists: IPlaylist[],
-            fetchSongsFn: (value: string) => Promise<GetMusicResponseDto[]>
-        ): Promise<Record<string, GetMusicResponseDto[]>> =>
+            fetchSongsFn: (value: string) => Promise<MusicResponseDto[]>
+        ): Promise<Record<string, MusicResponseDto[]>> =>
         {
-            const populatedPlaylists: Record<string, GetMusicResponseDto[]> = {};
+            const populatedPlaylists: Record<string, MusicResponseDto[]> = {};
 
             await Promise.all(playlists.map(async (playlist) => {
                 populatedPlaylists[playlist.title] = await fetchSongsFn(playlist.value);

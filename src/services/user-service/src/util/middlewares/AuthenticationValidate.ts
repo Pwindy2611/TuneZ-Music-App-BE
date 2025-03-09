@@ -4,7 +4,6 @@ import {UserBaseService} from '../../service/UserBaseService.js';
 import {validateEmail, validatePassword, validateUsername} from '../base/RegexBase.js';
 import {saveSessionTokenToDatabase} from "../base/TokenBase.js";
 import {mailService} from '../base/MailBase.js'
-import * as admin from 'firebase-admin';
 
 class AuthenticationValidate {
     validateRegister = async (req: Request, res: Response, next: NextFunction) => {

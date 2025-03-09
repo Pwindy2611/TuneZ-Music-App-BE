@@ -1,7 +1,7 @@
 import {database, firestore} from "../config/firebase/FireBaseConfig";
 import {FollowResponseDto} from "../dto/response/FollowResponseDto";
 import {getFollowersCount} from "./FollowUserService.GetFollowersCount";
-import {IFollowUserService} from "../interface/IFollowUserService";
+import {IFollowUserService} from "../interface/service/IFollowUserService";
 
 export const getFollowers : IFollowUserService["getFollowers"] = async (userId) => {
     try {

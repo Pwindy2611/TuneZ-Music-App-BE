@@ -1,4 +1,4 @@
-import {IMusicBaseService} from "../../interface/IMusicBaseService.js";
+import {IMusicBaseService} from "../../interface/service/IMusicBaseService.js";
 import {musicBaseMediator} from "../../config/container/Container.js";
 import {GetMusicByArtistQuery} from "./query/GetMusicByArtistQuery.js";
 import {singleton} from "tsyringe";
