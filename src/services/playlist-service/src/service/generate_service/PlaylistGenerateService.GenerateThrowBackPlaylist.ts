@@ -17,7 +17,7 @@ export const generateThrowBackPlaylist: IPlaylistGenerateService["generateThrowB
         }
 
         console.log(`Generating new throwback playlist for user: ${userId}`);
-        const throwbackPlaylists = await PlaylistBaseService.getPlaylistByFilter('value', 'throwback');
+        const throwbackPlaylists = await PlaylistBaseService.getPlaylistByFilter('throwback', 'custom');
 
         const throwbackPlaylist = Array.isArray(throwbackPlaylists) && throwbackPlaylists.length > 0 ? throwbackPlaylists[0] : null;
         if (!throwbackPlaylist) {

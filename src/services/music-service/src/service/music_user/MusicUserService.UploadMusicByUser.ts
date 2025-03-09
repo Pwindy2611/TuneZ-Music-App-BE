@@ -1,10 +1,10 @@
-import {IMusicBaseService} from "../../interface/IMusicBaseService.js";
 import {Lifecycle, scoped} from "tsyringe";
 import {musicBaseMediator, musicBaseRepository} from "../../config/container/Container.js";
 import {UploadMusicByUserCommand} from "./command/UploadMusicByUserCommand.js";
+import {IMusicUserService} from "../../interface/IMusicUserService.js";
 @scoped(Lifecycle.ResolutionScoped)
 export class UploadMusicByUserService {
-    execute: IMusicBaseService["uploadMusicByUser"] = async (music, musicFile, imgFile) => {
+    execute: IMusicUserService["uploadMusicByUser"] = async (music, musicFile, imgFile) => {
         const loveCount = 0;
         const playCount = 0;
 

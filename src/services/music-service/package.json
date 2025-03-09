@@ -14,22 +14,19 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@supabase/supabase-js": "^2.48.1",
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
-    "@types/firebase": "^2.4.32",
-    "body-parser": "^1.20.3",
+    "body-parser": "^2.1.0",
     "class-validator": "^0.14.1",
     "cloudinary": "^2.5.1",
-    "compression": "^1.7.5",
+    "compression": "^1.8.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^5.0.0",
-    "firebase": "^11.1.0",
-    "firebase-admin": "^13.0.2",
+    "express": "^5.0.1",
+    "firebase-admin": "^13.2.0",
     "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.16",
+    "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "^4.8.0"
@@ -41,7 +38,7 @@
     "@types/multer": "^1.4.12",
     "@types/nodemailer": "^6.4.17",
     "ts-node": "^10.9.2",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
   }
 }

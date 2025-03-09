@@ -2,16 +2,22 @@ import { Request, Response } from 'express';
 import {CreatePlaylistDto} from "../dto/CreatePlaylistDto.js";
 import {PlaylistBaseService} from "../service/base/PlaylistBaseService.js";
 import PlaylistGenerateService from "../service/PlaylistGenerateService.js";
+import {IPlaylist} from "../interface/IPlaylist.js";
 class PlaylistController {
     async createPlaylistApi(req: Request, res: Response) {
         try {
             const {title , type, value} = req.body;
 
-            const createPlaylistDto = new CreatePlaylistDto(title, type, value);
+            const playlistData: IPlaylist = {
+                title,
+                type,
+                value
+            }
+            const createPlaylistDto = new CreatePlaylistDto(playlistData);
 
             await createPlaylistDto.validate();
 
-            await PlaylistBaseService.createPlaylist(title, type, value);
+            await PlaylistBaseService.createPlaylist(playlistData);
 
             res.status(201).json({status: 201, success: true, message: 'Playlist created successfully'});
 

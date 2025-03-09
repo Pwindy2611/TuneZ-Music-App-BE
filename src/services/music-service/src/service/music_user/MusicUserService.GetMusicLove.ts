@@ -1,10 +1,10 @@
-import {IMusicBaseService} from "../../interface/IMusicBaseService.js";
 import {musicBaseMediator} from "../../config/container/Container.js";
 import {GetMusicLoveQuery} from "./query/GetMusicLoveQuery.js";
 import {singleton} from "tsyringe";
+import {IMusicUserService} from "../../interface/IMusicUserService.js";
 @singleton()
 export class GetMusicLoveService {
-    execute: IMusicBaseService["getMusicLove"] = async (userId) => {
+    execute: IMusicUserService["getMusicLove"] = async (userId) => {
         return await musicBaseMediator.send(new GetMusicLoveQuery(userId));
     };
 }

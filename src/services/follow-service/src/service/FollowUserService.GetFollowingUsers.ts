@@ -1,10 +1,10 @@
-import {IFollowBaseService} from "../interface/IFollowBaseService";
 import {database, firestore} from "../config/firebase/FireBaseConfig";
-import {GetFollowResponseDto} from "../dto/GetFollowResponseDto";
-import {getFollowersCount} from "./FollowBaseService.GetFollowersCount";
+import {FollowResponseDto} from "../dto/response/FollowResponseDto";
+import {getFollowersCount} from "./FollowUserService.GetFollowersCount";
 import {IFollowing} from "../interface/IFollowing";
+import {IFollowUserService} from "../interface/IFollowUserService";
 
-export const getFollowingUsers: IFollowBaseService ["getFollowingUsers"] = async (userId) => {
+export const getFollowingUsers: IFollowUserService ["getFollowingUsers"] = async (userId) => {
     try {
         const followSnapshot = await firestore
             .collection('users')
@@ -12,7 +12,7 @@ export const getFollowingUsers: IFollowBaseService ["getFollowingUsers"] = async
             .collection('following')
             .get();
 
-        const followingUsers: GetFollowResponseDto[] = [];
+        const followingUsers: FollowResponseDto[] = [];
 
         if(followSnapshot.empty){
             return followingUsers;

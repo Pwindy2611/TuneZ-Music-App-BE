@@ -8,25 +8,18 @@ class PlaylistBaseRepository implements IPlaylistBaseRepository {
         await playlistRef.push(playlist);
     }
 
-    async getPlaylistByFilter(key: string, values: string[] | string): Promise<IPlaylist[]> {
+    async getPlaylistByFilter(values: string[] | string, type: string): Promise<IPlaylist[]> {
         const playlistRef = database.ref("playlists");
-        if (Array.isArray(values)) {
-            const playlists: IPlaylist[] = [];
 
-            for (const value of values) {
-                const snapshot = await playlistRef.orderByChild(key).equalTo(value).once("value");
-                snapshot.forEach((childSnapshot) => {
-                    const playlist: IPlaylist = childSnapshot.val();
-                    playlists.push(playlist);
-                });
-            }
+        const snapshot = await playlistRef.orderByChild("type").equalTo(type).once("value");
 
-            return playlists;
-        } else {
-            const snapshot = await playlistRef.orderByChild(key).equalTo(values).once("value");
-            const playlist = snapshot.val() ? Object.values(snapshot.val())[0] as IPlaylist : null;
-            return playlist ? [playlist] : [];
-        }
+        if (!snapshot.exists()) return [];
+
+        const allPlaylists: IPlaylist[] = Object.values(snapshot.val());
+
+        const valueArray = Array.isArray(values) ? values : [values];
+
+        return allPlaylists.filter(playlist => valueArray.includes(playlist.value));
     }
 }
 

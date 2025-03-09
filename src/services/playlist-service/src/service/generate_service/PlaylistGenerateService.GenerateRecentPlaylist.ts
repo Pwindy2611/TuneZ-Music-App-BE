@@ -17,7 +17,7 @@ export const generateRecentPlaylist: IPlaylistGenerateService["generateRecentPla
         }
 
         console.log(`Generating new recent playlist for user: ${userId}`);
-        const recentPlaylists = await PlaylistBaseService.getPlaylistByFilter('value', 'recent');
+        const recentPlaylists = await PlaylistBaseService.getPlaylistByFilter('recent', 'custom');
 
         const recentPlaylist = Array.isArray(recentPlaylists) && recentPlaylists.length > 0 ? recentPlaylists[0] : null;
         if (!recentPlaylist) {
