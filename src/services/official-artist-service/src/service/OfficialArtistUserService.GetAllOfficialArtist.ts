@@ -1,8 +1,8 @@
-import {IOfficialArtistBaseService} from "../interface/IOfficialArtistBaseService.js";
 import {database, firestore} from "../config/firebase/FireBaseConfig.js";
 import {IOfficialArtist} from "../interface/IOfficialArtist.js";
+import {IOfficialArtistUserService} from "../interface/IOfficialArtistUserService.js";
 
-export const getAllOfficialArtist: IOfficialArtistBaseService["getAllOfficialArtists"] = async (userId) => {
+export const getAllOfficialArtist: IOfficialArtistUserService["getAllOfficialArtists"] = async (userId) => {
     try {
         if (!userId) {
             return Promise.reject(new Error('User ID is required')) ;

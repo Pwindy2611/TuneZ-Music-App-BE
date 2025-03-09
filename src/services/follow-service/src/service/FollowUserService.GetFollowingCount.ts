@@ -1,7 +1,7 @@
-import {IFollowBaseService} from "../interface/IFollowBaseService";
 import {firestore} from "../config/firebase/FireBaseConfig";
+import {IFollowUserService} from "../interface/IFollowUserService";
 
-export const getFollowingCount : IFollowBaseService ['getFollowingCount'] = async (userId) => {
+export const getFollowingCount : IFollowUserService ['getFollowingCount'] = async (userId) => {
     try{
         const followSnapshot = await firestore
             .collection('users')

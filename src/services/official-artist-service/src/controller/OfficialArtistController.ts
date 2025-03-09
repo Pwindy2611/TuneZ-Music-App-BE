@@ -4,6 +4,7 @@ import {OfficialArtistBaseService} from "../service/OfficialArtistBaseService.js
 import multer from "multer";
 import {IOfficialArtist} from "../interface/IOfficialArtist.js";
 import {IFile} from "../interface/IFile.js";
+import {OfficialArtistUserService} from "../service/OfficialArtistUserService.js";
 
 const uploadMulter = multer({
     limits: { fileSize: 10 * 1024 * 1024 },
@@ -82,7 +83,7 @@ class OfficialArtistController {
         try {
             const userId = req.query.userId as string;
 
-            const artists = await OfficialArtistBaseService.getAllOfficialArtist(userId);
+            const artists = await OfficialArtistUserService.getAllOfficialArtist(userId);
 
             if(artists.length === 0){
                 res.status(404).json({status: 404, success: false, message: 'No official artists found'});

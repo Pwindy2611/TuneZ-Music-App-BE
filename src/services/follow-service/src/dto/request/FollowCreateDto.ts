@@ -1,7 +1,7 @@
 import {IsString, IsNotEmpty, validateOrReject, IsArray} from 'class-validator';
-import { auth, database } from '../config/firebase/FireBaseConfig';
+import { auth, database } from '../../config/firebase/FireBaseConfig';
 
-export class Follow {
+export class FollowCreateDto {
     @IsString()
     @IsNotEmpty()
     userId: string;

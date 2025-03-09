@@ -6,6 +6,7 @@ import {CreateMusicDto} from "../dto/CreateMusicDto.js";
 import {IMusic} from "../interface/IMusic.js";
 import {SongType} from "../enum/SongType.js";
 import {UploadMusicDto} from "../dto/UploadMusicDto.js";
+import {MusicUserService} from "../service/music_user/MusicUserService.js";
 
 
 const uploadMulter = multer({
@@ -143,7 +144,7 @@ class MusicController {
                     buffer: imgFile.buffer,
                 }
 
-                const newMusic = await MusicBaseService.uploadMusicByUser.execute(musicData, musicObject, imgObject);
+                const newMusic = await MusicUserService.uploadMusicByUser.execute(musicData, musicObject, imgObject);
 
                 res.status(201).json({
                     status: 201,
@@ -275,7 +276,7 @@ class MusicController {
         try {
             const userId = req.query.userId as string;
 
-            const musicHistory = await MusicBaseService.getMusicHistory.execute(userId);
+            const musicHistory = await MusicUserService.getMusicHistory.execute(userId);
 
             if(!musicHistory) {
                 res.status(404).json({
@@ -306,7 +307,7 @@ class MusicController {
         try {
             const userId = req.query.userId as string;
 
-            const musicLove = await MusicBaseService.getMusicLove.execute(userId);
+            const musicLove = await MusicUserService.getMusicLove.execute(userId);
 
             if(!musicLove) {
                 res.status(404).json({

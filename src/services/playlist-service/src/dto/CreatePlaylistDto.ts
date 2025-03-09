@@ -1,6 +1,7 @@
 import {IsString, validateOrReject} from "class-validator";
+import {IPlaylist} from "../interface/IPlaylist.js";
 
-export class CreatePlaylistDto {
+export class CreatePlaylistDto implements IPlaylist{
     @IsString()
     title: string;
 
@@ -10,10 +11,10 @@ export class CreatePlaylistDto {
     @IsString()
     value:string
 
-    constructor(title: string, type: string, value: string) {
-        this.title = title;
-        this.type = type;
-        this.value = value;
+    constructor(playlist: IPlaylist) {
+        this.title = playlist.title;
+        this.type = playlist.type;
+        this.value = playlist.value;
     }
 
     async validate() {

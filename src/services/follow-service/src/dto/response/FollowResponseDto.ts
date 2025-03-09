@@ -1,4 +1,4 @@
-export class GetFollowResponseDto{
+export class FollowResponseDto {
     userName: string;
     profilePictureUrl: string;
     followerCount: number;
