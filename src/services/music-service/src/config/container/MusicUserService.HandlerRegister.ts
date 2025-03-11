@@ -1,5 +1,4 @@
-import { container } from "./Container.js";
-import {musicUserMediator} from "./Container.js";
+import { container, musicUserMediator } from "./Container.js";
 import {UploadMusicByUserCommand} from "../../service/music_user/command/UploadMusicByUserCommand.js";
 import {UploadMusicByUserHandler} from "../../service/music_user/handler/UploadMusicByUserHandler.js";
 import {GetMusicHistoryHandler} from "../../service/music_user/handler/GetMusicHistoryHandler.js";

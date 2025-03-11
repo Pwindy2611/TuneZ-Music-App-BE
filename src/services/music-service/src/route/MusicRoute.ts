@@ -12,7 +12,13 @@ router.get('/getAllMusic', MusicController.getAllMusicsApi);
 router.get('/getMusicByArtist', MusicController.getMusicByArtistApi);
 router.get('/getMusicByGenres', MusicController.getMusicByGenresApi);
 router.get('/getMusicHistory', MusicController.getMusicHistoryApi);
-router.get('/getMusicLove', MusicController.getMusicLoveApi)
+router.get('/getMusicLove', MusicController.getMusicLoveApi);
 
+//STREAM
+router.get('/getStreamMusic/:musicId', MusicController.getStreamMusicApi);
+router.post('/pauseMusic', MusicController.pauseMusicApi);
+router.post('/playMusic/:musicId', MusicController.playMusicApi);
+router.post('/seekMusic/:musicId', MusicController.seekMusicApi);
+router.get('/getUserMusicState', MusicController.getUserMusicStateApi);
 
 export default router;

@@ -1,5 +1,6 @@
 import {database, firestore} from '../../config/firebase/FireBaseConfig.js'
 import {MusicResponseDto} from "../../dto/response/MusicResponseDto.js";
+import axios from "axios";
 
 class FetchBase {
     async fetchMusicDetails(musicIds: string[]): Promise<MusicResponseDto[]> {
@@ -25,27 +26,16 @@ class FetchBase {
     }
 
     async fetchMusicIdsFromHistory(userId: string, limit: number) {
-        const historySnapshot = await firestore
-            .collection(`users`)
-            .doc(userId)
-            .collection('history')
-            .orderBy('listenAt', 'desc')
-            .limit(limit)
-            .get();
 
-        return historySnapshot.empty ? [] : historySnapshot.docs.map(doc => doc.data().musicId);
+        const response = await axios.get(`http://api-gateway:3000/history/getMusicIdsByUserHistory?userId=${userId}&limit=${limit}`);
+
+        return response.data.data as string[];
     }
 
     async fetchMusicIdsFromLove(userId: string, limit: number) {
-        const historySnapshot = await firestore
-            .collection(`users`)
-            .doc(userId)
-            .collection('love')
-            .orderBy('listenAt', 'desc')
-            .limit(limit)
-            .get();
+        const response = await axios.get(`http://api-gateway:3000/love/getMusicIdsByUserLove?userId=${userId}&limit=${limit}`);
 
-        return historySnapshot.empty ? [] : historySnapshot.docs.map(doc => doc.data().musicId);
+        return response.data.musicIds as string[];
     }
 }
 

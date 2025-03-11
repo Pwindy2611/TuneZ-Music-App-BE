@@ -1,9 +1,10 @@
 import {IMusicBaseRepository} from "../interface/repository/IMusicBaseRepository.js";
-import {auth, database} from "../config/firebase/FireBaseConfig.js";
+import {database} from "../config/firebase/FireBaseConfig.js";
 import FetchBase from "../util/base/FetchBase.js";
 import {singleton} from "tsyringe";
 import UploadBase from "../util/base/UploadBase.js";
 import {IMusic} from "../interface/object/IMusic.js";
+import {child} from "@firebase/database";
 
 @singleton()
 export class MusicBaseRepository implements IMusicBaseRepository {
@@ -101,19 +102,32 @@ export class MusicBaseRepository implements IMusicBaseRepository {
         const musicDetails = await FetchBase.fetchMusicDetails(musicIds);
         return musicDetails.length > 0 ? musicDetails : null;
     }
+    async getMusicUrlById(musicId:string): Promise<any> {
+        const musicRef = database.ref(`musics/${musicId}`);
 
-    async getMusicHistory(userId: string): Promise<any> {
-        const musicIds = await FetchBase.fetchMusicIdsFromHistory(userId, 50);
-        const uniqueMusicIds = [...new Set(musicIds)];
-
-        return await FetchBase.fetchMusicDetails(uniqueMusicIds);
+        try {
+            const snapshot = await musicRef.once("value");
+            if (snapshot.exists()) {
+                return snapshot.val().musicPath;
+            }
+            return null;
+        } catch (error) {
+            throw new Error(error.message);
+        }
     }
 
-    async getMusicLove(userId: string): Promise<any> {
-        const musicIds = await FetchBase.fetchMusicIdsFromLove(userId, 50);
-        const uniqueMusicIds = [...new Set(musicIds)];
+    async getMusicDurationById(musicId: string): Promise<number> {
+        const musicRef = database.ref(`musics/${musicId}`);
 
-        return await FetchBase.fetchMusicDetails(uniqueMusicIds);
+        try {
+            const snapshot = await musicRef.once("value");
+            if (snapshot.exists()) {
+                return snapshot.val().duration;
+            }
+            return -1;
+        } catch (error) {
+            throw new Error(error.message);
+        }
     }
 
     async isOfficialArtistExist(artistId: string): Promise<boolean> {
@@ -122,8 +136,6 @@ export class MusicBaseRepository implements IMusicBaseRepository {
 
         return snapshot.exists();
     }
-    async isUserExist(userId: string): Promise<boolean> {
-        return !!(await auth.getUser(userId));
-    }
+
 
 }

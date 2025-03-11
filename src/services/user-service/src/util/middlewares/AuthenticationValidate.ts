@@ -81,8 +81,10 @@ class AuthenticationValidate {
             res.cookie('session', sessionCookie, {
                 maxAge: expiresIn,
                 httpOnly: true,
-                secure: true,
+                sameSite: "none",
+                secure: true
             });
+
 
             res.status(200).json({
                 status: 200,
