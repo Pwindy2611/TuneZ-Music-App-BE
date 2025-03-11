@@ -1,5 +1,4 @@
 import { Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
 import { IAuthRequest } from "../interface/IAuthRequest";
 import {auth} from "../config/firebase/FireBaseConfig"; // Import interface
 

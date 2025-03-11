@@ -22,7 +22,6 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
-
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());

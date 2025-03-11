@@ -4,7 +4,6 @@ import FetchBase from "../util/base/FetchBase.js";
 import {singleton} from "tsyringe";
 import UploadBase from "../util/base/UploadBase.js";
 import {IMusic} from "../interface/object/IMusic.js";
-import {child} from "@firebase/database";
 
 @singleton()
 export class MusicBaseRepository implements IMusicBaseRepository {

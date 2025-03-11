@@ -1,5 +1,4 @@
 import {inject, injectable} from "tsyringe";
-import {MusicBaseRepository} from "../../../repository/MusicBaseRepository.js";
 import {GetMusicHistoryQuery} from "../query/GetMusicHistoryQuery.js";
 import {MusicUserRepository} from "../../../repository/MusicUserRepository.js";
 @injectable()

@@ -1,7 +1,6 @@
 import * as dotenv from "dotenv";
 import { initializeApp, cert, getApps, getApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
-import { getDatabase } from "firebase-admin/database";
 import * as fs from "fs";
 import * as path from "path";
 

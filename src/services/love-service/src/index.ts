@@ -21,6 +21,10 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+app.use(compression());
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, _res, next) => {
     console.log(`[Love Api] Request method: ${req.method}, path: ${req.path}`);
     next();

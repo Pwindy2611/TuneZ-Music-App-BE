@@ -1,4 +1,4 @@
-import {database, firestore} from '../../config/firebase/FireBaseConfig.js'
+import {database} from '../../config/firebase/FireBaseConfig.js'
 import {MusicResponseDto} from "../../dto/response/MusicResponseDto.js";
 import axios from "axios";
 

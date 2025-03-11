@@ -3,12 +3,9 @@ import {IMusicState} from "../interface/object/IMusicState.js";
 import {Readable} from "stream";
 import redisClient from "../config/redis/RedisConfig.js";
 import {firestore} from "../config/firebase/FireBaseConfig.js";
-import {MusicStreamService} from "../service/music_stream/MusicStreamService.js";
 import axios from "axios";
 import {MusicBaseService} from "../service/music_base/MusicBaseService.js";
-import {response} from "express";
 import {singleton} from "tsyringe";
-import {Timestamp} from "firebase-admin/firestore";
 @singleton()
 export class MusicStreamRepository implements IMusicStreamRepository {
     async getUserMusicState(userId: string): Promise<IMusicState> {

@@ -1,7 +1,5 @@
 import {IMusicStreamService} from "../../interface/service/IMusicStreamService.js";
 import {IMusicState} from "../../interface/object/IMusicState.js";
-import redisClient from "../../config/redis/RedisConfig.js";
-import {firestore} from "../../config/firebase/FireBaseConfig.js";
 import {Lifecycle, scoped} from "tsyringe";
 import {musicStreamMediator} from "../../config/container/Container.js";
 import {GetUserMusicStateQuery} from "./query/GetUserMusicStateQuery.js";

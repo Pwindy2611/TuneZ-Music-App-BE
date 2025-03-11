@@ -10,7 +10,6 @@ import {MusicUserService} from "../service/music_user/MusicUserService.js";
 import {IAuthRequest} from "../interface/object/IAuthRequest.js";
 import {MusicStreamService} from "../service/music_stream/MusicStreamService.js";
 import {musicStreamRepository} from "../config/container/Container.js";
-import {req} from "agent-base";
 
 
 const uploadMulter = multer({
