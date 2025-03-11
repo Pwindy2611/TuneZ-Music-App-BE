@@ -1,14 +1,15 @@
-import {IPlaylistGenerateService} from "../../interface/service/IPlaylistGenerateService.js";
-import {MusicResponseDto} from "../../dto/response/MusicResponseDto.js";
+import { IPlaylistGenerateService } from "../../interface/service/IPlaylistGenerateService.js";
+import { MusicResponseDto } from "../../dto/response/MusicResponseDto.js";
 import FetchBase from "../../util/base/FetchBase.js";
 import PlaylistCacheService from "../base/PlaylistCacheService.js";
-import {PlaylistBaseService} from "../base/PlaylistBaseService.js";
-import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
-import {PlaylistType} from "../../enum/PlaylistType.js";
+import { PlaylistBaseService } from "../base/PlaylistBaseService.js";
+import { generateRepo } from "../../repository/PlaylistGenerateRepository.js";
+import { PlaylistType } from "../../enum/PlaylistType.js";
+import {IPlaylistResponseDto} from "../../dto/response/IPlaylistResponseDto.js";
 
-export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generateFollowedArtistsPlaylist"] = async (userId) => {
+export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generateFollowedArtistsPlaylist"] = async (userId): Promise<IPlaylistResponseDto[] | null> => {
     try {
-        if(!await generateRepo.isUserExists(userId)) {//
+        if (!await generateRepo.isUserExists(userId)) {
             return Promise.reject(new Error("User not found"));
         }
 
@@ -18,56 +19,36 @@ export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generate
             return cachedPlaylist;
         }
 
+        const artistIds = await generateRepo.getIdsArtistFollowed(userId);
+        if (artistIds.length === 0) return null;
 
-        const artistIds  = await generateRepo.getIdsArtistFollowed(userId);
+        const artistPlaylists: IPlaylistResponseDto[] = [];
 
-        if (artistIds .length === 0) return null;
+        for (const artistId of artistIds) {
+            const artistName = await generateRepo.getArtistName(artistId);
+            if (!artistName) continue;
 
-        const artistPromises = artistIds.map(async (artistId) => {
-            const name = await generateRepo.getArtistName(artistId)
-            return {
-                artistName: name
-            };
-        });
-
-        const artists = (await Promise.all(artistPromises)).filter((artist): artist is {artistName: string } => artist !== null);
-
-
-        const artistMusicPromises = artists.map(async ({artistName }) => {
-            const artistPlaylists = await PlaylistBaseService.getPlaylistByFilter(artistName, PlaylistType.FOLLOWED_ARTIST);
-
-            if (!artistPlaylists || artistPlaylists.length === 0) {
-                throw new Error(`No playlist found for artist: ${artistName}`);
-            }
+            const playlists = await PlaylistBaseService.getPlaylistByFilter(artistName, PlaylistType.FOLLOWED_ARTIST);
+            if (!playlists || playlists.length === 0) continue;
 
             const musicIds = await FetchBase.fetchMusicIdsFromArtist(artistName, 20);
             const musicDetails = await FetchBase.fetchMusicDetails(musicIds);
 
-            return artistPlaylists.map(playlist => ({
-                title: playlist.title,
-                musicDetails
-            }));
-        });
-
-
-        const artistMusicDetails = await Promise.all(artistMusicPromises);
-
-        const followedPlaylistByArtistName: Record<string, MusicResponseDto[]> = {};
-        artistMusicDetails.flat().forEach(({ title, musicDetails }) => {
-            if (!followedPlaylistByArtistName[title]) {
-                followedPlaylistByArtistName[title] = [];
+            for (const playlist of playlists) {
+                artistPlaylists.push({
+                    title: playlist.title,
+                    coverImage: playlist.coverImage || 'https://example.com/default-cover.jpg', // Giá trị mặc định
+                    tracks: musicDetails
+                });
             }
-            followedPlaylistByArtistName[title].push(...musicDetails);
-        });
-
-        const result = Object.keys(followedPlaylistByArtistName).length > 0 ? { followedPlaylistByArtistName } : null;
-
-        if(result){
-            await PlaylistCacheService.saveToCache(userId, 'followed-artists', result);
         }
 
-        return result;
-    }catch (error) {
+        if (artistPlaylists.length > 0) {
+            await PlaylistCacheService.saveToCache(userId, 'followed-artists', artistPlaylists);
+        }
+
+        return artistPlaylists.length > 0 ? artistPlaylists : null;
+    } catch (error) {
         throw new Error(`Failed to generate followed artists playlist for user: ${error.message}`);
     }
-}
+};

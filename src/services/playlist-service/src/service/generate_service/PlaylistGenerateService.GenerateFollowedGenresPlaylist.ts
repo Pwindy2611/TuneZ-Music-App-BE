@@ -5,10 +5,11 @@ import {PlaylistBaseService} from "../base/PlaylistBaseService.js";
 import FetchBase from "../../util/base/FetchBase.js";
 import {MusicResponseDto} from "../../dto/response/MusicResponseDto.js";
 import {PlaylistType} from "../../enum/PlaylistType.js";
+import {IPlaylistResponseDto} from "../../dto/response/IPlaylistResponseDto.js";
 
-export const generateFollowedGenresPlaylist: IPlaylistGenerateService["generateFollowedGenresPlaylist"] = async (userId) => {
+export const generateFollowedGenresPlaylist: IPlaylistGenerateService["generateFollowedGenresPlaylist"] = async (userId): Promise<IPlaylistResponseDto[] | null> => {
     try {
-        if(!await generateRepo.isUserExists(userId)){
+        if (!await generateRepo.isUserExists(userId)) {
             return Promise.reject(new Error("User not found"));
         }
 
@@ -18,53 +19,37 @@ export const generateFollowedGenresPlaylist: IPlaylistGenerateService["generateF
             return cachedPlaylist;
         }
 
-        const artistIds  = await generateRepo.getIdsArtistFollowed(userId);
-
+        const artistIds = await generateRepo.getIdsArtistFollowed(userId);
         if (artistIds.length === 0) return null;
 
-        const artistPromises = artistIds.map(async (artistId) => {
-            const genre = await generateRepo.getGenresFromArtist(artistId)
-            return {
-                genres: genre
-            };
-        });
+        const genrePlaylists: IPlaylistResponseDto[] = [];
 
-        const artists = (await Promise.all(artistPromises)).filter((artist): artist is {genres: string} => artist !== null);
+        for (const artistId of artistIds) {
+            const genre = await generateRepo.getGenresFromArtist(artistId);
+            if (!genre) continue;
 
-        const artistMusicPromises = artists.map(async ({genres}) => {
-            const artistPlaylists = await PlaylistBaseService.getPlaylistByFilter(genres, PlaylistType.FOLLOWED_GENRE);
+            const playlists = await PlaylistBaseService.getPlaylistByFilter(genre, PlaylistType.FOLLOWED_GENRE);
+            if (!playlists || playlists.length === 0) continue;
 
-            if (!artistPlaylists || artistPlaylists.length === 0) {
-                throw new Error(`No playlist found for artist: ${genres}`);
-            }
-
-            const musicIds = await FetchBase.fetchMusicIdsFromGenre(genres, 20);
+            const musicIds = await FetchBase.fetchMusicIdsFromGenre(genre, 20);
             const musicDetails = await FetchBase.fetchMusicDetails(musicIds);
 
-            return artistPlaylists.map(playlist => ({
-                title: playlist.title,
-                musicDetails
-            }));
-        });
-
-        const artistMusicDetails = await Promise.all(artistMusicPromises);
-
-        const followedPlaylistByGenres: Record<string, MusicResponseDto[]> = {};
-        artistMusicDetails.flat().forEach(({ title, musicDetails }) => {
-            if (!followedPlaylistByGenres[title]) {
-                followedPlaylistByGenres[title] = [];
+            for (const playlist of playlists) {
+                genrePlaylists.push({
+                    title: playlist.title,
+                    coverImage: playlist.coverImage || 'https://example.com/default-cover.jpg', // Giá trị mặc định
+                    tracks: musicDetails
+                });
             }
-            followedPlaylistByGenres[title].push(...musicDetails);
-        });
-
-        const result = Object.keys(followedPlaylistByGenres).length > 0 ? { followedPlaylistByGenres } : null;
-
-        if(result){
-            await PlaylistCacheService.saveToCache(userId, 'followed-genres', result);
         }
 
-        return result;
-    }catch (error) {
-        throw new Error(`Failed to generate followed artists playlist for user: ${error.message}`);
+        if (genrePlaylists.length > 0) {
+            await PlaylistCacheService.saveToCache(userId, 'followed-genres', genrePlaylists);
+        }
+
+        return genrePlaylists.length > 0 ? genrePlaylists : null;
+    } catch (error) {
+        throw new Error(`Failed to generate followed genres playlist for user: ${error.message}`);
     }
-}
+};
+

@@ -7,8 +7,11 @@ import {MusicResponseDto} from "../../dto/response/MusicResponseDto.js";
 import PlaylistCacheService from "../base/PlaylistCacheService.js";
 import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 import {PlaylistType} from "../../enum/PlaylistType.js";
+import {IPlaylistResponseDto} from "../../dto/response/IPlaylistResponseDto.js";
 
-export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylist"] = async (userId) => {
+export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylist"] = async (
+    userId
+): Promise<IPlaylistResponseDto[] | null> => {
     try {
         if (!await generateRepo.isUserExists(userId)) {
             return Promise.reject(new Error("User not found"));
@@ -23,7 +26,7 @@ export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylis
         console.log(`Generating new user preference playlist for user: ${userId}`);
 
         const { topArtists, topGenres } = await HistoryBase.getUserPreferences(userId);
-        if (!topArtists.length && !topGenres.length) {
+        if ((!topArtists || topArtists.length === 0) && (!topGenres || topGenres.length === 0)) {
             return null;
         }
 
@@ -32,37 +35,44 @@ export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylis
 
         const fetchSongsByArtist = async (artist: string): Promise<MusicResponseDto[]> => {
             const musicIds = await FetchBase.fetchMusicIdsFromArtist(artist, 10);
-            return await FetchBase.fetchMusicDetails(musicIds);
+            return musicIds.length > 0 ? await FetchBase.fetchMusicDetails(musicIds) : [];
         };
 
         const fetchSongsByCategory = async (genre: string): Promise<MusicResponseDto[]> => {
             const musicIds = await FetchBase.fetchMusicIdsFromGenres(genre, 10);
-            return await FetchBase.fetchMusicDetails(musicIds);
+            return musicIds.length > 0 ? await FetchBase.fetchMusicDetails(musicIds) : [];
         };
 
         const populatePlaylistsWithSongs = async (
             playlists: IPlaylist[],
             fetchSongsFn: (value: string) => Promise<MusicResponseDto[]>
-        ): Promise<Record<string, MusicResponseDto[]>> =>
-        {
-            const populatedPlaylists: Record<string, MusicResponseDto[]> = {};
-
-            await Promise.all(playlists.map(async (playlist) => {
-                populatedPlaylists[playlist.title] = await fetchSongsFn(playlist.value);
-            }));
-
-            return populatedPlaylists;
+        ): Promise<IPlaylistResponseDto[]> => {
+            return await Promise.all(
+                playlists.map(async (playlist) => {
+                    const tracks = await fetchSongsFn(playlist.value);
+                    return tracks.length > 0 ? {
+                        title: playlist.title,
+                        coverImage: playlist.coverImage || 'https://example.com/default-cover.jpg', // Ảnh mặc định nếu thiếu
+                        tracks
+                    } : null;
+                })
+            ).then(results => results.filter(playlist => playlist !== null) as IPlaylistResponseDto[]);
         };
 
         const playlistsByArtist = await populatePlaylistsWithSongs(artistPlaylists, fetchSongsByArtist);
-        const playlistsByGenres = await populatePlaylistsWithSongs(categoryPlaylists, fetchSongsByCategory);
+        const playlistsByCategory = await populatePlaylistsWithSongs(categoryPlaylists, fetchSongsByCategory);
 
-        const result = { playlistsByArtist, playlistsByCategory: playlistsByGenres };
+        const finalPlaylists = [...playlistsByArtist, ...playlistsByCategory];
 
-        await PlaylistCacheService.saveToCache(userId, 'userPreference', result);
+        if (finalPlaylists.length === 0) {
+            return null;
+        }
 
-        return result;
-    }catch (error) {
-        throw new Error(`Error generating playlist: ${error.message}`);
+        await PlaylistCacheService.saveToCache(userId, 'userPreference', finalPlaylists);
+
+        return finalPlaylists;
+    } catch (error) {
+        throw new Error(`Error generating user playlist: ${error.message}`);
     }
-}
+};
+
