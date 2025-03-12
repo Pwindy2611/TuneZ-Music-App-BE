@@ -1,4 +1,4 @@
-import {IPlaylistGenerateService} from "../../interface/IPlaylistGenerateService.js";
+import {IPlaylistGenerateService} from "../../interface/service/IPlaylistGenerateService.js";
 import FetchBase from "../../util/base/FetchBase.js";
 import {PlaylistBaseService} from "../base/PlaylistBaseService.js";
 import PlaylistCacheService from "../base/PlaylistCacheService.js";

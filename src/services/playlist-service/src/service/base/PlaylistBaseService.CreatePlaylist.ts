@@ -1,4 +1,4 @@
-import {IPlaylistBaseService} from "../../interface/IPlaylistBaseService.js";
+import {IPlaylistBaseService} from "../../interface/service/IPlaylistBaseService.js";
 import {baseRepo} from "../../repository/PlaylistBaseRepository.js";
 
 export const createPlaylist: IPlaylistBaseService['createPlaylist'] = async (playlist) => {

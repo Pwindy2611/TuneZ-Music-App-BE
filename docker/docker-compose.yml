@@ -5,6 +5,12 @@ services:
       context: ../src/services/api-gateway
     ports:
       - "3000:3000"
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../key/server.cert:/usr/src/app/server.cert
+      - ../key/server.key:/usr/src/app/server.key
     command: npm run start
     networks:
       - app_network

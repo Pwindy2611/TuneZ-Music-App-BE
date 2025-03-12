@@ -1,4 +1,4 @@
-import {ILoveBaseService} from "../interface/ILoveBaseService";
+import {ILoveBaseService} from "../interface/service/ILoveBaseService";
 import {firestore} from "../config/firebase/FireBaseConfig";
 
 import * as admin from "firebase-admin";

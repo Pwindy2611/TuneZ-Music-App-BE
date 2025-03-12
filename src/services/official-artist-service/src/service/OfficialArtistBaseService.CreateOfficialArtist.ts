@@ -1,7 +1,7 @@
-import {IOfficialArtistBaseService} from "../interface/IOfficialArtistBaseService.js";
+import {IOfficialArtistBaseService} from "../interface/service/IOfficialArtistBaseService.js";
 import {database} from "../config/firebase/FireBaseConfig.js"
 import UploadBase from "../util/base/UploadBase.js";
-import {IOfficialArtist} from "../interface/IOfficialArtist.js";
+import {IOfficialArtist} from "../interface/object/IOfficialArtist.js";
 export const createOfficialArtist: IOfficialArtistBaseService["createOfficialArtist"] = async (artist, imgFile) => {
     try {
         const artistRef = database.ref("officialArtist").push();

@@ -1,4 +1,4 @@
-import {IPlaylistStrategy} from "../../../interface/IPlaylistStrategy.js";
+import {IPlaylistStrategy} from "../../../interface/object/IPlaylistStrategy.js";
 import {
     generateFollowedGenresPlaylist
 } from "../../generate_service/PlaylistGenerateService.GenerateFollowedGenresPlaylist.js";

@@ -4,7 +4,6 @@ import {UserBaseService} from '../../service/UserBaseService.js';
 import {validateEmail, validatePassword, validateUsername} from '../base/RegexBase.js';
 import {saveSessionTokenToDatabase} from "../base/TokenBase.js";
 import {mailService} from '../base/MailBase.js'
-import * as admin from 'firebase-admin';
 
 class AuthenticationValidate {
     validateRegister = async (req: Request, res: Response, next: NextFunction) => {
@@ -82,8 +81,10 @@ class AuthenticationValidate {
             res.cookie('session', sessionCookie, {
                 maxAge: expiresIn,
                 httpOnly: true,
-                secure: true,
+                sameSite: "none",
+                secure: true
             });
+
 
             res.status(200).json({
                 status: 200,

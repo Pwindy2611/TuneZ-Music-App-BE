@@ -1,5 +1,5 @@
 import { injectable, inject } from "tsyringe";
-import {IUserBaseService} from "../interface/IUserBaseService.js";
+import {IUserBaseService} from "../interface/service/IUserBaseService.js";
 import {UserBaseRepository} from "../repository/UserBaseRepository.js";
 @injectable()
 export class GetUserByEmailService{

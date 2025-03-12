@@ -3,25 +3,43 @@ import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import {historyProxy} from "./proxy/HistoryProxy";
-import {musicProxy} from "./proxy/MusicProxy";
-import {userProxy} from "./proxy/UserProxy";
-import {loveProxy} from "./proxy/LoveProxy";
-import {followProxy} from "./proxy/FollowProxy";
-import {playlistProxy} from "./proxy/PlaylistProxy";
 
-import {officialArtistProxy} from "./proxy/OfficialArtistProxy";
+import { followProxy, historyProxy, loveProxy, musicProxy, officialArtistProxy, playlistProxy, userProxy } from "./proxy/CreateProxy";
+import {authMiddleware} from "./middleware/AuthMiddleware";
+import fs from "fs";
+import * as https from "node:https";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
+const allowedOrigins = [
+    'https://tunez-ddb5f.firebaseapp.com',
+    'https://localhost:3000'
+];
+
 app.use(cors({
-    origin: '*',
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    exposedHeaders: ['Set-Cookie'],
 }));
+
+
+const options = {
+    key: fs.readFileSync(process.env.SERVER_KEY_PATH || '../server.key'),
+    cert: fs.readFileSync(process.env.SERVER_CERT_PATH || '../server.cert')
+};
 
 app.use(compression());
 app.use(cookieParser());
@@ -36,19 +54,19 @@ app.use((req, _res, next) => {
 });
 
 // Proxy
-app.use('/users', userProxy);
+app.use('/users', authMiddleware, userProxy);
 
-app.use('/musics', musicProxy);
+app.use('/musics',authMiddleware, musicProxy);
 
-app.use('/history', historyProxy);
+app.use('/history', authMiddleware, historyProxy);
 
-app.use('/offartist', officialArtistProxy)
+app.use('/offartist', authMiddleware, officialArtistProxy)
 
-app.use('/love', loveProxy)
+app.use('/love', authMiddleware, loveProxy)
 
-app.use('/follow', followProxy)
+app.use('/follow', authMiddleware, followProxy)
 
-app.use('/playlists', playlistProxy)
+app.use('/playlists', authMiddleware, playlistProxy)
 
 // Health check endpoint
 app.get('/health', (_req, res) => {
@@ -56,6 +74,6 @@ app.get('/health', (_req, res) => {
 });
 
 // Start the server
-app.listen(port, () => {
-    console.log(`API Gateway is running on http://localhost:${port}/`);
+https.createServer(options, app).listen(3000, () => {
+    console.log(`Api gateway running on https://localhost:${port}`);
 });

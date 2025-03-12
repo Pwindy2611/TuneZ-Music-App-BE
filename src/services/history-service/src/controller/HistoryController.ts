@@ -1,7 +1,8 @@
 import {Request, Response} from "express";
-import {IHistory} from "../interface/IHistory";
-import {SaveHistoryDto} from "../dto/SaveHistoryDto";
+import {IHistory} from "../interface/object/IHistory";
+import {SaveHistoryDto} from "../dto/request/SaveHistoryDto";
 import {HistoryBaseService} from "../service/HistoryBaseService";
+import {HistoryUserService} from "../service/HistoryUserService";
 
 class HistoryController {
     saveHistoryApi = async (req: Request, res: Response) => {
@@ -41,6 +42,23 @@ class HistoryController {
                     message: 'Unexpected error occurred',
                 });
             }
+        }
+    }
+    getMusicIdsFromUserHistoryApi = async (req: Request, res: Response) => {
+        try {
+            const userId = req.query.userId as string;
+            const limit = Number(req.query.limit);
+
+            const musicIds = await HistoryUserService.getMusicIdsByUserHistory(userId, limit);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Get music ids from user history successfully',
+                data: musicIds
+            })
+        }catch (error) {
+            res.status(500).json({status: 500, success: false, error: error.message });
         }
     }
 }

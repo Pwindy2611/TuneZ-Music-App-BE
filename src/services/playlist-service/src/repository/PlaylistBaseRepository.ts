@@ -1,5 +1,5 @@
-import {IPlaylistBaseRepository} from "../interface/IPlaylistBaseRepository.js";
-import {IPlaylist} from "../interface/IPlaylist.js";
+import {IPlaylistBaseRepository} from "../interface/repository/IPlaylistBaseRepository.js";
+import {IPlaylist} from "../interface/object/IPlaylist.js";
 import {database} from "../config/firebase/FireBaseConfig.js";
 
 class PlaylistBaseRepository implements IPlaylistBaseRepository {

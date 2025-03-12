@@ -1,7 +1,8 @@
 import {Request, Response} from "express";
-import {ILove} from "../interface/ILove";
-import {SaveMusicDto} from "../dto/SaveMusicDto";
+import {ILove} from "../interface/object/ILove";
+import {SaveMusicDto} from "../dto/request/SaveMusicDto";
 import {LoveBaseService} from "../service/LoveBaseService";
+import {LoveUserService} from "../service/LoveUserService";
 
 class LoveController {
     saveLoveMusicApi = async (req: Request, res: Response) => {
@@ -40,6 +41,27 @@ class LoveController {
                     message: 'Unexpected error occurred',
                 });
             }
+        }
+    }
+    getMusicIdsByUserLoveApi = async (req: Request, res: Response) => {
+        try {
+            const userId = req.query.userId as string;
+            const limit = Number(req.query.limit);
+
+            const musicIds = await LoveUserService.getMusicIdsByUserLove(userId, limit);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Get music ids by user love successfully',
+                musicIds
+            })
+        }catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: error.message,
+            })
         }
     }
 }

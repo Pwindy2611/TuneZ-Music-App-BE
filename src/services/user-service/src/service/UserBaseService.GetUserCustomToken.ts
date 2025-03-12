@@ -1,7 +1,6 @@
 import {inject, injectable} from "tsyringe";
-import {IUserBaseRepository} from "../interface/IUserBaseRepository.js";
 import {UserBaseRepository} from "../repository/UserBaseRepository.js";
-import {IUserBaseService} from "../interface/IUserBaseService.js";
+import {IUserBaseService} from "../interface/service/IUserBaseService.js";
 @injectable()
 export class GetUserCustomTokenService {
     constructor(@inject("UserBaseRepository") private repository: UserBaseRepository) {}

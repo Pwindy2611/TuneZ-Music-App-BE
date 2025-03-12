@@ -1,12 +1,15 @@
 import multer from 'multer'
 import {Request, Response} from "express";
 import {MusicBaseService} from "../service/music_base/MusicBaseService.js";
-import {IMusicFile} from "../interface/IMusicFile.js";
-import {CreateMusicDto} from "../dto/CreateMusicDto.js";
-import {IMusic} from "../interface/IMusic.js";
+import {IMusicFile} from "../interface/object/IMusicFile.js";
+import {CreateMusicDto} from "../dto/request/CreateMusicDto.js";
+import {IMusic} from "../interface/object/IMusic.js";
 import {SongType} from "../enum/SongType.js";
-import {UploadMusicDto} from "../dto/UploadMusicDto.js";
+import {UploadMusicDto} from "../dto/request/UploadMusicDto.js";
 import {MusicUserService} from "../service/music_user/MusicUserService.js";
+import {IAuthRequest} from "../interface/object/IAuthRequest.js";
+import {MusicStreamService} from "../service/music_stream/MusicStreamService.js";
+import {musicStreamRepository} from "../config/container/Container.js";
 
 
 const uploadMulter = multer({
@@ -207,7 +210,7 @@ class MusicController {
 
             const musicsByArtist = await MusicBaseService.getMusicByArtist.execute(artist);
 
-            if (!musicsByArtist) {
+            if (musicsByArtist?.length === 0) {
                 res.status(404).json({
                     status: 404,
                     success: false,
@@ -247,7 +250,7 @@ class MusicController {
 
             const musicsByGenres = await MusicBaseService.getMusicByCategory.execute(genres);
 
-            if (!musicsByGenres) {
+            if (musicsByGenres?.length === 0) {
                 res.status(404).json({
                     status: 404,
                     success: false,
@@ -278,7 +281,7 @@ class MusicController {
 
             const musicHistory = await MusicUserService.getMusicHistory.execute(userId);
 
-            if(!musicHistory) {
+            if(musicHistory?.length === 0) {
                 res.status(404).json({
                     status: 404,
                     success: false,
@@ -309,7 +312,7 @@ class MusicController {
 
             const musicLove = await MusicUserService.getMusicLove.execute(userId);
 
-            if(!musicLove) {
+            if(musicLove?.length === 0) {
                 res.status(404).json({
                     status: 404,
                     success: false,
@@ -330,6 +333,168 @@ class MusicController {
                 status: 500,
                 success: false,
                 message: 'Internal Server Error',
+            });
+        }
+    }
+
+    getStreamMusicApi = async (req: IAuthRequest, res: Response) => {
+        try {
+            const userId = req.userId;
+
+            if (!userId) {
+                res.status(401).send("Unauthorized");
+                return;
+            }
+
+            const musicId = req.params.musicId;
+            // Không cần xử lý seekTime từ FE nữa
+            const musicStream = await MusicStreamService.getStreamMusic.execute(userId, musicId);
+
+            res.setHeader("Content-Type", "audio/mpeg");
+
+            musicStream.pipe(res);
+
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`,
+            });
+        }
+    }
+
+    playMusicApi = async (req: IAuthRequest, res: Response) => {
+        try {
+            const userId = req.userId;
+
+            const musicId = req.params.musicId;
+            if (!userId) {
+                res.status(401).send("Unauthorized");
+                return;
+            }
+            const previousState = await MusicStreamService.getUserMusicState.execute(userId);
+            let startFrom = 0;
+
+            if (previousState.currentMusicId === musicId && !previousState.isPlaying) {
+                startFrom = previousState.timestamp;
+            }
+
+            await MusicStreamService.updateUserMusicState.execute(userId, musicId, startFrom, true);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Music playing',
+            })
+        }catch (error){
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`,
+            })
+        }
+    }
+
+    pauseMusicApi = async (req: IAuthRequest, res: Response) => {
+        try {
+            const userId = req.userId;
+
+            if (!userId) {
+                res.status(401).send("Unauthorized");
+                return;
+            }
+
+            const state = await MusicStreamService.getUserMusicState.execute(userId);
+
+            if(!state.currentMusicId){
+                res.status(400).json({
+                    status: 400,
+                    success: false,
+                    message: 'No music is playing',
+                });
+                return;
+            }
+
+            const newTimestamp = await musicStreamRepository.calculateCurrentTimestamp(userId);
+            await MusicStreamService.updateUserMusicState.execute(userId, state.currentMusicId, newTimestamp, false);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Music paused',
+            })
+        }catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`,
+            })
+        }
+    }
+
+    seekMusicApi = async (req: IAuthRequest, res: Response) => {
+        try {
+            const userId = req.userId;
+
+            if (!userId) {
+                res.status(401).send("Unauthorized");
+                return;
+            }
+
+            const musicId = req.params.musicId;
+            const seekTime = Number(req.query.seek);
+
+            await MusicStreamService.updateUserMusicState.execute(userId, musicId, seekTime, false);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Music seeked',
+            })
+        }catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`,
+            })
+        }
+    }
+    getUserMusicStateApi = async (req: IAuthRequest, res: Response) => {
+        try {
+            const userId = req.userId;
+            if (!userId) {
+                res.status(401).send("Unauthorized");
+                return;
+            }
+
+            const state = await MusicStreamService.getUserMusicState.execute(userId);
+
+            if (!state.currentMusicId) {
+                res.status(200).json({
+                    status: 200,
+                    success: true,
+                    message: "No music is playing",
+                    state: { currentMusicId: null, timestamp: 0, lastUpdated: 0, isPlaying: false }
+                });
+                return;
+            }
+
+            const newTimestamp = await musicStreamRepository.calculateCurrentTimestamp(userId);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: "Fetched user music state",
+                state: {
+                    ...state,
+                    timestamp: newTimestamp
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`,
             });
         }
     }

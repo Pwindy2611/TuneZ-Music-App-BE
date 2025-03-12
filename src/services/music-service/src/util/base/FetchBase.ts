@@ -1,8 +1,9 @@
-import {database, firestore} from '../../config/firebase/FireBaseConfig.js'
-import {GetMusicResponseDto} from "../../dto/GetMusicResponseDto.js";
+import {database} from '../../config/firebase/FireBaseConfig.js'
+import {MusicResponseDto} from "../../dto/response/MusicResponseDto.js";
+import axios from "axios";
 
 class FetchBase {
-    async fetchMusicDetails(musicIds: string[]): Promise<GetMusicResponseDto[]> {
+    async fetchMusicDetails(musicIds: string[]): Promise<MusicResponseDto[]> {
         const musicPromises = musicIds.map(async (musicId) => {
             const musicRef = database.ref(`musics/${musicId}`);
             const musicSnap = await musicRef.get();
@@ -10,7 +11,7 @@ class FetchBase {
 
             if (!musicData) return null;
 
-            return new GetMusicResponseDto(
+            return new MusicResponseDto(
                 musicSnap.key as string,
                 musicData.name,
                 musicData.artist,
@@ -21,31 +22,20 @@ class FetchBase {
         });
 
         const results = await Promise.all(musicPromises);
-        return results.filter(item => item !== null) as GetMusicResponseDto[];
+        return results.filter(item => item !== null) as MusicResponseDto[];
     }
 
     async fetchMusicIdsFromHistory(userId: string, limit: number) {
-        const historySnapshot = await firestore
-            .collection(`users`)
-            .doc(userId)
-            .collection('history')
-            .orderBy('listenAt', 'desc')
-            .limit(limit)
-            .get();
 
-        return historySnapshot.empty ? [] : historySnapshot.docs.map(doc => doc.data().musicId);
+        const response = await axios.get(`http://api-gateway:3000/history/getMusicIdsByUserHistory?userId=${userId}&limit=${limit}`);
+
+        return response.data.data as string[];
     }
 
     async fetchMusicIdsFromLove(userId: string, limit: number) {
-        const historySnapshot = await firestore
-            .collection(`users`)
-            .doc(userId)
-            .collection('love')
-            .orderBy('listenAt', 'desc')
-            .limit(limit)
-            .get();
+        const response = await axios.get(`http://api-gateway:3000/love/getMusicIdsByUserLove?userId=${userId}&limit=${limit}`);
 
-        return historySnapshot.empty ? [] : historySnapshot.docs.map(doc => doc.data().musicId);
+        return response.data.musicIds as string[];
     }
 }
 

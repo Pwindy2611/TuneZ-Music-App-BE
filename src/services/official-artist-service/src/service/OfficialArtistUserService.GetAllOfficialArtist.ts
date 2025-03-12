@@ -1,6 +1,6 @@
 import {database, firestore} from "../config/firebase/FireBaseConfig.js";
-import {IOfficialArtist} from "../interface/IOfficialArtist.js";
-import {IOfficialArtistUserService} from "../interface/IOfficialArtistUserService.js";
+import {IOfficialArtist} from "../interface/object/IOfficialArtist.js";
+import {IOfficialArtistUserService} from "../interface/service/IOfficialArtistUserService.js";
 
 export const getAllOfficialArtist: IOfficialArtistUserService["getAllOfficialArtists"] = async (userId) => {
     try {

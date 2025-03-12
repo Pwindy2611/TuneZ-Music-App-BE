@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import {CreatePlaylistDto} from "../dto/CreatePlaylistDto.js";
+import {CreatePlaylistDto} from "../dto/request/CreatePlaylistDto.js";
 import {PlaylistBaseService} from "../service/base/PlaylistBaseService.js";
 import PlaylistGenerateService from "../service/PlaylistGenerateService.js";
-import {IPlaylist} from "../interface/IPlaylist.js";
+import {IPlaylist} from "../interface/object/IPlaylist.js";
 class PlaylistController {
     async createPlaylistApi(req: Request, res: Response) {
         try {

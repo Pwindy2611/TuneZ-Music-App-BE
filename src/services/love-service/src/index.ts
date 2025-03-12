@@ -10,8 +10,17 @@ const port = process.env.PORT || 3005;
 
 // Middleware
 app.use(cors({
-    origin: 'http://api-gateway:3000',
-    credentials: true }));
+    origin: function (origin, callback) {
+        if (!origin || origin.match(/^https?:\/\/(localhost|tunez-ddb5f\.firebaseapp\.com|api-gateway)(:\d+)?$/)) {
+            callback(null, true); // Cho phép Mobile App, Web App hợp lệ và API Gateway
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());

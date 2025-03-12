@@ -1,4 +1,4 @@
-import {IPlaylistStrategy} from "../../../interface/IPlaylistStrategy.js";
+import {IPlaylistStrategy} from "../../../interface/object/IPlaylistStrategy.js";
 import {generateThrowBackPlaylist} from "../../generate_service/PlaylistGenerateService.GenerateThrowBackPlaylist.js";
 
 export class ThrowBackPlaylistStrategy implements IPlaylistStrategy {

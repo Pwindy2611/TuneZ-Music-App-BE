@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response} from 'express';
+import {Request, Response} from 'express';
 import { auth } from "../config/firebase/FireBaseConfig.js";
 import {UserBaseService} from '../service/UserBaseService.js';
 import {mailService} from "../util/base/MailBase.js";
