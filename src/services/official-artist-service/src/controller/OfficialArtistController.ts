@@ -61,21 +61,11 @@ class OfficialArtistController {
                     artist: newArtist,
                 });
             } catch (error) {
-                if (error instanceof Error) {
-                    console.error('Error creating new official arist:', error.message);
-                    res.status(500).json({
-                        status: 500,
-                        success: false,
-                        message: error.message,
-                    });
-                } else {
-                    console.error('Unexpected error while creating official arist');
-                    res.status(500).json({
-                        status: 500,
-                        success: false,
-                        message: 'Unexpected error occurred',
-                    });
-                }
+                res.status(400).json({
+                    status: 400,
+                    success: false,
+                    message: error.message
+                })
             }
         }
     ]

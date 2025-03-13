@@ -1,4 +1,4 @@
-import {IPlaylistStrategy} from "../../interface/object/IPlaylistStrategy.js";
+import {IPlaylistStrategy} from "../../../interface/object/IPlaylistStrategy.js";
 import {FollowedArtistsPlaylistStrategy} from "../strategy/follow_group/FollowedArtistsPlaylistStrategy.js";
 import {FollowedGenresPlaylistStrategy} from "../strategy/follow_group/FollowedGenresPlaylistStrategy.js";
 

@@ -17,7 +17,7 @@ const createProxy = (serviceUrl: string, pathPrefix: string) => {
             proxyReqOptDecorator: (proxyReqOpts: any, req: Request) => {
                 proxyReqOpts.headers = proxyReqOpts.headers || {};
                 proxyReqOpts.headers['Content-Type'] = req.headers['content-type'] || '';
-                proxyReqOpts.headers["x-user-id"] = req.headers["x-user-id"];
+                proxyReqOpts.headers["x-user-id"] = req.headers["x-user-id"] || '';
                 proxyReqOpts.credentials = "include";
                 console.log(`[PROXY] Requesting: ${proxyReqOpts.protocol}//${proxyReqOpts.host}${proxyReqOpts.path}`);
                 return proxyReqOpts;

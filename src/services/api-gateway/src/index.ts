@@ -54,7 +54,7 @@ app.use((req, _res, next) => {
 });
 
 // Proxy
-app.use('/users', authMiddleware, userProxy);
+app.use('/users', userProxy);
 
 app.use('/musics',authMiddleware, musicProxy);
 

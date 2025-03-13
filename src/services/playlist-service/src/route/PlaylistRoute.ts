@@ -3,10 +3,17 @@ import PlaylistController from "../controller/PlaylistController.js";
 
 const router = express.Router();
 
+//SYSTEM
 router.post('/createNewPlaylist', PlaylistController.createPlaylistApi);
-/*router.get('/generateUserPlaylist', PlaylistController.generateUserPlaylistApi);
-router.get('/generateRecentPlaylist', PlaylistController.generateRecentPlaylistApi);
-router.get('/generateThrowbackPlaylist', PlaylistController.generateThrowBackPlaylistApi);
-router.get('/getFollowedArtistsPlaylist', PlaylistController.generateFollowedArtistsPlaylistApi);*/
+router.post('/updatePlaylist', PlaylistController.updatePlaylistApi);
 router.get('/generatePlaylist', PlaylistController.generatePlaylistApi);
+
+
+//USER
+router.post('/createUserPlaylist', PlaylistController.createUserPlaylistApi);
+router.post('/updateUserPlaylist', PlaylistController.updateUserPlaylistApi);
+router.delete('/deleteUserPlaylist', PlaylistController.deleteUserPlaylistApi);
+router.get('/getUserPlaylists', PlaylistController.getUserPlaylistsApi);
+router.post('/addMusic', PlaylistController.addMusicToUserPlaylistApi);
+router.post('/removeMusic', PlaylistController.removeMusicFromUserPlaylistApi);
 export default router;
