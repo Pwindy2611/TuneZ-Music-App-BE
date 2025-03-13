@@ -1,4 +1,4 @@
-import {IPlaylistStrategy} from "../../interface/object/IPlaylistStrategy.js";
+import {IPlaylistStrategy} from "../../../interface/object/IPlaylistStrategy.js";
 import {UserPreferencePlaylistStrategy} from "../strategy/user_group/UserPreferencePlaylistStrategy.js";
 
 export class UserGroup {

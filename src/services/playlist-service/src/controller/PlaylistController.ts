@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import {CreatePlaylistDto} from "../dto/request/CreatePlaylistDto.js";
-import {PlaylistBaseService} from "../service/base/PlaylistBaseService.js";
-import PlaylistGenerateService from "../service/PlaylistGenerateService.js";
+import PlaylistBaseService from "../service/base/PlaylistBaseService.js";
+import PlaylistGenerateService from "../service/generate/PlaylistGenerateService.js";
 import {IPlaylist} from "../interface/object/IPlaylist.js";
 import multer from "multer";
 import {IFile} from "../interface/object/IFile.js";

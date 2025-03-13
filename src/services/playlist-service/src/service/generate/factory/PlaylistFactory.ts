@@ -1,5 +1,5 @@
-import HistoryBase from "../../util/base/HistoryBase.js";
-import FetchBase from "../../util/base/FetchBase.js";
+import HistoryBase from "../../../util/base/HistoryBase.js";
+import FetchBase from "../../../util/base/FetchBase.js";
 import {HistoryGroup} from "./HistoryGroup.js";
 import {FollowedGroup} from "./FollowedGroup.js";
 import {UserGroup} from "./UserGroup.js";

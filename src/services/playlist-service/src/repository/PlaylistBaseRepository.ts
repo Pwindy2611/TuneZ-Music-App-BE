@@ -33,7 +33,6 @@ class PlaylistBaseRepository implements IPlaylistBaseRepository {
             throw new Error("Unknown error occurred while creating new playlist.");
         }
     }
-
     async updatePlaylist(id: string, playlist: IPlaylist, imgFile?: IFile): Promise<void> {
         const playlistRef = database.ref(`playlists/${id}`);
 
@@ -58,7 +57,14 @@ class PlaylistBaseRepository implements IPlaylistBaseRepository {
 
         await playlistRef.update(updatedPlaylist);
     }
-
+    async deletePlaylist(id: string): Promise<void> {
+        const playlistRef = database.ref(`playlists/${id}`);
+        const snapshot = await playlistRef.get();
+        if (!snapshot.exists()) {
+            throw new Error("Playlist not found");
+        }
+        await playlistRef.remove();
+    }
     async getPlaylistByFilter(values: string[] | string, type: string): Promise<IPlaylist[]> {
         const playlistRef = database.ref("playlists");
 

@@ -5,6 +5,5 @@ export interface IPlaylistBaseService {
     createPlaylist(playlist: IPlaylist, imgFile: IFile): Promise<void>;
     updatePlaylist(id: string, playlist: IPlaylist, imgFile?: IFile): Promise<void>;
     deletePlaylist(id: string): Promise<void>;
-    getSystemPlaylist(): Promise<IPlaylist[]>;
     getPlaylistByFilter(values: string | string[], type: string): Promise<IPlaylist[]>;
 }

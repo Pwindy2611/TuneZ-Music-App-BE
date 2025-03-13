@@ -1,10 +1,10 @@
 import {IPlaylistGenerateService} from "../../interface/service/IPlaylistGenerateService.js";
 import HistoryBase from "../../util/base/HistoryBase.js";
-import {PlaylistBaseService} from "../base/PlaylistBaseService.js";
+import PlaylistBaseService from "../base/PlaylistBaseService.js";
 import FetchBase from "../../util/base/FetchBase.js";
 import {IPlaylist} from "../../interface/object/IPlaylist.js";
 import {MusicResponseDto} from "../../dto/response/MusicResponseDto.js";
-import PlaylistCacheService from "../base/PlaylistCacheService.js";
+import PlaylistCacheService from "../cache/PlaylistCacheService.js";
 import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 import {PlaylistType} from "../../enum/PlaylistType.js";
 import {IPlaylistResponseDto} from "../../dto/response/IPlaylistResponseDto.js";
@@ -52,7 +52,7 @@ export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylis
                     const tracks = await fetchSongsFn(playlist.value);
                     return tracks.length > 0 ? {
                         title: playlist.title,
-                        coverImage: playlist.coverImage || 'https://example.com/default-cover.jpg', // Ảnh mặc định nếu thiếu
+                        coverImage: playlist.coverImage || '',
                         tracks
                     } : null;
                 })
