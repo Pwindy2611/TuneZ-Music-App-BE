@@ -151,7 +151,7 @@ class PlaylistController {
 
             const { title } = req.body;
 
-            const newPlaylist = await playlistUserService.createUserPlaylist(userId, title);
+            await playlistUserService.createUserPlaylist(userId, title);
 
             res.status(201).json({
                 status: 201,

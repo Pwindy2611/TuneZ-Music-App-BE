@@ -1,4 +1,3 @@
-import {IPlaylist} from "../object/IPlaylist.js";
 import {IFile} from "../object/IFile.js";
 import {IUserPlaylist} from "../object/IUserPlaylist.js";
 
