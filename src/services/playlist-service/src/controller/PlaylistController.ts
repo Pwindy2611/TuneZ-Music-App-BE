@@ -5,6 +5,9 @@ import PlaylistGenerateService from "../service/generate/PlaylistGenerateService
 import {IPlaylist} from "../interface/object/IPlaylist.js";
 import multer from "multer";
 import {IFile} from "../interface/object/IFile.js";
+import {IAuthRequest} from "../interface/object/IAuthRequest.js";
+import playlistUserService from "../service/user/PlaylistUserService.js";
+import {IUserPlaylist} from "../interface/object/IUserPlaylist.js";
 
 const uploadMulter = multer({
     limits: { fileSize: 10 * 1024 * 1024 },
@@ -69,7 +72,6 @@ class PlaylistController {
             }
         }
     ];
-
     updatePlaylistApi = [
         uploadMulter.fields([
             { name: "imgFile", maxCount: 1 }
@@ -122,8 +124,6 @@ class PlaylistController {
             }
         }
     ];
-
-
     async generatePlaylistApi(req: Request, res: Response) {
         try {
             const userId = req.query.userId as string;
@@ -138,6 +138,184 @@ class PlaylistController {
             res.status(200).json({ status: 200, success: true, message: 'Playlists fetched successfully', data: playlists });
         }catch (error) {
             res.status(500).json({ error: error.message });
+        }
+    }
+    async createUserPlaylistApi(req: IAuthRequest, res: Response) {
+        try {
+            const userId = req.userId;
+
+            if (!userId) {
+                res.status(400).json({ message: "User is unauthorized" });
+                return;
+            }
+
+            const { title } = req.body;
+
+            const newPlaylist = await playlistUserService.createUserPlaylist(userId, title);
+
+            res.status(201).json({
+                status: 201,
+                success: true,
+                message: "Playlist created successfully",
+            });
+        }catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: error.message
+            });
+        }
+    }
+    updateUserPlaylistApi = [
+        uploadMulter.fields([
+            { name: "coverImage", maxCount: 1 }
+        ]),
+        async (req: IAuthRequest, res: Response) => {
+            try {
+                const userId = req.userId;
+
+                if (!userId) {
+                    res.status(400).json({ message: "User is unauthorized" });
+                    return;
+                }
+
+                const { playlistId, title, description } = req.body;
+
+                const updatePlaylist: IUserPlaylist = {
+                    title,
+                    description,
+                }
+
+                const multerFile = (req.files as { coverImage?: Express.Multer.File[] })?.coverImage?.[0];
+
+                let coverImage: IFile | undefined;
+
+                if (multerFile) {
+                    coverImage = {
+                        originalName: multerFile.originalname,
+                        mimetype: multerFile.mimetype,
+                        buffer: multerFile.buffer,
+                    };
+                }
+
+                await playlistUserService.updateUserPlaylist(userId, playlistId, updatePlaylist, coverImage);
+
+                res.status(200).json({
+                    status: 200,
+                    success: true,
+                    message: "Playlist updated successfully",
+                });
+            }catch (error) {
+                res.status(500).json({
+                    status: 500,
+                    success: false,
+                    message: error.message
+                })
+            }
+        }
+    ]
+    async deleteUserPlaylistApi(req: IAuthRequest, res: Response) {
+        try {
+            const userId = req.userId;
+
+            if (!userId) {
+                res.status(400).json({ message: "User is unauthorized" });
+                return;
+            }
+
+            const { playlistId } = req.body;
+
+            await playlistUserService.deleteUserPlaylist(userId, playlistId);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: "Playlist deleted successfully",
+            });
+        }catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: error.message
+            })
+        }
+    }
+    async getUserPlaylistsApi(req: IAuthRequest, res: Response) {
+        try {
+            const userId = req.userId;
+
+            if (!userId) {
+                res.status(400).json({ message: "User is unauthorized" });
+                return;
+            }
+
+            const playlists = await playlistUserService.getUserPlaylists(userId);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: "Playlists fetched successfully",
+                data: playlists,
+            });
+        }catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: error.message
+            })
+        }
+    }
+    async addMusicToUserPlaylistApi(req: IAuthRequest, res: Response) {
+        try {
+            const userId = req.userId;
+
+            if (!userId) {
+                res.status(400).json({ message: "User is unauthorized" });
+                return;
+            }
+
+            const { playlistId, musicId } = req.body;
+
+            await playlistUserService.addMusicToUserPlaylist(userId, playlistId, musicId);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: "Music added to playlist successfully",
+            });
+
+        }catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: error.message
+            })
+        }
+    }
+    async removeMusicFromUserPlaylistApi(req: IAuthRequest, res: Response) {
+        try {
+            const userId = req.userId;
+
+            if (!userId) {
+                res.status(400).json({ message: "User is unauthorized" });
+                return;
+            }
+
+            const { playlistId, musicIds } = req.body;
+
+            await playlistUserService.removeMusicFromUserPlaylist(userId, playlistId, musicIds);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: "Music removed from playlist successfully",
+            });
+        }catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: error.message
+            })
         }
     }
 }
