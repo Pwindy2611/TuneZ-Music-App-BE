@@ -58,7 +58,11 @@ export class MusicBaseRepository implements IMusicBaseRepository {
     async getAllMusic(): Promise<any> {
         const musicRef = database.ref("musics");
         const snapshot = await musicRef.get();
-        return snapshot.exists() ? snapshot.val() : null;
+        if (!snapshot.exists()) return null;
+
+        const musicIds = Object.keys(snapshot.val());
+        const musicDetails = await FetchBase.fetchMusicDetails(musicIds);
+        return musicDetails.length ? musicDetails : null;
     }
 
     async getMusicByArtist(artist: string): Promise<any> {

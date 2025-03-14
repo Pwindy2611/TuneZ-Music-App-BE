@@ -6,6 +6,7 @@ import cors from 'cors';
 import http from 'http';
 import officialArtistRouter from './route/OfficialArtistRoute.js'
 import 'reflect-metadata';
+import {authMiddleware} from "./util/middleware/AuthMiddleware.js";
 
 
 const app = express();
@@ -32,6 +33,7 @@ app.use((req, _res, next) => {
     console.log(`[Official Artist Api] Request method: ${req.method}, path: ${req.path}`);
     next();
 });
+
 // Routes
 app.use(officialArtistRouter);
 

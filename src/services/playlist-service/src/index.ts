@@ -33,8 +33,6 @@ app.use((req, res, next) => {
     next();
 });
 
-//Middleware
-app.use(authMiddleware);
 // Routes
 app.use(playlistRoute);
 

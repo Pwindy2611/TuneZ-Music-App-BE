@@ -2,10 +2,21 @@ import { Request, Response } from 'express';
 import {FollowCreateDto} from "../dto/request/FollowCreateDto";
 import {FollowBaseService} from "../service/FollowBaseService";
 import {FollowUserService} from "../service/FollowUserService";
+import {IAuthRequest} from "../interface/object/IAuthRequest";
 class FollowController {
-    async addFollowApi(req: Request, res: Response) {
+    async addFollowApi(req: IAuthRequest, res: Response) {
         try {
-            const { userId, followingIds, followType} = req.body;
+            const userId = req.userId;
+
+            if(!userId){
+                res.status(401).json({
+                    status: 401,
+                    success: false,
+                    message: 'Unauthorized'
+                });
+                return;
+            }
+            const { followingIds, followType} = req.body;
 
             const followUserDto = new FollowCreateDto(userId, followingIds, followType);
 
@@ -27,10 +38,18 @@ class FollowController {
             });
         }
     }
-    async getFollowingCountApi(req: Request, res: Response) {
+    async getFollowingCountApi(req: IAuthRequest, res: Response) {
         try {
-            const userId  = req.query.userId as string;
+            const userId  = req.userId;
 
+            if(!userId){
+                res.status(401).json({
+                    status: 401,
+                    success: false,
+                    message: 'Unauthorized'
+                });
+                return;
+            }
             const count = await FollowUserService.getFollowingCount(userId);
 
             res.status(200).json({
@@ -47,10 +66,18 @@ class FollowController {
             });
         }
     }
-    async getFollowersCountApi(req: Request, res: Response) {
+    async getFollowersCountApi(req: IAuthRequest, res: Response) {
         try {
-            const  userId  = req.query.userId as string;
+            const  userId  = req.userId;
 
+            if(!userId){
+                res.status(401).json({
+                    status: 401,
+                    success: false,
+                    message: 'Unauthorized'
+                });
+                return;
+            }
             const count = await FollowUserService.getFollowersCount(userId);
 
             res.status(200).json({
@@ -67,9 +94,18 @@ class FollowController {
             });
         }
     }
-    async getFollowingUserApi(req: Request, res: Response) {
+    async getFollowingUserApi(req: IAuthRequest, res: Response) {
         try {
-            const userId = req.query.userId as string;
+            const userId = req.userId;
+
+            if(!userId){
+                res.status(401).json({
+                    status: 401,
+                    success: false,
+                    message: 'Unauthorized'
+                });
+                return;
+            }
 
             const followingList = await FollowUserService.getFollowingUsers(userId);
 
@@ -96,9 +132,18 @@ class FollowController {
             });
         }
     }
-    async getFollowersApi(req:Request, res: Response){
+    async getFollowersApi(req:IAuthRequest, res: Response){
         try {
-            const userId = req.query.userId as string;
+            const userId = req.userId;
+
+            if(!userId){
+                res.status(401).json({
+                    status: 401,
+                    success: false,
+                    message: 'Unauthorized'
+                });
+                return;
+            }
 
             const followersList = await FollowUserService.getFollowers(userId);
 
@@ -125,9 +170,20 @@ class FollowController {
             });
         }
     }
-    async unFollowApi(req: Request, res: Response) {
+    async unFollowApi(req: IAuthRequest, res: Response) {
         try {
-            const {userId, followingId} = req.body;
+            const userId = req.userId;
+
+            if(!userId) {
+                res.status(401).json({
+                    status: 401,
+                    success: false,
+                    message: 'Unauthorized'
+                });
+                return;
+            }
+
+            const {followingId} = req.body;
 
             await FollowBaseService.unFollow(userId, followingId);
 

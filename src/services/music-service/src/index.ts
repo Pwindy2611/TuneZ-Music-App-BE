@@ -35,8 +35,6 @@ app.use((req, _res, next) => {
     console.log(`[Music Api] Request method: ${req.method}, path: ${req.path}`);
     next();
 });
-//Middleware
-app.use(authMiddleware);
 // Routes
 app.use(musicRoute);
 
