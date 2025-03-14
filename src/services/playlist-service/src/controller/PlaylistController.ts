@@ -124,9 +124,14 @@ class PlaylistController {
             }
         }
     ];
-    async generatePlaylistApi(req: Request, res: Response) {
+    async generatePlaylistApi(req: IAuthRequest, res: Response) {
         try {
-            const userId = req.query.userId as string;
+            const userId = req.userId;
+
+            if(!userId){
+                res.status(401).json({ status: 401, success: false, message: 'Unauthorized' });
+                return;
+            }
 
             const playlists = await PlaylistGenerateService.generate(userId);
 

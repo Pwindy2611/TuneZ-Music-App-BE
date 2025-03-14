@@ -1,13 +1,20 @@
-import {Request, Response} from "express";
+import {Response} from "express";
 import {ILove} from "../interface/object/ILove";
 import {SaveMusicDto} from "../dto/request/SaveMusicDto";
 import {LoveBaseService} from "../service/LoveBaseService";
 import {LoveUserService} from "../service/LoveUserService";
+import {IAuthRequest} from "../interface/object/IAuthRequest";
 
 class LoveController {
-    saveLoveMusicApi = async (req: Request, res: Response) => {
+    saveLoveMusicApi = async (req: IAuthRequest, res: Response) => {
         try {
-            const {musicId, userId} = req.body || req.params;
+            const userId = req.userId;
+
+            if (!userId){
+                res.status(401).send({error: "User not found"});
+                return;
+            }
+            const {musicId} = req.body;
 
             const loveData: ILove = {
                 musicId,
@@ -43,9 +50,14 @@ class LoveController {
             }
         }
     }
-    getMusicIdsByUserLoveApi = async (req: Request, res: Response) => {
+    getMusicIdsByUserLoveApi = async (req: IAuthRequest, res: Response) => {
         try {
-            const userId = req.query.userId as string;
+            const userId = req.userId;
+
+            if (!userId){
+                res.status(401).send({error: "User not found"});
+                return;
+            }
             const limit = Number(req.query.limit);
 
             const musicIds = await LoveUserService.getMusicIdsByUserLove(userId, limit);

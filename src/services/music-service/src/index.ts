@@ -9,7 +9,6 @@ import 'reflect-metadata';
 import './config/container/MusicBaseService.HandlerRegister.js'
 import './config/container/MusicUserService.HandlerRegister.js'
 import './config/container/MusicStreamService.HandlerRegister.js'
-import {authMiddleware} from "./util/middleware/AuthMiddleware.js";
 
 
 const app = express();
@@ -35,8 +34,6 @@ app.use((req, _res, next) => {
     console.log(`[Music Api] Request method: ${req.method}, path: ${req.path}`);
     next();
 });
-//Middleware
-app.use(authMiddleware);
 // Routes
 app.use(musicRoute);
 

@@ -1,7 +1,11 @@
 import proxy from "express-http-proxy";
 import { Request, Response, NextFunction } from "express-serve-static-core";
+import * as console from "node:console";
 
-const allowedOrigins = ['https://tunez-ddb5f.firebaseapp.com', 'http://localhost:3000'];
+const allowedOrigins = [
+    'https://tunez-ddb5f.firebaseapp.com',
+    'http://localhost:3000'
+];
 
 const createProxy = (serviceUrl: string, pathPrefix: string) => {
     return (req: Request, res: Response, next: NextFunction) => {
@@ -24,6 +28,7 @@ const createProxy = (serviceUrl: string, pathPrefix: string) => {
             },
             userResDecorator: async (proxyRes: any, proxyResData: any, req: Request, res: Response) => {
                 console.log(`[PROXY] Response received from ${serviceUrl}: ${proxyRes.statusCode}`);
+
                 const origin = req.headers.origin || "";
                 if (!origin || allowedOrigins.includes(origin)) {
                     res.header("Access-Control-Allow-Origin", origin || "*");
@@ -34,16 +39,21 @@ const createProxy = (serviceUrl: string, pathPrefix: string) => {
                 res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
                 res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Set-Cookie");
 
-                const contentType = proxyRes.headers["content-type"] || "";
-                if (contentType.startsWith("audio/")) {
+                const resContentType = proxyRes.headers["content-type"] || "";
+                if (resContentType.startsWith("audio/")) {
                     return proxyResData;
                 }
-                try {
-                    return JSON.stringify(JSON.parse(proxyResData.toString("utf8")));
-                } catch (error) {
-                    console.error("[PROXY] Failed to parse response:", error);
-                    return proxyResData;
+
+                if (resContentType.includes("application/json")) {
+                    try {
+                        const responseBody = proxyResData.toString("utf8").replace(/^\uFEFF/, "");
+                        return JSON.stringify(JSON.parse(responseBody));
+                    } catch (error) {
+                        console.error("[PROXY] Failed to parse JSON response:", error);
+                        return proxyResData;
+                    }
                 }
+                return proxyResData;
             }
         };
 

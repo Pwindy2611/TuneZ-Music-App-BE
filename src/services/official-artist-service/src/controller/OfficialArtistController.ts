@@ -5,6 +5,7 @@ import multer from "multer";
 import {IOfficialArtist} from "../interface/object/IOfficialArtist.js";
 import {IFile} from "../interface/object/IFile.js";
 import {OfficialArtistUserService} from "../service/OfficialArtistUserService.js";
+import {IAuthRequest} from "../interface/object/IAuthRequest.js";
 
 const uploadMulter = multer({
     limits: { fileSize: 10 * 1024 * 1024 },
@@ -69,9 +70,18 @@ class OfficialArtistController {
             }
         }
     ]
-    getAllOfficialArtistApi = async (req: Request, res: Response) => {
+    getAllOfficialArtistApi = async (req: IAuthRequest, res: Response) => {
         try {
-            const userId = req.query.userId as string;
+            const userId = req.userId;
+
+            if (!userId) {
+                res.status(401).json({
+                    status: 401,
+                    success: false,
+                    message: 'User is not authorized'
+                })
+                return;
+            }
 
             const artists = await OfficialArtistUserService.getAllOfficialArtist(userId);
 

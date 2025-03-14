@@ -30,6 +30,7 @@ app.use((req, res, next) => {
     console.log(`[History Api] Request method: ${req.method}, path: ${req.path}`);
     next();
 });
+
 //Route
 app.use(HistoryRoute);
 

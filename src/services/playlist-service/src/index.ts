@@ -6,7 +6,6 @@ import cors from 'cors';
 import http from 'http';
 import playlistRoute from './route/PlaylistRoute.js';
 import 'reflect-metadata';
-import {authMiddleware} from "./util/middleware/AuthMiddleware.js";
 
 
 const app = express();
@@ -33,8 +32,6 @@ app.use((req, res, next) => {
     next();
 });
 
-//Middleware
-app.use(authMiddleware);
 // Routes
 app.use(playlistRoute);
 

@@ -20,9 +20,6 @@ export class CreateMusicDto implements IMusic {
     @IsString()
     officialArtistId?: string;
 
-    @IsString()
-    userId?: string;
-
     constructor(music: IMusic) {
         this.name = music.name;
         this.artist = music.artist;
@@ -30,7 +27,6 @@ export class CreateMusicDto implements IMusic {
         this.genres = music.genres;
         this.songType = music.songType;
         this.officialArtistId = music.officialArtistId;
-        this.userId = music.userId;
     }
 
     async validate() {

@@ -104,9 +104,15 @@ class MusicController {
             { name: "musicFile", maxCount: 1 },
             { name: "imgFile", maxCount: 1 }
         ]),
-        async (req: Request, res: Response) => {
+        async (req: IAuthRequest, res: Response) => {
             try {
-                const { name, artist, duration, genres, userId } = req.body;
+                const userId = req.userId;
+
+                if (!userId) {
+                    res.status(401).send("Unauthorized");
+                    return;
+                }
+                const { name, artist, duration, genres } = req.body;
 
                 const musicData: IMusic = {
                     name,
@@ -183,7 +189,7 @@ class MusicController {
                 status: 200,
                 success: true,
                 message: 'Fetched all music successfully',
-                musics,
+                data: musics,
             });
         } catch (error: unknown) {
             console.error('Error fetching all musics:', error);
@@ -223,7 +229,7 @@ class MusicController {
                 status: 200,
                 success: true,
                 message: `Fetched music by artist: ${artist}`,
-                musics: musicsByArtist,
+                data: musicsByArtist,
             });
         } catch (error: unknown) {
             console.error('Error fetching music by artist:', error);
@@ -263,7 +269,7 @@ class MusicController {
                 status: 200,
                 success: true,
                 message: `Fetched music by Genres: ${genres}`,
-                musics: musicsByGenres,
+                data: musicsByGenres,
             });
         } catch (error: unknown) {
             console.error('Error fetching music by Genres:', error);
@@ -275,10 +281,14 @@ class MusicController {
         }
     };
 
-    getMusicHistoryApi = async (req: Request, res: Response) => {
+    getMusicHistoryApi = async (req: IAuthRequest, res: Response) => {
         try {
-            const userId = req.query.userId as string;
+            const userId = req.userId;
 
+            if (!userId) {
+                res.status(401).send("Unauthorized");
+                return;
+            }
             const musicHistory = await MusicUserService.getMusicHistory.execute(userId);
 
             if(musicHistory?.length === 0) {
@@ -294,7 +304,7 @@ class MusicController {
                 status: 200,
                 success: true,
                 message: `Fetched music history with: ${userId}`,
-                musics: musicHistory,
+                data: musicHistory,
             });
         }catch (error: unknown) {
             console.error('Error fetching music history:', error);
@@ -306,9 +316,14 @@ class MusicController {
         }
     }
 
-    getMusicLoveApi = async (req: Request, res: Response) => {
+    getMusicLoveApi = async (req: IAuthRequest, res: Response) => {
         try {
-            const userId = req.query.userId as string;
+            const userId = req.userId;
+
+            if (!userId) {
+                res.status(401).send("Unauthorized");
+                return;
+            }
 
             const musicLove = await MusicUserService.getMusicLove.execute(userId);
 
@@ -325,7 +340,7 @@ class MusicController {
                 status: 200,
                 success: true,
                 message: `Fetched music love with: ${userId}`,
-                musics: musicLove,
+                data: musicLove,
             });
         }catch (error: unknown) {
             console.error('Error fetching music love:', error);
@@ -347,7 +362,7 @@ class MusicController {
             }
 
             const musicId = req.params.musicId;
-            // Không cần xử lý seekTime từ FE nữa
+
             const musicStream = await MusicStreamService.getStreamMusic.execute(userId, musicId);
 
             res.setHeader("Content-Type", "audio/mpeg");
