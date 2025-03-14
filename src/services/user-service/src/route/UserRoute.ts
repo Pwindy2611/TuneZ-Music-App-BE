@@ -1,6 +1,7 @@
 import express from 'express';
 import MusicController from '../controller/UserController.js';
-import { authValidate } from '../util/middlewares/AuthenticationValidate.js';
+import { authValidate } from '../util/middleware/AuthenticationValidate.js';
+import {authMiddleware} from "../util/middleware/AuthMiddleware.js";
 
 const router = express.Router();
 
@@ -17,5 +18,8 @@ router.post('/sendEmailVerify', MusicController.sendVerificationEmailApi);
 router.post('/sendEmailResetPassword', MusicController.sendForgetPasswordApi);
 router.post('/sendOtpEmail', MusicController.sendOtpEmailApi);
 router.post('/verifyOtp', MusicController.verifyOtpEmailApi);
+
+//CRUD
+router.post('/deleteUser/:userId', MusicController.deleteUserApi);
 
 export default router;

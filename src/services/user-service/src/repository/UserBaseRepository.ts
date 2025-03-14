@@ -1,7 +1,7 @@
 import {IUserBaseRepository} from "../interface/repository/IUserBaseRepository.js";
 import {IUser} from "../interface/object/IUser.js";
 import {UserDto} from "../dto/response/UserDto.js";
-import {auth, database} from "../config/firebase/FireBaseConfig.js";
+import {auth, database, firestore} from "../config/firebase/FireBaseConfig.js";
 import {injectable} from "tsyringe";
 
 @injectable()
@@ -10,6 +10,17 @@ export class UserBaseRepository implements IUserBaseRepository {
         const userRef = database.ref(`users/${user._id}`);
         return await userRef.set(user);
     }
+
+    async deleteUser(userId: string): Promise<void> {
+        await auth.deleteUser(userId);
+
+        const userRef = database.ref(`users/${userId}`);
+        await userRef.remove();
+
+        const userFirestore = firestore.collection('users').doc(userId);
+        await userFirestore.delete();
+    }
+
 
     async getAllUsers(): Promise<UserDto[] | null> {
         const usersRef = database.ref('users');

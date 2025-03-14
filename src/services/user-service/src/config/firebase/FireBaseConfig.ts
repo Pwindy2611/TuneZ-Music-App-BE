@@ -4,6 +4,7 @@ import { getAuth } from "firebase-admin/auth";
 import { getDatabase } from "firebase-admin/database";
 import * as fs from "fs";
 import * as path from "path";
+import {getFirestore} from "firebase-admin/firestore";
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ class FirebaseSingleton {
     private static instance: FirebaseSingleton;
     public auth;
     public database;
+    public firestore;
 
     private constructor() {
         const serviceAccountPath = process.env.FIREBASE_KEY_PATH;
@@ -38,6 +40,7 @@ class FirebaseSingleton {
 
         this.auth = getAuth(app);
         this.database = getDatabase(app);
+        this.firestore = getFirestore(app);
     }
 
     public static getInstance(): FirebaseSingleton {
@@ -51,3 +54,4 @@ class FirebaseSingleton {
 const firebaseInstance = FirebaseSingleton.getInstance();
 export const auth = firebaseInstance.auth;
 export const database = firebaseInstance.database;
+export const firestore = firebaseInstance.firestore;
