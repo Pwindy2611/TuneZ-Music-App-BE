@@ -5,7 +5,6 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import 'reflect-metadata';
 import HistoryRoute from "./route/HistoryRoute";
-import {authMiddleware} from "./util/middleware/AuthMiddleware";
 
 const app = express();
 const port = process.env.PORT || 3004;

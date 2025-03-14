@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import {Response } from 'express';
 import {FollowCreateDto} from "../dto/request/FollowCreateDto";
 import {FollowBaseService} from "../service/FollowBaseService";
 import {FollowUserService} from "../service/FollowUserService";

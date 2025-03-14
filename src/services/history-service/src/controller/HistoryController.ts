@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import {Response} from "express";
 import {IHistory} from "../interface/object/IHistory";
 import {SaveHistoryDto} from "../dto/request/SaveHistoryDto";
 import {HistoryBaseService} from "../service/HistoryBaseService";
