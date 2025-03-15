@@ -5,5 +5,5 @@ export interface IMusicStreamService {
     getUserMusicSate(userId: string): Promise<IMusicState>
     updateUserMusicState(userId: string, musicId: string, timestamp: number, isPlaying: boolean): Promise<void>
     calculateResumeTimestamp(state: IMusicState): Promise<number>
-    getStreamMusic(userId: string, musicId: string): Promise<Readable>
+    getStreamMusic(musicId: string): Promise<Readable>
 }

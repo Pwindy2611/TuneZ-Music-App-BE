@@ -7,8 +7,6 @@ export interface IMusic {
     genres: string;
     userId?: string;
     officialArtistId?: string;
-    playCount?: number;
-    loveCount?: number;
     musicPath?: string;
     imgPath?: string;
-}   
+}

@@ -1,14 +1,15 @@
-import {Response} from "express";
+import {Request, Response} from "express";
 import {IHistory} from "../interface/object/IHistory";
 import {SaveHistoryDto} from "../dto/request/SaveHistoryDto";
 import {HistoryBaseService} from "../service/HistoryBaseService";
 import {HistoryUserService} from "../service/HistoryUserService";
-import {IAuthRequest} from "../interface/object/IAuthRequest";
 
 class HistoryController {
-    saveHistoryApi = async (req: IAuthRequest, res: Response) => {
+    saveHistoryApi = async (req: Request, res: Response) => {
         try {
-            const userId = req.userId;
+
+            const { userId, musicId } = req.body;
+
             if (!userId){
                 res.status(401).json({
                     status: 401,
@@ -17,7 +18,6 @@ class HistoryController {
                 });
                 return;
             }
-            const { musicId } = req.body;
 
             const historyData: IHistory = {
                 userId,
@@ -54,11 +54,11 @@ class HistoryController {
             }
         }
     }
-    getMusicIdsFromUserHistoryApi = async (req: IAuthRequest, res: Response) => {
+    getMusicIdsFromUserHistoryApi = async (req: Request, res: Response) => {
         try {
-            const userId = req.userId;
+            const userId = req.query.userId as string;
 
-            if(!userId){
+            if (!userId){
                 res.status(401).json({
                     status: 401,
                     success: false,
@@ -66,6 +66,7 @@ class HistoryController {
                 });
                 return;
             }
+
             const limit = Number(req.query.limit);
 
             const musicIds = await HistoryUserService.getMusicIdsByUserHistory(userId, limit);

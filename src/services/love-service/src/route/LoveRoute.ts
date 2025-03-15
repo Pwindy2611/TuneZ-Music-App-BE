@@ -5,5 +5,7 @@ import {authMiddleware} from "../util/middleware/AuthMiddleware";
 const router = express.Router();
 
 router.post('/saveLoveMusic', authMiddleware, LoveController.saveLoveMusicApi);
-router.get('/getMusicIdsByUserLove', authMiddleware, LoveController.getMusicIdsByUserLoveApi);
+
+//MICROSERVICE
+router.get('/getMusicIdsByUserLove', LoveController.getMusicIdsByUserLoveApi);
 export default router;

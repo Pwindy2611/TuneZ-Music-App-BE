@@ -1,11 +1,14 @@
 import {IMusicStreamRepository} from "../interface/repository/IMusicStreamRepository.js";
 import {IMusicState} from "../interface/object/IMusicState.js";
-import {Readable} from "stream";
 import redisClient from "../config/redis/RedisConfig.js";
 import {firestore} from "../config/firebase/FireBaseConfig.js";
-import axios from "axios";
 import {MusicBaseService} from "../service/music_base/MusicBaseService.js";
 import {singleton} from "tsyringe";
+import {Readable} from "stream";
+import axios from "axios";
+import * as admin from "firebase-admin";
+
+
 @singleton()
 export class MusicStreamRepository implements IMusicStreamRepository {
     async getUserMusicState(userId: string): Promise<IMusicState> {
@@ -28,7 +31,7 @@ export class MusicStreamRepository implements IMusicStreamRepository {
         return { currentMusicId: null, timestamp: 0, lastUpdated: 0, isPlaying: false};
     }
 
-    async getStreamMusic(userId: string, musicId: string): Promise<Readable> {
+    async getStreamMusic(musicId: string): Promise<Readable> {
         const musicUrl = await MusicBaseService.getMusicUrlById.execute(musicId);
 
         const response = await axios.get(musicUrl, {
@@ -55,4 +58,20 @@ export class MusicStreamRepository implements IMusicStreamRepository {
         return state.isPlaying ? state.timestamp + timeElapsed : state.timestamp;
     }
 
+    async incrementPlayCount(musicId: string): Promise<void> {
+        const musicRef = firestore.collection('musics').doc(musicId);
+        await firestore.runTransaction(async (transaction) => {
+            const musicDoc = await transaction.get(musicRef);
+            if (!musicDoc.exists) {
+                transaction.set(musicRef, { playCount: 1 });
+            } else {
+                const currentPlayCount = musicDoc.data()?.playCount || 0;
+                transaction.update(musicRef, { playCount: currentPlayCount + 1 });
+            }
+        });
+    }
+
+    async saveHistory(userId: string, musicId: string): Promise<void> {
+        await axios.post(`http://api-gateway:3000/history/saveHistory`, {"userId": userId, "musicId": musicId});
+    }
 }

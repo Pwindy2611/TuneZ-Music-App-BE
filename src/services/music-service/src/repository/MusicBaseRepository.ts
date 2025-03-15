@@ -1,9 +1,10 @@
 import {IMusicBaseRepository} from "../interface/repository/IMusicBaseRepository.js";
-import {database} from "../config/firebase/FireBaseConfig.js";
+import {database, firestore} from "../config/firebase/FireBaseConfig.js";
 import FetchBase from "../util/base/FetchBase.js";
 import {singleton} from "tsyringe";
 import UploadBase from "../util/base/UploadBase.js";
 import {IMusic} from "../interface/object/IMusic.js";
+import * as admin from "firebase-admin";
 
 @singleton()
 export class MusicBaseRepository implements IMusicBaseRepository {
@@ -23,8 +24,6 @@ export class MusicBaseRepository implements IMusicBaseRepository {
             duration: musicData.duration,
             genres: musicData.genres,
             officialArtistId: musicData.officialArtistId,
-            playCount: musicData.playCount?? 0,
-            loveCount: musicData.loveCount?? 0,
             musicPath: musicPath ?? '',
             imgPath: imgPath?? ''
         }
@@ -46,8 +45,6 @@ export class MusicBaseRepository implements IMusicBaseRepository {
             duration: musicData.duration,
             genres: musicData.genres,
             userId: musicData.userId,
-            playCount: musicData.playCount?? 0,
-            loveCount: musicData.loveCount?? 0,
             musicPath: musicPath ?? '',
             imgPath: imgPath?? ''
         }
@@ -140,5 +137,17 @@ export class MusicBaseRepository implements IMusicBaseRepository {
         return snapshot.exists();
     }
 
+    async incrementLoveCount(musicId: string): Promise<void> {
+        const musicRef = firestore.collection('musics').doc(musicId);
+        await firestore.runTransaction(async (transaction) => {
+            const musicDoc = await transaction.get(musicRef);
+            if (!musicDoc.exists) {
+                transaction.set(musicRef, { loveCount: 1 });
+            } else {
+                const currentPlayCount = musicDoc.data()?.loveCount || 0;
+                transaction.update(musicRef, { loveCount: currentPlayCount + 1 });
+            }
+        });
+    }
 
 }

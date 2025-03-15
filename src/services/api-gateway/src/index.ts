@@ -36,10 +36,10 @@ app.use(cors({
 }));
 
 
-const options = {
+/*const options = {
     key: fs.readFileSync(process.env.SERVER_KEY_PATH || '../server.key'),
     cert: fs.readFileSync(process.env.SERVER_CERT_PATH || '../server.cert')
-};
+};*/
 
 app.use(compression());
 app.use(cookieParser());
@@ -74,6 +74,12 @@ app.get('/health', (_req, res) => {
 });
 
 // Start the server
+/*
 https.createServer(options, app).listen(3000, () => {
     console.log(`Api gateway running on https://localhost:${port}`);
+});
+*/
+
+app.listen(port, () => {
+    console.log(`Api gateway running on http://localhost:${port}`);
 });

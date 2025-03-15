@@ -22,4 +22,6 @@ router.post('/playMusic/:musicId', authMiddleware, MusicController.playMusicApi)
 router.post('/seekMusic/:musicId', authMiddleware, MusicController.seekMusicApi);
 router.get('/getUserMusicState', authMiddleware, MusicController.getUserMusicStateApi);
 
+//MICROSERVICE
+router.post('/incrementLoveCount/:musicId', MusicController.incrementLoveCountApi);
 export default router;

@@ -5,6 +5,6 @@ import {MusicStreamRepository} from "../../../repository/MusicStreamRepository.j
 export class GetStreamMusicHandler {
     constructor(@inject(MusicStreamRepository) private readonly musicStreamRepository: MusicStreamRepository) {}
     execute(query: GetStreamMusicQuery) {
-        return this.musicStreamRepository.getStreamMusic(query.userId, query.musicId);
+        return this.musicStreamRepository.getStreamMusic(query.musicId);
     }
 }
