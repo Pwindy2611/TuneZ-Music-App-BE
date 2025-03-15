@@ -6,8 +6,6 @@ import bodyParser from 'body-parser';
 
 import { followProxy, historyProxy, loveProxy, musicProxy, officialArtistProxy, playlistProxy, userProxy } from "./proxy/CreateProxy";
 import {authMiddleware} from "./middleware/AuthMiddleware";
-import fs from "fs";
-import * as https from "node:https";
 import * as dotenv from "dotenv";
 
 dotenv.config();

@@ -2,7 +2,6 @@ import { ILoveBaseService } from "../interface/service/ILoveBaseService";
 import { firestore } from "../config/firebase/FireBaseConfig";
 import * as admin from "firebase-admin";
 import axios from "axios";
-import https from "https";
 
 export const saveLoveMusic: ILoveBaseService["saveLoveMusic"] = async (love) => {
     try {
@@ -17,7 +16,6 @@ export const saveLoveMusic: ILoveBaseService["saveLoveMusic"] = async (love) => 
             return Promise.reject(new Error(`Music is already in your playlist`));
         }
 
-        // Lưu bài hát vào danh sách yêu thích
         const newDocRef = await loveRef.add({
             musicId: love.musicId,
             lovedAt: admin.firestore.FieldValue.serverTimestamp(),

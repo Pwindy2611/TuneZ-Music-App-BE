@@ -8,10 +8,12 @@ import PlaylistCacheService from "../cache/PlaylistCacheService.js";
 import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 import {PlaylistType} from "../../enum/PlaylistType.js";
 import {IPlaylistResponseDto} from "../../dto/response/IPlaylistResponseDto.js";
+import {PlaylistTitle} from "../../enum/PlaylistTitle.js";
+import {IPlaylistGroupedResponseDto} from "../../dto/response/IPlaylistGroupedResponseDto.js";
 
 export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylist"] = async (
     userId
-): Promise<IPlaylistResponseDto[] | null> => {
+): Promise<IPlaylistGroupedResponseDto | null> => {
     try {
         if (!await generateRepo.isUserExists(userId)) {
             return Promise.reject(new Error("User not found"));
@@ -70,7 +72,7 @@ export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylis
 
         await PlaylistCacheService.saveToCache(userId, 'userPreference', finalPlaylists);
 
-        return finalPlaylists;
+        return finalPlaylists.length > 0 ? {[PlaylistTitle.USER_GENERATE]: finalPlaylists} : null;
     } catch (error) {
         throw new Error(`Error generating user playlist: ${error.message}`);
     }

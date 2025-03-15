@@ -6,7 +6,6 @@ import {MusicBaseService} from "../service/music_base/MusicBaseService.js";
 import {singleton} from "tsyringe";
 import {Readable} from "stream";
 import axios from "axios";
-import * as admin from "firebase-admin";
 
 
 @singleton()
