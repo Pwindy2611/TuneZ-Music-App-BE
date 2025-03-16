@@ -7,7 +7,7 @@ export const getMusicIdsByUserLove: ILoveUserService["getMusicIdsByUserLove"] = 
             .collection(`users`)
             .doc(userId)
             .collection('love')
-            .orderBy('listenAt', 'desc')
+            .orderBy('lovedAt', 'desc')
             .limit(limit)
             .get();
 

@@ -1,6 +1,6 @@
-import {database} from '../../config/firebase/FireBaseConfig.js'
-import {MusicResponseDto} from "../../dto/response/MusicResponseDto.js";
-import axios from "axios";
+import { database } from '../../config/firebase/FireBaseConfig.js';
+import { MusicResponseDto } from "../../dto/response/MusicResponseDto.js";
+import { loveServiceClient, historyServiceClient } from '../../grpc/client/GrpcClients.js';
 
 class FetchBase {
     async fetchMusicDetails(musicIds: string[]): Promise<MusicResponseDto[]> {
@@ -26,16 +26,27 @@ class FetchBase {
     }
 
     async fetchMusicIdsFromHistory(userId: string, limit: number) {
-
-        const response = await axios.get(`http://api-gateway:3000/history/getMusicIdsByUserHistory?userId=${userId}&limit=${limit}`);
-
-        return response.data.data as string[];
+        return new Promise((resolve, reject) => {
+            historyServiceClient.getMusicIds({ userId, limit }, (err: any, response: any) => {
+                if (err) {
+                    reject(new Error(`gRPC error: ${err.message}`));
+                    return;
+                }
+                resolve(response.musicIds);
+            });
+        });
     }
 
     async fetchMusicIdsFromLove(userId: string, limit: number) {
-        const response = await axios.get(`http://api-gateway:3000/love/getMusicIdsByUserLove?userId=${userId}&limit=${limit}`);
-
-        return response.data.musicIds as string[];
+        return new Promise((resolve, reject) => {
+            loveServiceClient.getMusicIds({ userId, limit }, (err: any, response: any) => {
+                if (err) {
+                    reject(new Error(`gRPC error: ${err.message}`));
+                    return;
+                }
+                resolve(response.musicIds);
+            });
+        });
     }
 }
 

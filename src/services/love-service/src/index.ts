@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
 import loveRoute from "./route/LoveRoute";
+import './grpc/index'
 const app = express();
 const port = process.env.PORT || 3005; 
 

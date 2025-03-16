@@ -6,13 +6,13 @@ import {singleton} from "tsyringe";
 export class MusicUserRepository implements IMusicUserRepository {
     async getMusicHistory(userId: string): Promise<any> {
         const musicIds = await FetchBase.fetchMusicIdsFromHistory(userId, 50);
-        const uniqueMusicIds = [...new Set(musicIds)];
+        const uniqueMusicIds = [...new Set<string>(musicIds as string[])];
 
         return await FetchBase.fetchMusicDetails(uniqueMusicIds);
     }
     async getMusicLove(userId: string): Promise<any> {
         const musicIds = await FetchBase.fetchMusicIdsFromLove(userId, 50);
-        const uniqueMusicIds = [...new Set(musicIds)];
+        const uniqueMusicIds = [...new Set<string>(musicIds as string[])];
 
         return await FetchBase.fetchMusicDetails(uniqueMusicIds);
     }
