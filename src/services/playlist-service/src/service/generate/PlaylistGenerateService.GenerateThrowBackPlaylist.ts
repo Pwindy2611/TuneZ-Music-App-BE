@@ -1,7 +1,6 @@
 import {IPlaylistGenerateService} from "../../interface/service/IPlaylistGenerateService.js";
 import FetchBase from "../../util/base/FetchBase.js";
 import PlaylistBaseService from "../base/PlaylistBaseService.js";
-import PlaylistCacheService from "../cache/PlaylistCacheService.js";
 import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 import {IPlaylistResponseDto} from "../../dto/response/IPlaylistResponseDto.js";
 
@@ -11,17 +10,6 @@ export const generateThrowBackPlaylist: IPlaylistGenerateService["generateThrowB
     historyLimit
 ): Promise<IPlaylistResponseDto[] | null> => {
     try {
-        if (!await generateRepo.isUserExists(userId)) {
-            return Promise.reject(new Error("User not found"));
-        }
-
-        const cachedPlaylist = await PlaylistCacheService.getFromCache(userId, 'throwback');
-        if (cachedPlaylist) {
-            console.log(`Using cached throwback playlist for user: ${userId}`);
-            return cachedPlaylist;
-        }
-
-        console.log(`Generating new throwback playlist for user: ${userId}`);
         const throwbackPlaylists = await PlaylistBaseService.getPlaylistByFilter('throwback', 'custom');
 
         if (!Array.isArray(throwbackPlaylists) || throwbackPlaylists.length === 0) {
@@ -52,8 +40,6 @@ export const generateThrowBackPlaylist: IPlaylistGenerateService["generateThrowB
             coverImage: throwbackPlaylist.coverImage || 'https://example.com/default-cover.jpg', // Ảnh mặc định nếu thiếu
             tracks: musicDetails
         };
-
-        await PlaylistCacheService.saveToCache(userId, 'throwback', [playlistResponse]);
 
         return [playlistResponse];
     } catch (error) {

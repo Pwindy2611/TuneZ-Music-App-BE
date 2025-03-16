@@ -5,6 +5,7 @@ import { CreateUserService } from "./UserBaseService.CreateUser.js";
 import { GetAllUsersService } from "./UserBaseService.GetAllUsers.js";
 import { GetUserByEmailService } from "./UserBaseService.GetUserByEmail.js";
 import { GetUserCustomTokenService } from "./UserBaseService.GetUserCustomToken.js";
+import {DeleteUserService} from "./UserBaseService.DeleteUser.js";
 
 container.register("UserBaseRepository", {
     useClass: UserBaseRepository,
@@ -12,6 +13,7 @@ container.register("UserBaseRepository", {
 
 export const UserBaseService = {
     createUserService: container.resolve(CreateUserService),
+    deleteUserService: container.resolve(DeleteUserService),
     getAllUsersService: container.resolve(GetAllUsersService),
     getUserByEmailService: container.resolve(GetUserByEmailService),
     getUserCustomToken: container.resolve(GetUserCustomTokenService)

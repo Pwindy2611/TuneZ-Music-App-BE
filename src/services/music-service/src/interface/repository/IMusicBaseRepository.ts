@@ -6,4 +6,6 @@ export interface IMusicBaseRepository {
     getMusicUrlById(musicId: string): Promise<string>;
     getMusicDurationById(musicId: string): Promise<number>;
     isOfficialArtistExist(artistId: string): Promise<boolean>;
+    incrementLoveCount(musicId: string): Promise<void>
+
 }

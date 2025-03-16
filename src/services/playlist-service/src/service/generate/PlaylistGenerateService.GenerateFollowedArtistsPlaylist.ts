@@ -5,8 +5,10 @@ import PlaylistBaseService  from "../base/PlaylistBaseService.js";
 import { generateRepo } from "../../repository/PlaylistGenerateRepository.js";
 import { PlaylistType } from "../../enum/PlaylistType.js";
 import {IPlaylistResponseDto} from "../../dto/response/IPlaylistResponseDto.js";
+import {PlaylistTitle} from "../../enum/PlaylistTitle.js";
+import {IPlaylistGroupedResponseDto} from "../../dto/response/IPlaylistGroupedResponseDto.js";
 
-export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generateFollowedArtistsPlaylist"] = async (userId): Promise<IPlaylistResponseDto[] | null> => {
+export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generateFollowedArtistsPlaylist"] = async (userId): Promise<IPlaylistGroupedResponseDto | null> => {
     try {
         if (!await generateRepo.isUserExists(userId)) {
             return Promise.reject(new Error("User not found"));
@@ -46,8 +48,9 @@ export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generate
             await PlaylistCacheService.saveToCache(userId, 'followed-artists', artistPlaylists);
         }
 
-        return artistPlaylists.length > 0 ? artistPlaylists : null;
-    } catch (error) {
+        return artistPlaylists.length > 0 ? {[PlaylistTitle.FOLLOW_ARTIST]: artistPlaylists} : null;
+    }
+    catch (error) {
         throw new Error(`Failed to generate followed artists playlist for user: ${error.message}`);
     }
 };

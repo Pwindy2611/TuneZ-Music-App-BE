@@ -10,6 +10,6 @@ export const authMiddleware = (req: IAuthRequest, res: Response, next: NextFunct
     }
 
     req.userId = Array.isArray(userId) ? userId[0] : userId;
-    console.log(`[MUSIC-SERVICE] User ${req.userId} authenticated`);
+    console.log(`[USER-SERVICE] User ${req.userId} authenticated`);
     next();
 };

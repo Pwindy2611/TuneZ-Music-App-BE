@@ -1,10 +1,10 @@
 import express from 'express';
 import HistoryController from "../controller/HistoryController";
-import {authMiddleware} from "../util/middleware/AuthMiddleware";
 
 const router = express.Router();
 
-router.post('/saveHistory', authMiddleware, HistoryController.saveHistoryApi);
+router.post('/saveHistory', HistoryController.saveHistoryApi);
 
-router.get('/getMusicIdsByUserHistory', authMiddleware, HistoryController.getMusicIdsFromUserHistoryApi)
+//MICROSERVICE
+router.get('/getMusicIdsByUserHistory', HistoryController.getMusicIdsFromUserHistoryApi)
 export default router;

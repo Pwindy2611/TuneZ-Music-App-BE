@@ -1,8 +1,6 @@
 import {IPlaylistGenerateService} from "../../interface/service/IPlaylistGenerateService.js";
 import FetchBase from "../../util/base/FetchBase.js";
 import PlaylistBaseService from "../base/PlaylistBaseService.js";
-import PlaylistCacheService from "../cache/PlaylistCacheService.js";
-import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 import {IPlaylistResponseDto} from "../../dto/response/IPlaylistResponseDto.js";
 
 export const generateRecentPlaylist: IPlaylistGenerateService["generateRecentPlaylist"] = async (
@@ -11,17 +9,7 @@ export const generateRecentPlaylist: IPlaylistGenerateService["generateRecentPla
     historyLimit
 ): Promise<IPlaylistResponseDto[] | null> => {
     try {
-        if (!await generateRepo.isUserExists(userId)) {
-            return Promise.reject(new Error("User not found"));
-        }
 
-        const cachedPlaylist = await PlaylistCacheService.getFromCache(userId, 'recent');
-        if (cachedPlaylist) {
-            console.log(`Using cached recent playlist for user: ${userId}`);
-            return cachedPlaylist;
-        }
-
-        console.log(`Generating new recent playlist for user: ${userId}`);
         const recentPlaylists = await PlaylistBaseService.getPlaylistByFilter('recent', 'custom');
 
         if (!Array.isArray(recentPlaylists) || recentPlaylists.length === 0) {
@@ -53,8 +41,6 @@ export const generateRecentPlaylist: IPlaylistGenerateService["generateRecentPla
             coverImage: recentPlaylist.coverImage || 'https://example.com/default-cover.jpg', // Giá trị mặc định
             tracks: musicDetails
         };
-
-        await PlaylistCacheService.saveToCache(userId, 'recent', [playlistResponse]);
 
         return [playlistResponse];
     } catch (error) {

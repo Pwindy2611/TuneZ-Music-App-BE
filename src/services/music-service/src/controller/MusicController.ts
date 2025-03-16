@@ -9,7 +9,7 @@ import {UploadMusicDto} from "../dto/request/UploadMusicDto.js";
 import {MusicUserService} from "../service/music_user/MusicUserService.js";
 import {IAuthRequest} from "../interface/object/IAuthRequest.js";
 import {MusicStreamService} from "../service/music_stream/MusicStreamService.js";
-import {musicStreamRepository} from "../config/container/Container.js";
+import {musicBaseRepository, musicStreamRepository} from "../config/container/Container.js";
 
 
 const uploadMulter = multer({
@@ -180,7 +180,6 @@ class MusicController {
             }
         },
     ];
-
     getAllMusicsApi = async (_req: Request, res: Response) => {
         try {
             const musics = await MusicBaseService.getAllMusic.execute();
@@ -200,7 +199,6 @@ class MusicController {
             });
         }
     };
-
     getMusicByArtistApi = async (req: Request, res: Response) => {
         try {
             const artist  = req.query.artist as string;
@@ -240,7 +238,6 @@ class MusicController {
             });
         }
     };
-
     getMusicByGenresApi = async (req: Request, res: Response) => {
         try {
             const genres  = req.query.genres as string;
@@ -280,7 +277,6 @@ class MusicController {
             });
         }
     };
-
     getMusicHistoryApi = async (req: IAuthRequest, res: Response) => {
         try {
             const userId = req.userId;
@@ -315,7 +311,6 @@ class MusicController {
             });
         }
     }
-
     getMusicLoveApi = async (req: IAuthRequest, res: Response) => {
         try {
             const userId = req.userId;
@@ -351,7 +346,6 @@ class MusicController {
             });
         }
     }
-
     getStreamMusicApi = async (req: IAuthRequest, res: Response) => {
         try {
             const userId = req.userId;
@@ -363,7 +357,7 @@ class MusicController {
 
             const musicId = req.params.musicId;
 
-            const musicStream = await MusicStreamService.getStreamMusic.execute(userId, musicId);
+            const musicStream = await MusicStreamService.getStreamMusic.execute(musicId);
 
             res.setHeader("Content-Type", "audio/mpeg");
 
@@ -377,7 +371,6 @@ class MusicController {
             });
         }
     }
-
     playMusicApi = async (req: IAuthRequest, res: Response) => {
         try {
             const userId = req.userId;
@@ -388,6 +381,12 @@ class MusicController {
                 return;
             }
             const previousState = await MusicStreamService.getUserMusicState.execute(userId);
+
+            if(previousState.currentMusicId !== musicId ){
+                await musicStreamRepository.incrementPlayCount(musicId);
+                await musicStreamRepository.saveHistory(userId, musicId);
+            }
+
             let startFrom = 0;
 
             if (previousState.currentMusicId === musicId && !previousState.isPlaying) {
@@ -409,7 +408,6 @@ class MusicController {
             })
         }
     }
-
     pauseMusicApi = async (req: IAuthRequest, res: Response) => {
         try {
             const userId = req.userId;
@@ -446,7 +444,6 @@ class MusicController {
             })
         }
     }
-
     seekMusicApi = async (req: IAuthRequest, res: Response) => {
         try {
             const userId = req.userId;
@@ -511,6 +508,25 @@ class MusicController {
                 success: false,
                 message: `Internal Server Error ${error.message}`,
             });
+        }
+    }
+    incrementLoveCountApi = async (req: Request, res: Response) => {
+        try {
+            const musicId = req.params.musicId;
+
+            await musicBaseRepository.incrementLoveCount(musicId);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Increment love count successfully',
+            });
+        }catch (error){
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`,
+            })
         }
     }
 }

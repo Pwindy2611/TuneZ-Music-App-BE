@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import { auth } from "../config/firebase/FireBaseConfig.js";
 import {UserBaseService} from '../service/UserBaseService.js';
 import {mailService} from "../util/base/MailBase.js";
+import {IAuthRequest} from "../interface/object/IAuthRequest.js";
 
 class UserController {
     getAllUsersApi = async (_req: Request, res: Response) => {
@@ -16,7 +17,6 @@ class UserController {
             }
         }
     };
-
     getUserCustomTokenApi = async (req: Request, res: Response) => {
         try {
             const email = req.query.email as string;
@@ -62,7 +62,17 @@ class UserController {
             }
         }
     };
+    deleteUserApi = async (req: IAuthRequest, res: Response) => {
+        try {
+            const userId = req.userId || req.params.userId;
 
+            await UserBaseService.deleteUserService.execute(userId);
+
+            res.status(200).json({ status: 200, message: 'Delete user successfully' });
+        } catch (error) {
+            res.status(500).json({ status: 500, message: error.message });
+        }
+    }
     sendVerificationEmailApi = async (req: Request, res: Response) => {
         try {
             const { email } = req.body;

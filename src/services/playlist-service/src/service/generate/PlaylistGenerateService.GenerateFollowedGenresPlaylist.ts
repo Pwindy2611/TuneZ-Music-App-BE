@@ -5,8 +5,10 @@ import PlaylistBaseService from "../base/PlaylistBaseService.js";
 import FetchBase from "../../util/base/FetchBase.js";
 import {PlaylistType} from "../../enum/PlaylistType.js";
 import {IPlaylistResponseDto} from "../../dto/response/IPlaylistResponseDto.js";
+import {IPlaylistGroupedResponseDto} from "../../dto/response/IPlaylistGroupedResponseDto.js";
+import {PlaylistTitle} from "../../enum/PlaylistTitle.js";
 
-export const generateFollowedGenresPlaylist: IPlaylistGenerateService["generateFollowedGenresPlaylist"] = async (userId): Promise<IPlaylistResponseDto[] | null> => {
+export const generateFollowedGenresPlaylist: IPlaylistGenerateService["generateFollowedGenresPlaylist"] = async (userId): Promise<IPlaylistGroupedResponseDto | null> => {
     try {
         if (!await generateRepo.isUserExists(userId)) {
             return Promise.reject(new Error("User not found"));
@@ -46,7 +48,7 @@ export const generateFollowedGenresPlaylist: IPlaylistGenerateService["generateF
             await PlaylistCacheService.saveToCache(userId, 'followed-genres', genrePlaylists);
         }
 
-        return genrePlaylists.length > 0 ? genrePlaylists : null;
+        return genrePlaylists.length > 0 ? {[PlaylistTitle.FOLLOW_GENRE]: genrePlaylists} : null;
     } catch (error) {
         throw new Error(`Failed to generate followed genres playlist for user: ${error.message}`);
     }

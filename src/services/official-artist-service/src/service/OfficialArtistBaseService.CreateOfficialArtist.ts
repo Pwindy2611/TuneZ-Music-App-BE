@@ -4,7 +4,7 @@ import UploadBase from "../util/base/UploadBase.js";
 import {IOfficialArtist} from "../interface/object/IOfficialArtist.js";
 export const createOfficialArtist: IOfficialArtistBaseService["createOfficialArtist"] = async (artist, imgFile) => {
     try {
-        const artistRef = database.ref("officialArtist").push();
+        const artistRef = database.ref("officialArtists").push();
         const artistId = artistRef.key as string;
 
         let imgPath = "";
