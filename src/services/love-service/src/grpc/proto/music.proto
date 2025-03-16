@@ -1,0 +1,15 @@
+syntax = 'proto3';
+
+package music;
+
+service MusicService {
+  rpc IncrementLoveCount (IncrementLoveCountRequest) returns (IncrementLoveCountResponse) {}
+}
+
+message IncrementLoveCountRequest {
+  string musicId = 1;
+}
+
+message IncrementLoveCountResponse {
+  string message = 1;
+}

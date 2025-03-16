@@ -1,4 +1,5 @@
 export interface IUserPlaylist{
+    id?: string;
     title: string;
     description?: string;
     coverImage?: string;

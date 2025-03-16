@@ -1,7 +1,7 @@
-import { ILoveBaseService } from "../interface/service/ILoveBaseService";
-import { firestore } from "../config/firebase/FireBaseConfig";
-import * as admin from "firebase-admin";
-import axios from "axios";
+import { ILoveBaseService } from "../interface/service/ILoveBaseService.js";
+import { firestore } from "../config/firebase/FireBaseConfig.js";
+import { musicServiceClient } from "../grpc/client/GrpcClient.js";
+import {Timestamp} from "firebase-admin/firestore";
 
 export const saveLoveMusic: ILoveBaseService["saveLoveMusic"] = async (love) => {
     try {
@@ -18,13 +18,21 @@ export const saveLoveMusic: ILoveBaseService["saveLoveMusic"] = async (love) => 
 
         const newDocRef = await loveRef.add({
             musicId: love.musicId,
-            lovedAt: admin.firestore.FieldValue.serverTimestamp(),
+            lovedAt: Timestamp.now(),
         });
 
         try {
-            await axios.post(`http://api-gateway:3000/musics/incrementLoveCount/${love.musicId}`);
-        } catch (apiError) {
-            console.error(`Failed to increment love count: ${apiError.message}`);
+            await new Promise((resolve, reject) => {
+                musicServiceClient.incrementLoveCount({ musicId: love.musicId }, (error: any, response: any) => {
+                    if (error) {
+                        reject(new Error(`Failed to increment love count: ${error.message}`));
+                    } else {
+                        resolve(response);
+                    }
+                });
+            });
+        } catch (grpcError) {
+            console.error(grpcError.message);
         }
 
         return newDocRef.id;

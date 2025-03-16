@@ -1,6 +1,6 @@
-import {ILove} from "../../interface/object/ILove";
+import {ILove} from "../../interface/object/ILove.js";
 import {IsString, validateOrReject} from "class-validator";
-import {database} from '../../config/firebase/FireBaseConfig'
+import {database} from '../../config/firebase/FireBaseConfig.js'
 
 export class SaveMusicDto implements ILove{
     @IsString()

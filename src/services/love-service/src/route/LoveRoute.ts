@@ -1,6 +1,6 @@
 import express from "express";
-import LoveController from "../controller/LoveController";
-import {authMiddleware} from "../util/middleware/AuthMiddleware";
+import LoveController from "../controller/LoveController.js";
+import {authMiddleware} from "../util/middleware/AuthMiddleware.js";
 
 const router = express.Router();
 

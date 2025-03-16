@@ -35,7 +35,8 @@ export class GetUserInfoByIdService {
                 profilePicture: user.profilePictureUrl,
                 followerCount,
                 followingCount,
-                playlists: playlists.map((playlist: { title: string; coverImg: string; musicCount: number }) => ({
+                playlists: playlists.map((playlist: { id: string, title: string; coverImg: string; musicCount: number }) => ({
+                    id: playlist.id,
                     title: playlist.title,
                     coverImg: playlist.coverImg,
                     musicCount: playlist.musicCount

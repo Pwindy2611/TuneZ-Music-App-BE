@@ -11,9 +11,10 @@ message GetUserPlaylistRequest {
 }
 
 message UserPlaylist {
-  string title = 1;
-  string coverImg = 2;
-  int32 musicCount = 3;
+  string id = 1;
+  string title = 2;
+  string coverImg = 3;
+  int32 musicCount = 4;
 }
 
 message GetUserPlaylistResponse {

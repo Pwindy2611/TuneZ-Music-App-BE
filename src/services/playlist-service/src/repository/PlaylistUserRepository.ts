@@ -53,8 +53,16 @@ export class PlaylistUserRepository implements IPlaylistUserRepository {
         if (!snapshot.exists()) {
             return [];
         }
-        return Object.values(snapshot.val() as IUserPlaylist);
+        const playlists = snapshot.val();
+        return Object.entries(playlists).map(([key, value]: [string, unknown]) => {
+            const playlist = value as IUserPlaylist;
+            return {
+                ...playlist,
+                id: key
+            };
+        }) as IUserPlaylist[];
     }
+
     async getUserPlaylistById(userId: string, playlistId: string): Promise<IUserPlaylist> {
         const playlistRef = database.ref(`user_playlists/${userId}/${playlistId}`);
         const snapshot = await playlistRef.get();

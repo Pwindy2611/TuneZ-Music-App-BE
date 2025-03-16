@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "Love Service for TuneZ Music App",
     "main": "src/index.ts",
+    "type": "module",
     "scripts": {
         "start": "tsx src/index.ts",
         "dev": "npx tsx watch src/index.ts",

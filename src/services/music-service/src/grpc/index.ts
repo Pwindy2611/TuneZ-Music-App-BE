@@ -2,12 +2,11 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { getMusicIdsByUserLove } from '../service/LoveUserService.GetMusicIdsByUserLove.js';
+import {musicBaseRepository} from "../config/container/Container.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const PROTO_PATH = path.resolve(__dirname, './proto/love.proto');
+const PROTO_PATH = path.resolve(__dirname, './proto/music.proto');
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
     keepCase: true,
@@ -17,26 +16,26 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
     oneofs: true
 });
 
-const loveProto = grpc.loadPackageDefinition(packageDefinition).love;
+const musicProto = grpc.loadPackageDefinition(packageDefinition).music;
 
-async function getMusicIds(call: any, callback: any) {
+async function incrementLoveCountHandler(call: any, callback: any) {
     try {
-        const { userId, limit } = call.request;
-        const musicIds = await getMusicIdsByUserLove(userId, limit);
-        callback(null, { musicIds });
+        const { musicId } = call.request;
+        const response = await musicBaseRepository.incrementLoveCount(musicId);
+        callback(null, { message: response });
     } catch (error) {
         callback({
             code: grpc.status.INTERNAL,
-            message: `Error fetching music IDs: ${error.message}`
+            message: `Error incrementing love count: ${error.message}`
         });
     }
 }
 
 function startServer() {
     const server = new grpc.Server();
-    server.addService((loveProto as any).LoveService.service, { getMusicIds });
+    server.addService((musicProto as any).MusicService.service, { incrementLoveCount: incrementLoveCountHandler });
 
-    server.bindAsync('0.0.0.0:50055', grpc.ServerCredentials.createInsecure(), (err, port) => {
+    server.bindAsync('0.0.0.0:50053', grpc.ServerCredentials.createInsecure(), (err, port) => {
         if (err) {
             console.error('Failed to start gRPC server:', err);
             return;

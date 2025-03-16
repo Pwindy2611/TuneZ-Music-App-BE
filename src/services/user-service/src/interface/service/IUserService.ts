@@ -1,4 +1,3 @@
-import {IUser} from "../object/IUser.js";
 import {IUserProfile} from "../object/IUserProfile.js";
 
 export interface IUserService {
