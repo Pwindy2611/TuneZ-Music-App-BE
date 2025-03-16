@@ -20,6 +20,7 @@ services:
       context: ../src/services/user-service
     ports:
       - "3001:3000"
+      - "50051:50051"
     env_file:
       - ../.env
     volumes:
@@ -48,6 +49,7 @@ services:
       context: ../src/services/music-service
     ports:
       - "3003:3000"
+      - "50053:50053"
     depends_on:
       - user-service
       - official-artist-service
@@ -65,6 +67,7 @@ services:
       context: ../src/services/history-service
     ports:
       - "3004:3000"
+      - "50054:50054"
     depends_on:
       - music-service
     env_file:
@@ -81,6 +84,7 @@ services:
       context: ../src/services/love-service
     ports:
       - "3005:3000"
+      - "50055:50055"
     depends_on:
       - music-service
     env_file:
@@ -97,6 +101,7 @@ services:
       context: ../src/services/follow-service
     ports:
       - "3006:3000"
+      - "50056:50056"
     depends_on:
       - user-service
       - official-artist-service
@@ -114,6 +119,7 @@ services:
       context: ../src/services/playlist-service
     ports:
       - "3007:3000"
+      - "50057:50057"
     depends_on:
       - music-service
       - follow-service

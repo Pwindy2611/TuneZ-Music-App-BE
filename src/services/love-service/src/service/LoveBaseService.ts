@@ -1,4 +1,4 @@
-import {saveLoveMusic} from './LoveBaseService.SaveLoveMusic'
+import {saveLoveMusic} from './LoveBaseService.SaveLoveMusic.js'
 
 export const LoveBaseService = {
     saveLoveMusic,

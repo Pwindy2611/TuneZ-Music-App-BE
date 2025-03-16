@@ -4,6 +4,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import 'reflect-metadata';
+import './grpc/index'
 import HistoryRoute from "./route/HistoryRoute";
 
 const app = express();

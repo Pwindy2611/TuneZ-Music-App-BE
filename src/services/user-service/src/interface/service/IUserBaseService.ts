@@ -7,5 +7,6 @@ export interface IUserBaseService {
     deleteUser(userId: string): Promise<void>;
     getAllUsers(): Promise<UserDto[] | null>;
     getUserByEmail(email: string): Promise<IUser | null>;
+    getUserById(userId: string): Promise<IUser | null>;
     getUserCustomToken(email?: string, cookie?: string): Promise<string | null>;
 }

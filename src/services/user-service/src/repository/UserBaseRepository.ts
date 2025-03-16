@@ -50,6 +50,15 @@ export class UserBaseRepository implements IUserBaseRepository {
         }
     }
 
+    async getUserById(userId: string): Promise<IUser | null> {
+        const userRef = database.ref(`users/${userId}`);
+        const snapshot = await userRef.get();
+        if (!snapshot.exists()) {
+            return null;
+        }
+        return snapshot.val() as IUser;
+    }
+    
     async getUserCustomToken(userIdentifier: string): Promise<string | null> {
         const isEmail = /\S+@\S+\.\S+/.test(userIdentifier);
 

@@ -1,8 +1,9 @@
 import {Request, Response} from 'express';
 import { auth } from "../config/firebase/FireBaseConfig.js";
-import {UserBaseService} from '../service/UserBaseService.js';
+import {UserBaseService} from '../service/base/UserBaseService.js';
 import {mailService} from "../util/base/MailBase.js";
 import {IAuthRequest} from "../interface/object/IAuthRequest.js";
+import {UserService} from "../service/user/UserService.js";
 
 class UserController {
     getAllUsersApi = async (_req: Request, res: Response) => {
@@ -33,6 +34,24 @@ class UserController {
 
         }catch (error) {
             res.status(500).json({ status: 500, success: false, message: error.message });
+        }
+    }
+    getUserInfoByIdApi = async (req: IAuthRequest, res: Response) => {
+        try {
+            const userId = req.userId;
+
+            if(!userId){
+                res.status(401).json({ status: 401, success: false, message: 'Unauthorized' });
+                return;
+            }
+            const user = await UserService.getUserInfoById.execute(userId);
+            res.status(200).json({ status: 200, user });
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                res.status(500).json({ status: 500, message: error.message });
+            } else {
+                res.status(500).json({ status: 500, message: 'Error fetching user' });
+            }
         }
     }
     registerApi = async (req: Request, res: Response) => {

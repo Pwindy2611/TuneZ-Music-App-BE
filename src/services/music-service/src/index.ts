@@ -9,6 +9,7 @@ import 'reflect-metadata';
 import './config/container/MusicBaseService.HandlerRegister.js'
 import './config/container/MusicUserService.HandlerRegister.js'
 import './config/container/MusicStreamService.HandlerRegister.js'
+import './grpc/index.js'
 
 
 const app = express();

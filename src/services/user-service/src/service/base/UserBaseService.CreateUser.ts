@@ -1,10 +1,10 @@
 import { injectable, inject } from "tsyringe";
-import { IUser } from "../interface/object/IUser.js";
-import { UserRole } from "../enum/UserRole.js";
-import { SubscriptionType } from "../enum/SubscriptionType.js";
+import { IUser } from "../../interface/object/IUser.js";
+import { UserRole } from "../../enum/UserRole.js";
+import { SubscriptionType } from "../../enum/SubscriptionType.js";
 import dotenv from "dotenv";
-import {IUserBaseService} from "../interface/service/IUserBaseService.js";
-import {UserBaseRepository} from "../repository/UserBaseRepository.js";
+import {IUserBaseService} from "../../interface/service/IUserBaseService.js";
+import {UserBaseRepository} from "../../repository/UserBaseRepository.js";
 
 dotenv.config();
 
@@ -39,12 +39,8 @@ export class CreateUserService {
 
             await this.repository.createUser(userData);
             return user._id;
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                throw new Error("Error creating new user: " + error.message);
-            } else {
-                throw new Error("Error creating new user: Unknown error");
-            }
+        } catch (error) {
+            throw new Error("Error creating new user: " + error.message);
         }
     }
 }

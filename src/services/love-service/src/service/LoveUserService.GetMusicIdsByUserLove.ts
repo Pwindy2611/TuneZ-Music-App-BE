@@ -1,5 +1,5 @@
-import {ILoveUserService} from "../interface/service/ILoveUserService";
-import {firestore} from "../config/firebase/FireBaseConfig";
+import {ILoveUserService} from "../interface/service/ILoveUserService.js";
+import {firestore} from "../config/firebase/FireBaseConfig.js";
 
 export const getMusicIdsByUserLove: ILoveUserService["getMusicIdsByUserLove"] = async (userId, limit) => {
     try {
@@ -7,7 +7,7 @@ export const getMusicIdsByUserLove: ILoveUserService["getMusicIdsByUserLove"] = 
             .collection(`users`)
             .doc(userId)
             .collection('love')
-            .orderBy('listenAt', 'desc')
+            .orderBy('lovedAt', 'desc')
             .limit(limit)
             .get();
 

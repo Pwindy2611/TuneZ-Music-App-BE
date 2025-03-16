@@ -6,6 +6,7 @@ import {MusicBaseService} from "../service/music_base/MusicBaseService.js";
 import {singleton} from "tsyringe";
 import {Readable} from "stream";
 import axios from "axios";
+import {historyServiceClient} from "../grpc/client/GrpcClients.js";
 
 
 @singleton()
@@ -71,6 +72,14 @@ export class MusicStreamRepository implements IMusicStreamRepository {
     }
 
     async saveHistory(userId: string, musicId: string): Promise<void> {
-        await axios.post(`http://api-gateway:3000/history/saveHistory`, {"userId": userId, "musicId": musicId});
+        return new Promise((resolve, reject) => {
+            historyServiceClient.addMusicId({ userId, musicId }, (err: any) => {
+                if (err) {
+                    reject(new Error(`gRPC error: ${err.message}`));
+                    return;
+                }
+                resolve();
+            });
+        });
     }
 }

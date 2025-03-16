@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
-import {ILove} from "../interface/object/ILove";
-import {SaveMusicDto} from "../dto/request/SaveMusicDto";
-import {LoveBaseService} from "../service/LoveBaseService";
-import {LoveUserService} from "../service/LoveUserService";
-import {IAuthRequest} from "../interface/object/IAuthRequest";
+import {ILove} from "../interface/object/ILove.js";
+import {SaveMusicDto} from "../dto/request/SaveMusicDto.js";
+import {LoveBaseService} from "../service/LoveBaseService.js";
+import {LoveUserService} from "../service/LoveUserService.js";
+import {IAuthRequest} from "../interface/object/IAuthRequest.js";
 
 class LoveController {
     saveLoveMusicApi = async (req: IAuthRequest, res: Response) => {

@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package history;
+
+service HistoryService {
+  rpc GetMusicIds (GetMusicIdsRequest) returns (GetMusicIdsResponse) {}
+  rpc AddMusicId (AddMusicIdRequest) returns (AddMusicIdResponse) {}
+}
+
+message GetMusicIdsRequest {
+  string userId = 1;
+  int32 limit = 2;
+}
+
+message GetMusicIdsResponse {
+  repeated string musicIds = 1;
+}
+
+message AddMusicIdRequest {
+  string userId = 1;
+  string musicId = 2;
+}
+
+message AddMusicIdResponse {
+  string message = 1;
+}
