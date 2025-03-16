@@ -1,6 +1,6 @@
 import {database, firestore} from "../config/firebase/FireBaseConfig";
 import {FollowResponseDto} from "../dto/response/FollowResponseDto";
-import {getFollowersCount} from "./FollowUserService.GetFollowersCount";
+import {getFollowerCount} from "./FollowUserService.GetFollowerCount";
 import {IFollowUserService} from "../interface/service/IFollowUserService";
 
 export const getFollowers : IFollowUserService["getFollowers"] = async (userId) => {
@@ -25,7 +25,7 @@ export const getFollowers : IFollowUserService["getFollowers"] = async (userId) 
             return {
                 name: userData.name,
                 profileImage: userData.profile.profileImage,
-                followerCount: await getFollowersCount(doc.data().followerId)
+                followerCount: await getFollowerCount(doc.data().followerId)
             };
         });
 

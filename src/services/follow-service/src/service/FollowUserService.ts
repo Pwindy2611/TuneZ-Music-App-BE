@@ -1,11 +1,11 @@
 import {getFollowingCount} from "./FollowUserService.GetFollowingCount";
-import {getFollowersCount} from "./FollowUserService.GetFollowersCount";
+import {getFollowerCount} from "./FollowUserService.GetFollowerCount";
 import {getFollowingUsers} from "./FollowUserService.GetFollowingUsers";
 import {getFollowers} from "./FollowUserService.GetFollowers";
 
 export const FollowUserService = {
     getFollowingCount,
-    getFollowersCount,
+    getFollowerCount,
     getFollowingUsers,
     getFollowers
 }

@@ -1,7 +1,7 @@
 import {firestore} from "../config/firebase/FireBaseConfig";
 import {IFollowUserService} from "../interface/service/IFollowUserService";
 
-export const getFollowersCount: IFollowUserService["getFollowersCount"] = async (userId) => {
+export const getFollowerCount: IFollowUserService["getFollowerCount"] = async (userId) => {
     try {
         let userDoc = await firestore.collection('users').doc(userId).get();
 

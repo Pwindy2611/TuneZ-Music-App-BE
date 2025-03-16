@@ -1,6 +1,6 @@
 import { database, firestore } from "../config/firebase/FireBaseConfig";
 import { FollowResponseDto } from "../dto/response/FollowResponseDto";
-import { getFollowersCount } from "./FollowUserService.GetFollowersCount";
+import { getFollowerCount } from "./FollowUserService.GetFollowerCount";
 import { IFollowing } from "../interface/object/IFollowing";
 import { IFollowUserService } from "../interface/service/IFollowUserService";
 
@@ -18,7 +18,7 @@ const getUserData = async (id: string, type: string): Promise<FollowResponseDto 
         const data = snapshot.val();
         return new FollowResponseDto(
             data.name,
-            await getFollowersCount(id),
+            await getFollowerCount(id),
             data.profile.profileImage
         );
     } catch (error) {

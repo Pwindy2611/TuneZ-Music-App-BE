@@ -6,6 +6,7 @@ import cors from 'cors';
 import http from 'http';
 import playlistRoute from './route/PlaylistRoute.js';
 import 'reflect-metadata';
+import './grpc/index.js'
 
 
 const app = express();

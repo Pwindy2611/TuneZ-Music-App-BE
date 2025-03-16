@@ -78,7 +78,7 @@ class FollowController {
                 });
                 return;
             }
-            const count = await FollowUserService.getFollowersCount(userId);
+            const count = await FollowUserService.getFollowerCount(userId);
 
             res.status(200).json({
                 status: 200,

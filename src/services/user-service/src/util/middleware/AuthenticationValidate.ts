@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {auth} from '../../config/firebase/FireBaseConfig.js';
-import {UserBaseService} from '../../service/UserBaseService.js';
+import {UserBaseService} from '../../service/base/UserBaseService.js';
 import {validateEmail, validatePassword, validateUsername} from '../base/RegexBase.js';
 import {saveSessionTokenToDatabase} from "../base/TokenBase.js";
 import {mailService} from '../base/MailBase.js'
@@ -93,11 +93,7 @@ class AuthenticationValidate {
                 isFirstTimeLogin: firstRegister
             });
         } catch (error: unknown) {
-            if (error instanceof Error) {
-                res.status(500).json({ status: 500, success: false, message:'Error logging in user: ' + error.message});
-            } else {
-                res.status(500).json({ status: 500, success: false, message: 'Unexpected error occurred' });
-            }
+            res.status(500).json({ status: 500, success: false, message: 'Unexpected error occurred' });
         }
         next();
     };

@@ -1,6 +1,6 @@
-import {IUserBaseService} from "../interface/service/IUserBaseService.js";
+import {IUserBaseService} from "../../interface/service/IUserBaseService.js";
 import { injectable, inject } from "tsyringe";
-import {UserBaseRepository} from "../repository/UserBaseRepository.js";
+import {UserBaseRepository} from "../../repository/UserBaseRepository.js";
 
 @injectable()
 export class GetAllUsersService {

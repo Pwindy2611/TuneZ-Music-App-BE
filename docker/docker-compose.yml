@@ -101,6 +101,7 @@ services:
       context: ../src/services/follow-service
     ports:
       - "3006:3000"
+      - "50056:50056"
     depends_on:
       - user-service
       - official-artist-service
@@ -118,6 +119,7 @@ services:
       context: ../src/services/playlist-service
     ports:
       - "3007:3000"
+      - "50057:50057"
     depends_on:
       - music-service
       - follow-service

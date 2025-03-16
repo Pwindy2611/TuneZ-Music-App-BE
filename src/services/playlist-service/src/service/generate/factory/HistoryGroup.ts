@@ -1,14 +1,12 @@
 import {IPlaylistStrategy} from "../../../interface/object/IPlaylistStrategy.js";
-import {RecentPlaylistStrategy} from "../strategy/history_group/RecentPlaylistStrategy.js";
-import {ThrowBackPlaylistStrategy} from "../strategy/history_group/ThrowBackPlaylistStrategy.js";
+import {UniquePlaylistStrategy} from "../strategy/history_group/UniquePlaylistStrategy.js";
 
 export class HistoryGroup {
     private strategies: IPlaylistStrategy[];
 
     constructor() {
         this.strategies = [
-            new RecentPlaylistStrategy(),
-            new ThrowBackPlaylistStrategy()
+            new UniquePlaylistStrategy()
         ];
     }
 

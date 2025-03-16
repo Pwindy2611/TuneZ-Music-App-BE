@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package playlist;
+
+service PlaylistService {
+  rpc GetUserPlaylist (GetUserPlaylistRequest) returns (GetUserPlaylistResponse) {}
+}
+
+message GetUserPlaylistRequest {
+  string userId = 1;
+}
+
+message UserPlaylist {
+  string title = 1;
+  string coverImg = 2;
+  int32 musicCount = 3;
+}
+
+message GetUserPlaylistResponse {
+  repeated UserPlaylist playlists = 1;
+}
