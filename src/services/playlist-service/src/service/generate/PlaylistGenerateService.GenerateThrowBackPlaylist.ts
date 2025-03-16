@@ -1,7 +1,6 @@
 import {IPlaylistGenerateService} from "../../interface/service/IPlaylistGenerateService.js";
 import FetchBase from "../../util/base/FetchBase.js";
 import PlaylistBaseService from "../base/PlaylistBaseService.js";
-import PlaylistCacheService from "../cache/PlaylistCacheService.js";
 import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 import {IPlaylistResponseDto} from "../../dto/response/IPlaylistResponseDto.js";
 

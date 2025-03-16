@@ -23,8 +23,8 @@ export const getFollowers : IFollowUserService["getFollowers"] = async (userId) 
             const userData = userSnapshot.val();
 
             return {
-                userName: userData.username,
-                profilePictureUrl: userData.profilePictureUrl,
+                name: userData.name,
+                profileImage: userData.profile.profileImage,
                 followerCount: await getFollowersCount(doc.data().followerId)
             };
         });

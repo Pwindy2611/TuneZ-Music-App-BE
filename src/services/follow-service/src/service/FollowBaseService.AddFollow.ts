@@ -28,6 +28,10 @@ export const addFollow: IFollowBaseService["addFollow"] = async (follow) => {
 
             const followerCollectionRef = followerCollection.doc(followingId).collection('followers').doc();
 
+            const userRef = firestore.collection('users').doc(userId);
+            const followingRef = followerCollection.doc(followingId);
+
+
             const batch = firestore.batch();
 
             batch.set(followingCollectionRef, {
@@ -43,6 +47,26 @@ export const addFollow: IFollowBaseService["addFollow"] = async (follow) => {
             });
 
             await batch.commit();
+
+            await firestore.runTransaction(async (transaction) => {
+                const followingDoc = await transaction.get(userRef);
+                if (!followingDoc.exists) {
+                    transaction.set(userRef, { followingCount: 1 });
+                } else {
+                    const currentFollowingCount = followingDoc.data()?.followingCount || 0;
+                    transaction.update(userRef, { followingCount: currentFollowingCount + 1 });
+                }
+            });
+
+            await firestore.runTransaction(async (transaction) => {
+                const followerDoc = await transaction.get(followingRef);
+                if (!followerDoc.exists) {
+                    transaction.set(followingRef, { followerCount: 1 });
+                } else {
+                    const currentFollowerCount = followerDoc.data()?.followerCount || 0;
+                    transaction.update(followingRef, { followerCount: currentFollowerCount + 1 });
+                }
+            });
         }
     } catch (error) {
         console.error('Error in follow:', error);

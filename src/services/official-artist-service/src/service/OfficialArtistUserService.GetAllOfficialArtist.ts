@@ -17,7 +17,7 @@ export const getAllOfficialArtist: IOfficialArtistUserService["getAllOfficialArt
 
         const followingIds = followRef.docs.map(doc  => doc.data().followingId);
 
-        const officialRef = database.ref('officialArtist');
+        const officialRef = database.ref('officialArtists');
         const snapshot = await officialRef.get();
 
         if (!snapshot.exists()) {

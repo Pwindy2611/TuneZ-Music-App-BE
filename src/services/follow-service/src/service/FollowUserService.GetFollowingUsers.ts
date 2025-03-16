@@ -1,10 +1,33 @@
-import {database, firestore} from "../config/firebase/FireBaseConfig";
-import {FollowResponseDto} from "../dto/response/FollowResponseDto";
-import {getFollowersCount} from "./FollowUserService.GetFollowersCount";
-import {IFollowing} from "../interface/object/IFollowing";
-import {IFollowUserService} from "../interface/service/IFollowUserService";
+import { database, firestore } from "../config/firebase/FireBaseConfig";
+import { FollowResponseDto } from "../dto/response/FollowResponseDto";
+import { getFollowersCount } from "./FollowUserService.GetFollowersCount";
+import { IFollowing } from "../interface/object/IFollowing";
+import { IFollowUserService } from "../interface/service/IFollowUserService";
 
-export const getFollowingUsers: IFollowUserService ["getFollowingUsers"] = async (userId) => {
+const getUserData = async (id: string, type: string): Promise<FollowResponseDto | null> => {
+    const path = type === 'user' ? `users/${id}` : `officialArtists/${id}`;
+    const userRef = database.ref(path);
+
+    try {
+        const snapshot = await userRef.once('value');
+        if (!snapshot.exists()) {
+            console.warn(`${type} data not found for ID: ${id}`);
+            return null;
+        }
+
+        const data = snapshot.val();
+        return new FollowResponseDto(
+            data.name,
+            await getFollowersCount(id),
+            data.profile.profileImage
+        );
+    } catch (error) {
+        console.error(`Error fetching ${type} data:`, error);
+        return null;
+    }
+};
+
+export const getFollowingUsers: IFollowUserService["getFollowingUsers"] = async (userId) => {
     try {
         const followSnapshot = await firestore
             .collection('users')
@@ -12,39 +35,19 @@ export const getFollowingUsers: IFollowUserService ["getFollowingUsers"] = async
             .collection('following')
             .get();
 
-        const followingUsers: FollowResponseDto[] = [];
-
-        if(followSnapshot.empty){
-            return followingUsers;
+        if (followSnapshot.empty) {
+            return [];
         }
 
-        const followingUsersPromises = followSnapshot.docs.map(async doc => {
-            const followingData: IFollowing = doc.data() as IFollowing;
-            let userRef;
-
-            if (followingData.followType === 'user') {
-                userRef = database.ref(`/users/${followingData.followingId}`);
-            } else if (followingData.followType === 'officialArtist') {
-                userRef = database.ref(`/officialArtist/${followingData.followingId}`);
-            } else {
-                throw new Error('Invalid follow type');
-            }
-
-            const userSnapshot = await userRef.get();
-            const userData = userSnapshot.val();
-
-            return {
-                userName: userData.username,
-                profilePictureUrl: userData.profilePictureUrl,
-                followerCount: await getFollowersCount(doc.data().followingId)
-            };
+        const followingPromises = followSnapshot.docs.map(async (doc) => {
+            const following = doc.data() as IFollowing;
+            return getUserData(following.followingId, following.followType);
         });
 
-        followingUsers.push(...await Promise.all(followingUsersPromises));
+        const results = await Promise.all(followingPromises);
+        return results.filter((user): user is FollowResponseDto => user !== null);
 
-
-        return followingUsers;
-    }catch (error) {
-        throw new Error(`Error when fetching following users: ${error.message}`)
+    } catch (error) {
+        throw new Error(`Error when fetching following users: ${error.message}`);
     }
-}
+};
