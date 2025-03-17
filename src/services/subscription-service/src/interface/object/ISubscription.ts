@@ -2,8 +2,8 @@ export interface ISubscription {
     name: string;
     description: string;
     price: number;
-    currency: string;
+    duration: number;
     features: string[];
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: string;
+    updatedAt?: string;
 }

@@ -72,3 +72,4 @@ export const officialArtistProxy = createProxy('http://official-artist-service:3
 export const playlistProxy = createProxy('http://playlist-service:3007', 'playlists');
 export const userProxy = createProxy('http://user-service:3001', 'users');
 export const albumProxy = createProxy('http://album-service:3008', 'albums');
+export const subscriptionProxy = createProxy('http://subscription-service:3009', 'subscriptions');

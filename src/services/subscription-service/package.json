@@ -14,8 +14,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@types/body-parser": "^1.19.5",
-    "@types/cors": "^2.8.17",
     "body-parser": "^2.1.0",
     "class-validator": "^0.14.1",
     "cloudinary": "^2.5.1",
@@ -25,13 +23,15 @@
     "dotenv": "^16.4.7",
     "express": "^5.0.1",
     "firebase-admin": "^13.2.0",
-    "nodemon": "^3.1.9",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.19.5",
     "@types/compression": "^1.7.5",
     "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"

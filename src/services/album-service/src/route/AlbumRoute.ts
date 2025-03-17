@@ -13,5 +13,7 @@ router.get('/getAllAlbums', albumController.getAllAlbums);
 
 router.delete('/deleteAlbum/:id', albumController.deleteAlbum);
 
+
+
 export default router;
 

@@ -1,5 +1,5 @@
 {
-    "explorer.compactFolders": true,
+    "explorer.compactFolders": false,
     "explorer.autoReveal": true,
     "explorer.autoRevealExclude": {
         "**/node_modules": true,
@@ -30,11 +30,27 @@
     "explorer.confirmDelete": false,
     "explorer.confirmDragAndDrop": false,
     "explorer.enableDragAndDrop": true,
-    "explorer.compactSingleFolderWorkspace": true,
-    "explorer.expandSingleFolderWorkspaces": false,
-    "explorer.folders.expanded": false,
-    "explorer.folders.autoCollapse": true,
+    "explorer.compactSingleFolderWorkspace": false,
+    "explorer.expandSingleFolderWorkspaces": true,
+    "explorer.folders.expanded": true,
+    "explorer.folders.autoCollapse": false,
     "explorer.folders.autoCollapseExclude": {
-        "**/src": false
+        "**/src": true
+    },
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+        "*.ts": "*.ts.map, *.ts.snap",
+        "*.js": "*.js.map, *.js.snap",
+        "*.css": "*.css.map",
+        "*.scss": "*.scss.map",
+        "*.less": "*.less.map",
+        "*.json": "*.json.map",
+        "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml",
+        "tsconfig.json": "tsconfig.*.json",
+        "webpack.config.js": "webpack.config.*.js",
+        "babel.config.js": "babel.config.*.js",
+        ".env": ".env.*",
+        "README.md": "LICENSE, CHANGELOG.md, CONTRIBUTING.md"
     }
 } 
