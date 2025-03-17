@@ -7,4 +7,5 @@ export interface IOfficialArtistBaseService {
     deleteOfficialArtist(artistId: string) : Promise<string | null>
     getAllOfficialArtists() : Promise<IOfficialArtist[]>
     getOfficialArtistById(artistId: string) : Promise<IOfficialArtist | null>
+    getOfficialArtistInfo(artistId: string) : Promise<IOfficialArtist | null>
 }

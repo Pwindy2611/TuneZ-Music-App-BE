@@ -39,3 +39,8 @@ services:
     ports:
       - "9234:9227"
     command: npm run debug
+
+  album-service:
+    ports:
+      - "9235:9227"
+    command: npm run debug

@@ -1,5 +1,5 @@
-import {IOfficialArtistBaseService} from "../interface/service/IOfficialArtistBaseService.js";
-import {database} from "../config/firebase/FireBaseConfig.js";
+import {IOfficialArtistBaseService} from "../../interface/service/IOfficialArtistBaseService.js";
+import {database} from "../../config/firebase/FireBaseConfig.js";
 
 export const getOfficialArtistById: IOfficialArtistBaseService['getOfficialArtistById'] = async (id) => {
     try {

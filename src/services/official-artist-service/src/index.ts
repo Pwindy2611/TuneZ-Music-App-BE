@@ -44,5 +44,5 @@ app.get('/health', (_req, res) => {
 // Start the server
 const server = http.createServer(app);
 server.listen(port, () => {
-    console.log(`User service is running on http://localhost:${port}/`);
+    console.log(`Official Artist service is running on http://localhost:${port}/`);
 });
