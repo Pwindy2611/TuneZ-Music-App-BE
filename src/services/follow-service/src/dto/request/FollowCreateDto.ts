@@ -32,7 +32,7 @@ export class FollowCreateDto {
 
             try {
                 for (const followingId of this.followingIds) {
-                    const officialArtistRef = database.ref(`/officialArtist/${followingId}`);
+                    const officialArtistRef = database.ref(`/officialArtists/${followingId}`);
                     const snapshot = await officialArtistRef.once('value');
                     if (!snapshot.exists()) {
                         await auth.getUser(followingId);
