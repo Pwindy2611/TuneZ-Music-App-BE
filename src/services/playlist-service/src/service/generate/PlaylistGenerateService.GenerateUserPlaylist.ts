@@ -22,7 +22,7 @@ export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylis
         const cachedPlaylist = await PlaylistCacheService.getFromCache(userId, 'userPreference');
         if (cachedPlaylist) {
             console.log(`Using cached user preference playlist for user: ${userId}`);
-            return cachedPlaylist;
+            return {[PlaylistTitle.USER_GENERATE]: cachedPlaylist};
         }
 
         console.log(`Generating new user preference playlist for user: ${userId}`);

@@ -14,7 +14,7 @@ export class PlaylistUserRepository implements IPlaylistUserRepository {
             title: playlistName,
             description: "",
             coverImage: process.env.DEFAULT_USER_COVER_PATH,
-            musicIds:[],
+            musicIds: [],
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         }
@@ -80,9 +80,14 @@ export class PlaylistUserRepository implements IPlaylistUserRepository {
         }
 
         const playlist = snapshot.val() as IUserPlaylist;
-        playlist.musicIds = [...new Set([...(playlist.musicIds || []), { id: musicId }])];
+        const existingMusicIds = playlist.musicIds || [];
+        
+        if (existingMusicIds.includes(musicId)) {
+            return Promise.reject(new Error("Music already exists in playlist"));
+        }
+        
+        playlist.musicIds = [...existingMusicIds, musicId];
         playlist.updatedAt = new Date().toISOString();
-
         await playlistRef.update(playlist);
     }
 
@@ -94,9 +99,8 @@ export class PlaylistUserRepository implements IPlaylistUserRepository {
         }
 
         const playlist = snapshot.val() as IUserPlaylist;
-        playlist.musicIds = playlist.musicIds?.filter(music => !musicIds.includes(music.id));
+        playlist.musicIds = playlist.musicIds?.filter(musicId => !musicIds.includes(musicId));
         playlist.updatedAt = new Date().toISOString();
-
         await playlistRef.update(playlist);
     }
 }

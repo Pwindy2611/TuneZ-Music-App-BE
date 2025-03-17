@@ -17,7 +17,7 @@ export const generateFollowedArtistsPlaylist: IPlaylistGenerateService["generate
         const cachedPlaylist = await PlaylistCacheService.getFromCache(userId, 'followed-artist');
         if (cachedPlaylist) {
             console.log(`Using cached followed playlist for user: ${userId}`);
-            return cachedPlaylist;
+            return {[PlaylistTitle.FOLLOW_ARTIST]: cachedPlaylist};
         }
 
         const artistIds = await generateRepo.getIdsArtistFollowed(userId);

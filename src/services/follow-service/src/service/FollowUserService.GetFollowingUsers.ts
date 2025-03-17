@@ -17,6 +17,7 @@ const getUserData = async (id: string, type: string): Promise<FollowResponseDto 
 
         const data = snapshot.val();
         return new FollowResponseDto(
+            id,
             data.name,
             await getFollowerCount(id),
             data.profile.profileImage

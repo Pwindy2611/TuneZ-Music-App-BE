@@ -41,8 +41,19 @@ app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'UP' });
 });
 
+// Error handling middleware
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error('Error:', err.message);
+    console.error('Stack:', err.stack);
+    res.status(500).json({
+        status: 500,
+        success: false,
+        message: err.message || 'Something went wrong!'
+    });
+});
+
 // Start the server
 const server = http.createServer(app);
 server.listen(port, () => {
-    console.log(`User service is running on http://localhost:${port}/`);
+    console.log(`Official Artist service is running on http://localhost:${port}/`);
 });

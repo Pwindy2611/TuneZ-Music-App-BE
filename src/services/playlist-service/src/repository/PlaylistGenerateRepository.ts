@@ -11,7 +11,7 @@ export class PlaylistGenerateRepository implements IPlaylistGenerateRepository{
     }
 
     async getArtistName(artistId: string): Promise<string> {
-        const artistRef = database.ref(`/officialArtist/${artistId}`);
+        const artistRef = database.ref(`/officialArtists/${artistId}`);
         const snapshot = await artistRef.once('value');
 
         if (!snapshot.exists()) return Promise.reject('Artist not found');
@@ -19,7 +19,7 @@ export class PlaylistGenerateRepository implements IPlaylistGenerateRepository{
         return snapshot.val().name;
     }
     async getGenresFromArtist(artistId: string): Promise<string> {
-        const artistRef = database.ref(`/officialArtist/${artistId}`);
+        const artistRef = database.ref(`/officialArtists/${artistId}`);
         const snapshot = await artistRef.once('value');
 
         if (!snapshot.exists()) return Promise.reject('Artist not found');

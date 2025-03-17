@@ -1,4 +1,4 @@
-import {ISubscription} from "./ISubscription.js";
+import {ISubscription} from "../object/ISubscription.js";
 
 export interface ISubscriptionBaseService {
     createSubscription(subscription: ISubscription): Promise<ISubscription>;

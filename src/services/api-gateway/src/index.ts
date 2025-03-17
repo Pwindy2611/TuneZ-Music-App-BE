@@ -4,7 +4,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 
-import { followProxy, historyProxy, loveProxy, musicProxy, officialArtistProxy, playlistProxy, userProxy } from "./proxy/CreateProxy";
+import { followProxy, historyProxy, loveProxy, musicProxy, officialArtistProxy, playlistProxy, userProxy, albumProxy, subscriptionProxy } from "./proxy/CreateProxy";
 import {authMiddleware} from "./middleware/AuthMiddleware";
 import * as dotenv from "dotenv";
 
@@ -65,6 +65,10 @@ app.use('/love', authMiddleware, loveProxy)
 app.use('/follow', authMiddleware, followProxy)
 
 app.use('/playlists', authMiddleware, playlistProxy)
+
+app.use('/albums', authMiddleware, albumProxy)
+
+app.use('/subscriptions', authMiddleware, subscriptionProxy)
 
 // Health check endpoint
 app.get('/health', (_req, res) => {

@@ -136,6 +136,41 @@ services:
     networks:
       - app_network
 
+  album-service:
+    build:
+      context: ../src/services/album-service
+    ports:
+      - "3008:3000"
+      - "50058:50058"
+    depends_on:
+      - music-service
+      - official-artist-service
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+  subscription-service:
+    build:
+      context: ../src/services/subscription-service
+    ports:
+      - "3009:3000"
+      - "50059:50059"
+    depends_on:
+      - user-service
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
 networks:
   app_network:
     driver: bridge

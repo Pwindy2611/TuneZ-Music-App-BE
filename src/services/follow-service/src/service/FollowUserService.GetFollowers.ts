@@ -18,19 +18,20 @@ export const getFollowers : IFollowUserService["getFollowers"] = async (userId) 
         }
 
         const followersPromises = followSnapshot.docs.map(async doc => {
-            const userRef = database.ref(`/users/${doc.data().followerId}`);
+            const followerId = doc.data().followerId;
+            const userRef = database.ref(`/users/${followerId}`);
             const userSnapshot = await userRef.get();
             const userData = userSnapshot.val();
 
-            return {
-                name: userData.name,
-                profileImage: userData.profile.profileImage,
-                followerCount: await getFollowerCount(doc.data().followerId)
-            };
+            return new FollowResponseDto(
+                followerId,
+                userData.name,
+                await getFollowerCount(followerId),
+                userData.profile.profileImage
+            );
         });
 
         followers.push(...await Promise.all(followersPromises));
-
 
         return followers;
     }catch (error) {

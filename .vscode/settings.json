@@ -1,0 +1,56 @@
+{
+    "explorer.compactFolders": false,
+    "explorer.autoReveal": true,
+    "explorer.autoRevealExclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/dist": true
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/**": true,
+        "**/.hg/store/**": true
+    },
+    "explorer.sortOrder": "filesFirst",
+    "explorer.sortOrderLexicographicOptions": "upper",
+    "explorer.incrementalNaming": "smart",
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "explorer.enableDragAndDrop": true,
+    "explorer.compactSingleFolderWorkspace": false,
+    "explorer.expandSingleFolderWorkspaces": true,
+    "explorer.folders.expanded": true,
+    "explorer.folders.autoCollapse": false,
+    "explorer.folders.autoCollapseExclude": {
+        "**/src": true
+    },
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+        "*.ts": "*.ts.map, *.ts.snap",
+        "*.js": "*.js.map, *.js.snap",
+        "*.css": "*.css.map",
+        "*.scss": "*.scss.map",
+        "*.less": "*.less.map",
+        "*.json": "*.json.map",
+        "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml",
+        "tsconfig.json": "tsconfig.*.json",
+        "webpack.config.js": "webpack.config.*.js",
+        "babel.config.js": "babel.config.*.js",
+        ".env": ".env.*",
+        "README.md": "LICENSE, CHANGELOG.md, CONTRIBUTING.md"
+    }
+} 

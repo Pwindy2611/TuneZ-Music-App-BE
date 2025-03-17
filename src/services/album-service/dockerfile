@@ -1,0 +1,28 @@
+
+FROM node:18
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+#Install protoc
+RUN apt-get update && \
+    apt-get install -y protobuf-compiler && \
+    apt-get clean
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 3008 9235 50058
+
+# Generate proto files
+RUN npm run generate-proto
+
+# Command to run the application
+CMD ["npm", "start"]
