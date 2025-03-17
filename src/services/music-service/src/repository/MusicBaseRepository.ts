@@ -130,7 +130,7 @@ export class MusicBaseRepository implements IMusicBaseRepository {
     }
 
     async isOfficialArtistExist(artistId: string): Promise<boolean> {
-        const artistRef = database.ref(`officialArtist/${artistId}`);
+        const artistRef = database.ref(`officialArtists/${artistId}`);
         const snapshot = await artistRef.once("value");
 
         return snapshot.exists();

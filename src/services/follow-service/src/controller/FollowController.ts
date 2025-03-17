@@ -27,7 +27,7 @@ class FollowController {
             res.status(201).json({
                 status: 201,
                 success: true,
-                message: 'FollowCreateDto  successful',
+                message: 'Follow successful',
                 data: newFollow
             });
         }catch (error) {
