@@ -14,7 +14,7 @@ export const generateUniquePlaylist: IPlaylistGenerateService['generateUniquePla
         const cachedPlaylist = await PlaylistCacheService.getFromCache(userId, 'unique');
         if (cachedPlaylist) {
             console.log(`Using cached recent playlist for user: ${userId}`);
-            return cachedPlaylist;
+            return {[PlaylistTitle.UNIQUE]: cachedPlaylist};
         }
 
         const [recentPlaylist, throwbackPlaylist] = await Promise.all([
