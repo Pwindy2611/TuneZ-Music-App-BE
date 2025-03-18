@@ -3,8 +3,21 @@ import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import { Request, Response, NextFunction } from "express";
 
-import { followProxy, historyProxy, loveProxy, musicProxy, officialArtistProxy, playlistProxy, userProxy, albumProxy, subscriptionProxy } from "./proxy/CreateProxy";
+
+import {
+    /*followProxy,
+    historyProxy,
+    loveProxy,
+    musicProxy,
+    officialArtistProxy,
+    playlistProxy,
+    userProxy,
+    albumProxy,
+    subscriptionProxy,*/
+    createProxy
+} from "./proxy/CreateProxy";
 import {authMiddleware} from "./middleware/AuthMiddleware";
 import * as dotenv from "dotenv";
 
@@ -52,23 +65,35 @@ app.use((req, _res, next) => {
 });
 
 // Proxy
-app.use('/users',authMiddleware, userProxy);
+const serviceMap: Record<string, string> = {
+    users: "http://user-service:3001",
+    musics: "http://music-service:3002",
+    history: "http://history-service:3003",
+    playlists: "http://playlist-service:3007",
+    albums: "http://album-service:3008",
+    love: "http://love-service:3009",
+    follow: "http://follow-service:3010",
+    subscriptions: "http://subscription-service:3011"
+};
+app.use(
+    "/api/:service",
+    authMiddleware,
+    (req: Request, res: Response, next: NextFunction) => {
+        const service = req.params.service;
+        const serviceUrl = serviceMap[service];
 
-app.use('/musics',authMiddleware, musicProxy);
+        if (!serviceUrl) {
+            res.status(404).json({ error: "Service not found" });
+            return;
+        }
 
-app.use('/history', authMiddleware, historyProxy);
+        const proxyMiddleware = createProxy(serviceUrl, service);
+        proxyMiddleware(req, res, next);
+    }
+);
 
-app.use('/offartist', authMiddleware, officialArtistProxy)
 
-app.use('/love', authMiddleware, loveProxy)
 
-app.use('/follow', authMiddleware, followProxy)
-
-app.use('/playlists', authMiddleware, playlistProxy)
-
-app.use('/albums', authMiddleware, albumProxy)
-
-app.use('/subscriptions', authMiddleware, subscriptionProxy)
 
 // Health check endpoint
 app.get('/health', (_req, res) => {

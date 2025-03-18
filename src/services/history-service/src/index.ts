@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 });
 
 //Route
-app.use(HistoryRoute);
+app.use('/api',HistoryRoute);
 
 // Health check endpoint
 app.get('/health', (_req, res) => {

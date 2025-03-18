@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 });
 
 //Routes
-app.use(albumRoute);
+app.use('/api' ,albumRoute);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

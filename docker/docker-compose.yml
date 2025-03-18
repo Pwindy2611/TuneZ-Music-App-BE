@@ -171,6 +171,24 @@ services:
     networks:
       - app_network
 
+  payment-service:
+    build:
+      context: ../src/services/payment-service
+    ports:
+      - "3010:3000"
+      - "50060:50060"
+    depends_on:
+      - user-service
+      - subscription-service
+    env_file:
+      - ../.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
 networks:
   app_network:
     driver: bridge

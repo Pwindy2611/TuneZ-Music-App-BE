@@ -31,7 +31,7 @@ app.use((req, res, next) => {
     next();
 });
 // Routes
-app.use(userRoute);
+app.use('/api', userRoute);
 
 // Health check endpoint
 app.get('/health', (_req, res) => {

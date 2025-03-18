@@ -34,7 +34,7 @@ app.use((req, _res, next) => {
 });
 
 // Routes
-app.use(officialArtistRouter);
+app.use('/api', officialArtistRouter);
 
 // Health check endpoint
 app.get('/health', (_req, res) => {
