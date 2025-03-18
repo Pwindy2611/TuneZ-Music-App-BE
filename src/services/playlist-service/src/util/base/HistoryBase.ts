@@ -1,7 +1,7 @@
 import FetchBase from "./FetchBase.js";
 
-class HistoryBase{
-     async analyzeUserHistory(userId: string) {
+class HistoryBase {
+    async analyzeUserHistory(userId: string) {
         const musicIds = await FetchBase.fetchMusicIdsFromHistory(userId, 50);
         const history = await FetchBase.fetchMusicDetails(musicIds);
 
