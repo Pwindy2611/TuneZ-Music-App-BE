@@ -4,7 +4,7 @@ import redisClient from "../config/redis/RedisConfig.js";
 import {firestore} from "../config/firebase/FireBaseConfig.js";
 import {MusicBaseService} from "../service/music_base/MusicBaseService.js";
 import {singleton} from "tsyringe";
-import {Readable} from "stream";
+import {PassThrough, Readable} from "stream";
 import axios from "axios";
 import {historyServiceClient} from "../grpc/client/GrpcClients.js";
 
@@ -34,11 +34,24 @@ export class MusicStreamRepository implements IMusicStreamRepository {
     async getStreamMusic(musicId: string): Promise<Readable> {
         const musicUrl = await MusicBaseService.getMusicUrlById.execute(musicId);
 
-        const response = await axios.get(musicUrl, {
+        // Bước 1: Chỉ tải trước 1MB đầu tiên
+        const firstChunk = await axios.get(musicUrl, {
+            headers: { Range: "bytes=0-1048576" }, // 1MB đầu tiên
             responseType: "stream"
         });
 
-        return response.data;
+        // Bước 2: Tạo một stream để truyền dữ liệu
+        const stream = new PassThrough();
+
+        // Bước 3: Pipe phần đầu tiên vào stream
+        firstChunk.data.pipe(stream, { end: false });
+
+        // Bước 4: Tải phần còn lại trong nền
+        axios.get(musicUrl, { responseType: "stream" }).then(fullResponse => {
+            fullResponse.data.pipe(stream);
+        });
+
+        return stream;
     }
 
     async updateUserMusicState(userId: string, state: {}): Promise<void> {
