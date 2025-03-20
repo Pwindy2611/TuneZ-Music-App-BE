@@ -1,14 +1,12 @@
 import { PaymentMethod } from '../../enum/PaymentMethod.js';
 import { PaymentStatus } from '../../enum/PaymentStatus.js';
-import { PaymentCurrency } from '../../enum/PaymentCurrency.js';
 
-export interface IPaymentResponse {
+export interface Payment {
   id: string;
+  orderId: string;
   amount: number;
-  currency: PaymentCurrency;
+  method: PaymentMethod;
   status: PaymentStatus;
-  paymentMethod: PaymentMethod;
   createdAt: Date;
   updatedAt: Date;
-  metadata?: Record<string, any>;
 } 

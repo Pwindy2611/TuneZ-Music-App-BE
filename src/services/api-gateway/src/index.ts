@@ -4,7 +4,7 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import { Request, Response, NextFunction } from "express";
-
+import { createHttpsServer } from './config/https/HttpsConfig.js';
 
 import {
     /*followProxy,
@@ -29,6 +29,7 @@ const port = process.env.PORT || 3000;
 // Middleware
 const allowedOrigins = [
     'https://tunez-ddb5f.firebaseapp.com',
+    'http://localhost:3000',
     'https://localhost:3000'
 ];
 
@@ -113,12 +114,17 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
     });
 });
 // Start the server
+
+
+// Tạm thời chạy HTTP, giữ lại code HTTPS để sau này dùng
+app.listen(port, () => {
+    console.log(`API Gateway running on http://localhost:${port}`);
+});
+
+// Code HTTPS được giữ lại để sau này dùng
 /*
-https.createServer(options, app).listen(3000, () => {
-    console.log(`Api gateway running on https://localhost:${port}`);
+const server = createHttpsServer(app);
+server.listen(port, () => {
+    console.log(`API Gateway running on https://localhost:${port}`);
 });
 */
-
-app.listen(port, () => {
-    console.log(`Api gateway running on http://localhost:${port}`);
-});

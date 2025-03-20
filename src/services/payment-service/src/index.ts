@@ -5,6 +5,9 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
 
+import paymentRoute from './route/PaymentRoute.js';
+
+
 const app = express();
 const port = process.env.PORT || 3010;
 
@@ -32,7 +35,7 @@ app.use((req: express.Request, _res: express.Response, next: express.NextFunctio
 });
 
 // Routes
-// TODO: Add payment routes
+app.use('/api/payments', paymentRoute);
 
 // Health check endpoint
 app.get('/health', (_req: express.Request, res: express.Response) => {

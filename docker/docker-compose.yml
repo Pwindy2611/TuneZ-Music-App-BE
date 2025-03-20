@@ -9,8 +9,8 @@ services:
       - ../.env
     volumes:
       - ../key/key.json:/usr/src/app/key.json
-      - ../key/server.cert:/usr/src/app/server.cert
-      - ../key/server.key:/usr/src/app/server.key
+      - ../key/localhost.pem:/usr/src/app/localhost.pem
+      - ../key/localhost-key.pem:/usr/src/app/localhost-key.pem
     command: npm run start
     networks:
       - app_network

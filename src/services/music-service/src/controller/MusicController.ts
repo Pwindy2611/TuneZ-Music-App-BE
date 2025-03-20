@@ -348,26 +348,26 @@ class MusicController {
     }
     getStreamMusicApi = async (req: IAuthRequest, res: Response) => {
         try {
-            const userId = req.userId;
-
-            if (!userId) {
-                res.status(401).send("Unauthorized");
-                return;
-            }
-
             const musicId = req.params.musicId;
+            const stream = await MusicStreamService.getStreamMusic.execute(musicId);
 
-            const musicStream = await MusicStreamService.getStreamMusic.execute(musicId);
+            res.writeHead(206, {
+                'Content-Type': 'audio/mpeg',
+                'Transfer-Encoding': 'chunked'
+            });
+            res.flushHeaders();
 
-            res.setHeader("Content-Type", "audio/mpeg");
+            stream.pipe(res);
 
-            musicStream.pipe(res);
-
+            stream.on('end', () => {
+                res.end();
+            });
         } catch (error) {
+            console.error("Error in streaming endpoint:", error);
             res.status(500).json({
                 status: 500,
                 success: false,
-                message: `Internal Server Error ${error.message}`,
+                message: "Internal Server Error " + error.message,
             });
         }
     }
