@@ -14,13 +14,13 @@ services:
     command: npm run start
     networks:
       - app_network
-  
+
   user-service:
     build:
       context: ../src/services/user-service
     ports:
       - "3001:3000"
-      - "50051:50051"
+      - "50201:50201"
     env_file:
       - ../.env
     volumes:
@@ -29,12 +29,13 @@ services:
     command: npm run start
     networks:
       - app_network
-  
+
   official-artist-service:
     build:
       context: ../src/services/official-artist-service
     ports:
       - "3002:3000"
+      - "50202:50202"
     env_file:
       - ../.env
     volumes:
@@ -43,13 +44,13 @@ services:
     command: npm run start
     networks:
       - app_network
-  
+
   music-service:
     build:
       context: ../src/services/music-service
     ports:
       - "3003:3000"
-      - "50053:50053"
+      - "50203:50203"
     depends_on:
       - user-service
       - official-artist-service
@@ -61,13 +62,13 @@ services:
     command: npm run start
     networks:
       - app_network
-  
+
   history-service:
     build:
       context: ../src/services/history-service
     ports:
       - "3004:3000"
-      - "50054:50054"
+      - "50204:50204"
     depends_on:
       - music-service
     env_file:
@@ -78,13 +79,13 @@ services:
     command: npm run start
     networks:
       - app_network
-  
+
   love-service:
     build:
       context: ../src/services/love-service
     ports:
       - "3005:3000"
-      - "50055:50055"
+      - "50205:50205"
     depends_on:
       - music-service
     env_file:
@@ -101,7 +102,7 @@ services:
       context: ../src/services/follow-service
     ports:
       - "3006:3000"
-      - "50056:50056"
+      - "50206:50206"
     depends_on:
       - user-service
       - official-artist-service
@@ -119,7 +120,7 @@ services:
       context: ../src/services/playlist-service
     ports:
       - "3007:3000"
-      - "50057:50057"
+      - "50207:50207"
     depends_on:
       - music-service
       - follow-service
@@ -141,7 +142,7 @@ services:
       context: ../src/services/album-service
     ports:
       - "3008:3000"
-      - "50058:50058"
+      - "50208:50208"
     depends_on:
       - music-service
       - official-artist-service
@@ -159,7 +160,7 @@ services:
       context: ../src/services/subscription-service
     ports:
       - "3009:3000"
-      - "50059:50059"
+      - "50209:50209"
     depends_on:
       - user-service
     env_file:
@@ -176,7 +177,7 @@ services:
       context: ../src/services/payment-service
     ports:
       - "3010:3000"
-      - "50060:50060"
+      - "50210:50210"
     depends_on:
       - user-service
       - subscription-service

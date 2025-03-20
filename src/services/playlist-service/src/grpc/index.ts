@@ -3,6 +3,9 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
 import PlaylistUserService from '../service/user/PlaylistUserService.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,7 +38,8 @@ function startServer() {
     const server = new grpc.Server();
     server.addService((playlistProto as any).PlaylistService.service, { getUserPlaylist: getUserPlaylistHandler });
 
-    server.bindAsync('0.0.0.0:50057', grpc.ServerCredentials.createInsecure(), (err, port) => {
+    const port = process.env.GRPC_PORT_PLAYLIST_SERVICE || '50207';
+    server.bindAsync(`0.0.0.0:${port}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
         if (err) {
             console.error('Failed to start gRPC server:', err);
             return;

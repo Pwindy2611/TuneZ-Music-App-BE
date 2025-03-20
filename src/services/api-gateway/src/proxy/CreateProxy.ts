@@ -1,5 +1,7 @@
 import proxy from "express-http-proxy";
-import { Request, Response, NextFunction } from "express";
+import {Request, Response, NextFunction, response} from "express";
+import stripAnsi from "strip-ansi";
+import zlib from "zlib";
 import * as console from "node:console";
 
 const allowedOrigins = [
@@ -13,7 +15,7 @@ export const createProxy = (serviceUrl: string, pathPrefix: string) => {
 
         const proxyOptions: any = {
             proxyReqPathResolver: (req: Request) => {
-                const newPath = '/api' + req.url.replace(new RegExp(`^/api/${pathPrefix}`), "");
+                const newPath = '/api' + req.url.replace(new RegExp(`^/${pathPrefix}`), "");
                 console.log(`[PROXY] Forwarding to ${serviceUrl}: ${newPath}`);
                 return newPath;
             },
@@ -43,15 +45,6 @@ export const createProxy = (serviceUrl: string, pathPrefix: string) => {
                     return proxyResData;
                 }
 
-                if (resContentType.includes("application/json")) {
-                    try {
-                        const responseBody = proxyResData.toString("utf8").replace(/^\uFEFF/, "");
-                        return JSON.stringify(JSON.parse(responseBody));
-                    } catch (error) {
-                        console.error("[PROXY] Failed to parse JSON response:", error);
-                        return proxyResData;
-                    }
-                }
                 return proxyResData;
             }
         };

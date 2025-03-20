@@ -2,6 +2,9 @@ import { fileURLToPath } from 'url';
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,12 +31,15 @@ const playlistPackageDefinition = protoLoader.loadSync(PLAYLIST_PROTO_PATH, {
 const followProto = grpc.loadPackageDefinition(followPackageDefinition).follow;
 const playlistProto = grpc.loadPackageDefinition(playlistPackageDefinition).playlist;
 
+const followServicePort = process.env.GRPC_PORT_FOLLOW_SERVICE || '50206';
+const playlistServicePort = process.env.GRPC_PORT_PLAYLIST_SERVICE || '50207';
+
 export const followServiceClient = new (followProto as any).FollowService(
-    'follow-service:50056',
+    `follow-service:${followServicePort}`,
     grpc.credentials.createInsecure()
 );
 
 export const playlistServiceClient = new (playlistProto as any).PlaylistService(
-    'playlist-service:50057',
+    `playlist-service:${playlistServicePort}`,
     grpc.credentials.createInsecure()
 );

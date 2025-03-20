@@ -67,13 +67,15 @@ app.use((req, _res, next) => {
 // Proxy
 const serviceMap: Record<string, string> = {
     users: "http://user-service:3001",
-    musics: "http://music-service:3002",
-    history: "http://history-service:3003",
+    offartist: "http://official-artist-service:3002",
+    musics: "http://music-service:3003",
+    history: "http://history-service:3004",
+    love: "http://love-service:3005",
+    follow: "http://follow-service:3006",
     playlists: "http://playlist-service:3007",
     albums: "http://album-service:3008",
-    love: "http://love-service:3009",
-    follow: "http://follow-service:3010",
-    subscriptions: "http://subscription-service:3011"
+    subscriptions: "http://subscription-service:3009",
+    payment: "http://payment-service:3010",
 };
 app.use(
     "/api/:service",
@@ -100,6 +102,16 @@ app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'UP' });
 });
 
+// Error handling middleware
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error('Error:', err.message);
+    console.error('Stack:', err.stack);
+    res.status(500).json({
+        status: 500,
+        success: false,
+        message: err.message || 'Something went wrong!'
+    });
+});
 // Start the server
 /*
 https.createServer(options, app).listen(3000, () => {
