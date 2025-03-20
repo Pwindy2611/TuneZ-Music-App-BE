@@ -4,7 +4,7 @@ import redisClient from "../config/redis/RedisConfig.js";
 import {firestore} from "../config/firebase/FireBaseConfig.js";
 import {MusicBaseService} from "../service/music_base/MusicBaseService.js";
 import {singleton} from "tsyringe";
-import {Readable} from "stream";
+import {PassThrough, Readable} from "stream";
 import axios from "axios";
 import {historyServiceClient} from "../grpc/client/GrpcClients.js";
 
@@ -34,12 +34,51 @@ export class MusicStreamRepository implements IMusicStreamRepository {
     async getStreamMusic(musicId: string): Promise<Readable> {
         const musicUrl = await MusicBaseService.getMusicUrlById.execute(musicId);
 
-        const response = await axios.get(musicUrl, {
-            responseType: "stream"
-        });
+        const outputStream = new PassThrough();
 
-        return response.data;
+        let isFirstChunkDone = false;
+
+        try {
+            const firstChunk = await axios.get(musicUrl, {
+                headers: { Range: "bytes=0-524288" }, // 512KB đầu tiên
+                responseType: "stream"
+            });
+
+            firstChunk.data.on('end', () => {
+                isFirstChunkDone = true;
+            });
+
+            firstChunk.data.pipe(outputStream, { end: false });
+
+            const restOfDataPromise = axios.get(musicUrl, {
+                headers: { Range: "bytes=524289-" },
+                responseType: "stream"
+            });
+
+            restOfDataPromise.then(fullResponse => {
+                const checkAndPipeRest = () => {
+                    if (isFirstChunkDone) {
+                        fullResponse.data.pipe(outputStream);
+                    } else {
+                        setTimeout(checkAndPipeRest, 100);
+                    }
+                };
+
+                checkAndPipeRest();
+            }).catch(error => {
+                if (!outputStream.destroyed) {
+                    outputStream.end();
+                }
+            });
+
+            return outputStream;
+        } catch (error) {
+            console.error("Error streaming music:", error);
+            outputStream.end();
+            return outputStream;
+        }
     }
+
 
     async updateUserMusicState(userId: string, state: {}): Promise<void> {
         await redisClient.set(`musicState:${userId}`, JSON.stringify(state), { EX: 3600 });

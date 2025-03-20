@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use(playlistRoute);
+app.use('/api', playlistRoute);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

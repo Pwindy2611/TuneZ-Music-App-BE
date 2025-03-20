@@ -2,6 +2,7 @@ import {IPlaylistGenerateService} from "../../interface/service/IPlaylistGenerat
 import FetchBase from "../../util/base/FetchBase.js";
 import PlaylistBaseService from "../base/PlaylistBaseService.js";
 import {IPlaylistResponseDto} from "../../dto/response/IPlaylistResponseDto.js";
+import { PlaylistType } from "../../enum/PlaylistType.js";
 
 export const generateRecentPlaylist: IPlaylistGenerateService["generateRecentPlaylist"] = async (
     userId,
@@ -10,7 +11,7 @@ export const generateRecentPlaylist: IPlaylistGenerateService["generateRecentPla
 ): Promise<IPlaylistResponseDto[] | null> => {
     try {
 
-        const recentPlaylists = await PlaylistBaseService.getPlaylistByFilter('recent', 'custom');
+        const recentPlaylists = await PlaylistBaseService.getPlaylistByFilter(PlaylistType.RECENT, 'custom');
 
         if (!Array.isArray(recentPlaylists) || recentPlaylists.length === 0) {
             return null;

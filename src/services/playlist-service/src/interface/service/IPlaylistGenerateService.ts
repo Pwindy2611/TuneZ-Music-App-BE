@@ -8,4 +8,8 @@ export interface IPlaylistGenerateService {
     generateUniquePlaylist(userId: string, playlistLimit: number, historyLimit: number): Promise<IPlaylistGroupedResponseDto | null>;
     generateFollowedArtistsPlaylist(userId: string): Promise<IPlaylistGroupedResponseDto| null>;
     generateFollowedGenresPlaylist(userId: string): Promise<IPlaylistGroupedResponseDto | null>;
+    generateDaylist(
+        userId: string,
+        playlistLimit: number
+    ): Promise<IPlaylistResponseDto[] | null>;
 }

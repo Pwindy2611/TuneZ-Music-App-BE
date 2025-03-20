@@ -1,6 +1,7 @@
 import {IPlaylistGenerateService} from "../../interface/service/IPlaylistGenerateService.js";
 import {generateThrowBackPlaylist} from "./PlaylistGenerateService.GenerateThrowBackPlaylist.js";
 import {generateRecentPlaylist} from "./PlaylistGenerateService.GenerateRecentPlaylist.js";
+import {generateDaylist} from "./PlaylistGenerateService.GenerateDaylist.js";
 import {PlaylistTitle} from "../../enum/PlaylistTitle.js";
 import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 import PlaylistCacheService from "../cache/PlaylistCacheService.js";
@@ -17,18 +18,24 @@ export const generateUniquePlaylist: IPlaylistGenerateService['generateUniquePla
             return {[PlaylistTitle.UNIQUE]: cachedPlaylist};
         }
 
-        const [recentPlaylist, throwbackPlaylist] = await Promise.all([
+        const [recentPlaylist, throwbackPlaylist, daylistPlaylist] = await Promise.all([
             generateRecentPlaylist(userId, playlistLimit, historyLimit),
-            generateThrowBackPlaylist(userId, historyLimit, historyLimit)
+            generateThrowBackPlaylist(userId, playlistLimit, historyLimit),
+            generateDaylist(userId, playlistLimit)
         ]);
 
-        const playlistResponse = [...(recentPlaylist || []), ...(throwbackPlaylist || [])];
+        const playlistResponse = [
+            ...(recentPlaylist || []), 
+            ...(throwbackPlaylist || []),
+            ...(daylistPlaylist || [])
+        ];
+        
         await PlaylistCacheService.saveToCache(userId, 'unique', playlistResponse);
 
         return {
-            [PlaylistTitle.UNIQUE]: [...(recentPlaylist || []), ...(throwbackPlaylist || [])]
+            [PlaylistTitle.UNIQUE]: playlistResponse
         };
     }catch (error) {
         throw error;
     }
-}
+};

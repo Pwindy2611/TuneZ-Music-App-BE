@@ -49,3 +49,8 @@ services:
     ports:
       - "9236:9227"
     command: npm run debug
+
+  payment-service:
+    ports:
+      - "9237:9227"
+    command: npm run debug

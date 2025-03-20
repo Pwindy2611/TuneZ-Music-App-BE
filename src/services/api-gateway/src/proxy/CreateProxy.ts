@@ -1,5 +1,7 @@
 import proxy from "express-http-proxy";
-import { Request, Response, NextFunction } from "express";
+import {Request, Response, NextFunction, response} from "express";
+import stripAnsi from "strip-ansi";
+import zlib from "zlib";
 import * as console from "node:console";
 
 const allowedOrigins = [
@@ -7,13 +9,13 @@ const allowedOrigins = [
     'http://localhost:3000'
 ];
 
-const createProxy = (serviceUrl: string, pathPrefix: string) => {
+export const createProxy = (serviceUrl: string, pathPrefix: string) => {
     return (req: Request, res: Response, next: NextFunction) => {
         const contentType = req.headers['content-type'] || '';
 
         const proxyOptions: any = {
             proxyReqPathResolver: (req: Request) => {
-                const newPath = req.url.replace(new RegExp(`^/${pathPrefix}`), '');
+                const newPath = '/api' + req.url.replace(new RegExp(`^/${pathPrefix}`), "");
                 console.log(`[PROXY] Forwarding to ${serviceUrl}: ${newPath}`);
                 return newPath;
             },
@@ -43,15 +45,6 @@ const createProxy = (serviceUrl: string, pathPrefix: string) => {
                     return proxyResData;
                 }
 
-                if (resContentType.includes("application/json")) {
-                    try {
-                        const responseBody = proxyResData.toString("utf8").replace(/^\uFEFF/, "");
-                        return JSON.stringify(JSON.parse(responseBody));
-                    } catch (error) {
-                        console.error("[PROXY] Failed to parse JSON response:", error);
-                        return proxyResData;
-                    }
-                }
                 return proxyResData;
             }
         };
@@ -64,6 +57,9 @@ const createProxy = (serviceUrl: string, pathPrefix: string) => {
     };
 };
 
+
+
+/*
 export const followProxy = createProxy('http://follow-service:3006', 'follow');
 export const historyProxy = createProxy('http://history-service:3004', 'history');
 export const loveProxy = createProxy('http://love-service:3005', 'love');
@@ -72,4 +68,4 @@ export const officialArtistProxy = createProxy('http://official-artist-service:3
 export const playlistProxy = createProxy('http://playlist-service:3007', 'playlists');
 export const userProxy = createProxy('http://user-service:3001', 'users');
 export const albumProxy = createProxy('http://album-service:3008', 'albums');
-export const subscriptionProxy = createProxy('http://subscription-service:3009', 'subscriptions');
+export const subscriptionProxy = createProxy('http://subscription-service:3009', 'subscriptions');*/

@@ -3,6 +3,9 @@ import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { albumBaseService } from '../service/base/AlbumBaseService.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,7 +47,8 @@ function startServer() {
     const server = new grpc.Server();
     server.addService((albumProto as any).AlbumService.service, { getAlbumsByArtist: getAlbumsByArtistHandler });
 
-    server.bindAsync('0.0.0.0:50058', grpc.ServerCredentials.createInsecure(), (err, port) => {
+    const port = process.env.GRPC_PORT_ALBUM_SERVICE || '50208';
+    server.bindAsync(`0.0.0.0:${port}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
         if (err) {
             console.error('Failed to start gRPC server:', err);
             return;

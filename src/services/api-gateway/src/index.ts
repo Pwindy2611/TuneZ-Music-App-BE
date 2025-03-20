@@ -3,8 +3,21 @@ import cors from 'cors';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import { Request, Response, NextFunction } from "express";
+import { createHttpsServer } from './config/https/HttpsConfig.js';
 
-import { followProxy, historyProxy, loveProxy, musicProxy, officialArtistProxy, playlistProxy, userProxy, albumProxy, subscriptionProxy } from "./proxy/CreateProxy";
+import {
+    /*followProxy,
+    historyProxy,
+    loveProxy,
+    musicProxy,
+    officialArtistProxy,
+    playlistProxy,
+    userProxy,
+    albumProxy,
+    subscriptionProxy,*/
+    createProxy
+} from "./proxy/CreateProxy";
 import {authMiddleware} from "./middleware/AuthMiddleware";
 import * as dotenv from "dotenv";
 
@@ -16,6 +29,7 @@ const port = process.env.PORT || 3000;
 // Middleware
 const allowedOrigins = [
     'https://tunez-ddb5f.firebaseapp.com',
+    'http://localhost:3000',
     'https://localhost:3000'
 ];
 
@@ -52,36 +66,65 @@ app.use((req, _res, next) => {
 });
 
 // Proxy
-app.use('/users',authMiddleware, userProxy);
+const serviceMap: Record<string, string> = {
+    users: "http://user-service:3001",
+    offartist: "http://official-artist-service:3002",
+    musics: "http://music-service:3003",
+    history: "http://history-service:3004",
+    love: "http://love-service:3005",
+    follow: "http://follow-service:3006",
+    playlists: "http://playlist-service:3007",
+    albums: "http://album-service:3008",
+    subscriptions: "http://subscription-service:3009",
+    payment: "http://payment-service:3010",
+};
+app.use(
+    "/api/:service",
+    authMiddleware,
+    (req: Request, res: Response, next: NextFunction) => {
+        const service = req.params.service;
+        const serviceUrl = serviceMap[service];
 
-app.use('/musics',authMiddleware, musicProxy);
+        if (!serviceUrl) {
+            res.status(404).json({ error: "Service not found" });
+            return;
+        }
 
-app.use('/history', authMiddleware, historyProxy);
+        const proxyMiddleware = createProxy(serviceUrl, service);
+        proxyMiddleware(req, res, next);
+    }
+);
 
-app.use('/offartist', authMiddleware, officialArtistProxy)
 
-app.use('/love', authMiddleware, loveProxy)
 
-app.use('/follow', authMiddleware, followProxy)
-
-app.use('/playlists', authMiddleware, playlistProxy)
-
-app.use('/albums', authMiddleware, albumProxy)
-
-app.use('/subscriptions', authMiddleware, subscriptionProxy)
 
 // Health check endpoint
 app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'UP' });
 });
 
+// Error handling middleware
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error('Error:', err.message);
+    console.error('Stack:', err.stack);
+    res.status(500).json({
+        status: 500,
+        success: false,
+        message: err.message || 'Something went wrong!'
+    });
+});
 // Start the server
+
+
+// Tạm thời chạy HTTP, giữ lại code HTTPS để sau này dùng
+app.listen(port, () => {
+    console.log(`API Gateway running on http://localhost:${port}`);
+});
+
+// Code HTTPS được giữ lại để sau này dùng
 /*
-https.createServer(options, app).listen(3000, () => {
-    console.log(`Api gateway running on https://localhost:${port}`);
+const server = createHttpsServer(app);
+server.listen(port, () => {
+    console.log(`API Gateway running on https://localhost:${port}`);
 });
 */
-
-app.listen(port, () => {
-    console.log(`Api gateway running on http://localhost:${port}`);
-});

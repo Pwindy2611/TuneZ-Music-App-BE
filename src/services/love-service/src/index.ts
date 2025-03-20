@@ -31,7 +31,7 @@ app.use((req, _res, next) => {
     next();
 });
 // Routes
-app.use(loveRoute);
+app.use('/api',loveRoute);
 
 // Health check endpoint
 app.get('/health', (_req, res) => {

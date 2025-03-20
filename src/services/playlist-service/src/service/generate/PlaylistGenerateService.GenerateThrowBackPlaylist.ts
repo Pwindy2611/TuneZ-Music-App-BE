@@ -3,6 +3,7 @@ import FetchBase from "../../util/base/FetchBase.js";
 import PlaylistBaseService from "../base/PlaylistBaseService.js";
 import {generateRepo} from "../../repository/PlaylistGenerateRepository.js";
 import {IPlaylistResponseDto} from "../../dto/response/IPlaylistResponseDto.js";
+import { PlaylistType } from "../../enum/PlaylistType.js";
 
 export const generateThrowBackPlaylist: IPlaylistGenerateService["generateThrowBackPlaylist"] = async (
     userId,
@@ -10,7 +11,7 @@ export const generateThrowBackPlaylist: IPlaylistGenerateService["generateThrowB
     historyLimit
 ): Promise<IPlaylistResponseDto[] | null> => {
     try {
-        const throwbackPlaylists = await PlaylistBaseService.getPlaylistByFilter('throwback', 'custom');
+        const throwbackPlaylists = await PlaylistBaseService.getPlaylistByFilter(PlaylistType.THROWBACK, 'custom');
 
         if (!Array.isArray(throwbackPlaylists) || throwbackPlaylists.length === 0) {
             return null;

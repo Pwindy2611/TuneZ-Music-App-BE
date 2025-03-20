@@ -32,7 +32,7 @@ app.use((req, res, next) => {
     next();
 });
 //Route
-app.use(FollowRoute);
+app.use('/api', FollowRoute);
 
 // Health check endpoint
 app.get('/health', (_req, res) => {
