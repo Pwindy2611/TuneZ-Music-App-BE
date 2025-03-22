@@ -4,5 +4,6 @@ export enum PaymentStatus {
   FAILED = 'FAILED',
   CANCELLED = 'CANCELLED',
   REFUNDED = 'REFUNDED',
-  EXPIRED = 'EXPIRED'
+  EXPIRED = 'EXPIRED',
+  TIMEOUT = 'TIMEOUT'
 } 

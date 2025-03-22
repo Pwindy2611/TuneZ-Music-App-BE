@@ -27,18 +27,14 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
-const allowedOrigins = [
-    'https://tunez-ddb5f.firebaseapp.com',
-    'http://localhost:3000',
-    'https://localhost:3000'
-];
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
 
 app.use(cors({
-    origin: function (origin, callback) {
+    origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error("Not allowed by CORS"));
+            callback(new Error('Not allowed by CORS'));
         }
     },
     credentials: true,
@@ -65,25 +61,30 @@ app.use((req, _res, next) => {
     next(); 
 });
 
-// Proxy
-const serviceMap: Record<string, string> = {
-    users: "http://user-service:3001",
-    offartist: "http://official-artist-service:3002",
-    musics: "http://music-service:3003",
-    history: "http://history-service:3004",
-    love: "http://love-service:3005",
-    follow: "http://follow-service:3006",
-    playlists: "http://playlist-service:3007",
-    albums: "http://album-service:3008",
-    subscriptions: "http://subscription-service:3009",
-    payment: "http://payment-service:3010",
+// Service URLs from environment variables
+type ServiceUrls = {
+    [key: string]: string | undefined;
 };
+
+const serviceUrls: ServiceUrls = {
+    users: process.env.USER_SERVICE_URL,
+    offartist: process.env.OFFICIAL_ARTIST_SERVICE_URL,
+    musics: process.env.MUSIC_SERVICE_URL,
+    history: process.env.HISTORY_SERVICE_URL,
+    love: process.env.LOVE_SERVICE_URL,
+    follow: process.env.FOLLOW_SERVICE_URL,
+    playlists: process.env.PLAYLIST_SERVICE_URL,
+    albums: process.env.ALBUM_SERVICE_URL,
+    subscriptions: process.env.SUBSCRIPTION_SERVICE_URL,
+    payment: process.env.PAYMENT_SERVICE_URL,
+};
+
 app.use(
     "/api/:service",
     authMiddleware,
     (req: Request, res: Response, next: NextFunction) => {
         const service = req.params.service;
-        const serviceUrl = serviceMap[service];
+        const serviceUrl = serviceUrls[service];
 
         if (!serviceUrl) {
             res.status(404).json({ error: "Service not found" });
@@ -117,14 +118,13 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 
 
 // Tạm thời chạy HTTP, giữ lại code HTTPS để sau này dùng
-app.listen(port, () => {
-    console.log(`API Gateway running on http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//     console.log(`API Gateway running on http://localhost:${port}`);
+// });
 
 // Code HTTPS được giữ lại để sau này dùng
-/*
+
 const server = createHttpsServer(app);
 server.listen(port, () => {
     console.log(`API Gateway running on https://localhost:${port}`);
 });
-*/

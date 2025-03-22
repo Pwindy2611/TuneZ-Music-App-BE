@@ -1,4 +1,4 @@
-import { PaymentStatus } from '../../enum/PaymentStatusEnum.js';
+  import { PaymentStatus } from '../../enum/PaymentStatus.js';
 
 export interface IUpdatePaymentStatusRequest {
   status: PaymentStatus;

@@ -1,5 +1,5 @@
 import { IsEnum, IsOptional, IsObject } from 'class-validator';
-import { PaymentStatus } from '../../enum/PaymentStatusEnum.js';
+import { PaymentStatus } from '../../enum/PaymentStatus.js';
 import { IUpdatePaymentStatusRequest } from '../../interface/request/IUpdatePaymentStatusRequest.js';
 
 export class UpdatePaymentStatusDto implements IUpdatePaymentStatusRequest {

@@ -36,7 +36,6 @@ export interface IPaymentService {
    * Xác thực payment callback từ cổng thanh toán
    */
   verifyPaymentCallback(
-    paymentId: string,
     callbackData: Record<string, any>
   ): Promise<IPaymentResponse>;
 } 

@@ -47,13 +47,14 @@ function startServer() {
     const server = new grpc.Server();
     server.addService((albumProto as any).AlbumService.service, { getAlbumsByArtist: getAlbumsByArtistHandler });
 
+    const host = process.env.GRPC_HOST || '0.0.0.0';
     const port = process.env.GRPC_PORT_ALBUM_SERVICE || '50208';
-    server.bindAsync(`0.0.0.0:${port}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
+    server.bindAsync(`${host}:${port}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
         if (err) {
             console.error('Failed to start gRPC server:', err);
             return;
         }
-        console.log(`Album gRPC server running on port ${port}`);
+        console.log(`Album gRPC server running on ${host}:${port}`);
     });
 }
 
