@@ -19,7 +19,6 @@ export const momoTestConfig: IMomoConfigTest = {
   publicKey: process.env.MOMO_PUBLIC_KEY || ''
 };
 
-// Validate required environment variables
 const requiredEnvVars = [
   'MOMO_TEST_PARTNER_CODE',
   'MOMO_TEST_ACCESS_KEY',

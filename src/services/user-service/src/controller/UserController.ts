@@ -133,10 +133,8 @@ class UserController {
         }
 
         try {
-            // Gửi OTP qua email
             await mailService.sendOtpEmail(email);
 
-            // Phản hồi nếu thành công
             res.status(200).json({
                 status: 200,
                 success: true,
@@ -144,7 +142,6 @@ class UserController {
             });
             return;
         } catch (error: unknown) {
-            // Xử lý lỗi nếu có vấn đề
             const errorMessage =
                 error instanceof Error ? error.message : 'Unknown error occurred';
 
@@ -176,7 +173,6 @@ class UserController {
             return;
         }
         catch (error: unknown) {
-            // Xử lý lỗi nếu có vấn đề
             const errorMessage =
                 error instanceof Error ? error.message : 'Unknown error occurred';
 

@@ -1,28 +1,28 @@
 export interface OfficialArtistInfo {
-    id: string;                     // Mã định danh của nghệ sĩ
-    name: string;                   // Tên nghệ sĩ
-    profileImageUrl?: string;       // URL ảnh đại diện
-    bio?: string;                   // Tiểu sử/ngắn gọn về nghệ sĩ
-    genres?: string[];              // Danh sách thể loại âm nhạc
-    followersCount?: number;        // Số lượng người theo dõi
-    albumCount?: number;            // Số lượng album đã phát hành
-    socialLinks?: {                 // Các liên kết mạng xã hội
+    id: string;
+    name: string;
+    profileImageUrl?: string;
+    bio?: string;
+    genres?: string[];
+    followersCount?: number;
+    albumCount?: number;
+    socialLinks?: {
         facebook?: string;
         instagram?: string;
         twitter?: string;
         youtube?: string;
         [key: string]: string | undefined;
     };
-    topSongs?: Array<{             // Danh sách các bài hát nổi bật
+    topSongs?: Array<{
         songId: string;
         title: string;
-        duration: number;             // Thời lượng bài hát (theo giây)
-        coverImageUrl?: string;       // URL ảnh bìa của bài hát
+        duration: number;
+        coverImageUrl?: string;
     }>;
-    albums?: Array<{               // Danh sách các album của nghệ sĩ
+    albums?: Array<{
         albumId: string;
         title: string;
-        releaseDate?: string;         // Ngày phát hành (ISO string)
-        coverImageUrl?: string;       // URL ảnh bìa của album
+        releaseDate?: string;
+        coverImageUrl?: string;
     }>;
 }

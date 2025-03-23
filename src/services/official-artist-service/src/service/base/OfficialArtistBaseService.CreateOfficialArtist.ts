@@ -18,7 +18,7 @@ export const createOfficialArtist: IOfficialArtistBaseService["createOfficialArt
             verified: artist.verified ?? false,
             profile: {
                 bio: artist.profile.bio ?? "",
-                profileImage: imgPath, // Ảnh sau khi upload
+                profileImage: imgPath,
                 genres: artist.profile.genres ?? []
             },
             createdAt: new Date().toISOString(),

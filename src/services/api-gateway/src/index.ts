@@ -42,13 +42,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     exposedHeaders: ['Set-Cookie'],
 }));
-
-
-/*const options = {
-    key: fs.readFileSync(process.env.SERVER_KEY_PATH || '../server.key'),
-    cert: fs.readFileSync(process.env.SERVER_CERT_PATH || '../server.cert')
-};*/
-
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -117,7 +110,6 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 // Start the server
 
 
-// Tạm thời chạy HTTP, giữ lại code HTTPS để sau này dùng
 // app.listen(port, () => {
 //     console.log(`API Gateway running on http://localhost:${port}`);
 // });

@@ -4,7 +4,7 @@ import { ICreatePaymentRequest } from '../interface/request/ICreatePaymentReques
 import { IUpdatePaymentStatusRequest } from '../interface/request/IUpdatePaymentStatusRequest.js';
 import { IAuthRequest } from '../interface/object/IAuthRequest.js';
 import { PaymentCurrency } from '../enum/PaymentCurrency.js';
-import { CryptoUtil } from '../utils/CryptoUtil.js';
+import { CryptoUtil } from '../util/CryptoUtil.js';
 import { PaymentMethod } from '../enum/PaymentMethod.js';
 import { IPaymentRequest } from '../interface/request/IPaymentRequest.js';
 
@@ -60,7 +60,6 @@ export class PaymentController {
         return;
       }
 
-      // Validate amount
       if (amount <= 0) {
         res.status(400).json({
           status: 400,
@@ -70,7 +69,6 @@ export class PaymentController {
         return;
       }
 
-      // Validate paymentMethod
       if (!Object.values(PaymentMethod).includes(paymentMethod)) {
         res.status(400).json({
           status: 400,
@@ -109,7 +107,6 @@ export class PaymentController {
 
   async handlePaymentCallback(req: IPaymentRequest, res: Response, next: NextFunction) {
     try {
-      // Lấy query params từ Momo callback
       const callbackData = {
         partnerCode: req.query.partnerCode as string,
         orderId: req.query.orderId as string,
@@ -126,7 +123,6 @@ export class PaymentController {
         signature: req.query.signature as string
       };
 
-      // Validate required fields
       if (!callbackData.orderId) {
         throw new Error('Missing required field: orderId');
       }
@@ -135,10 +131,8 @@ export class PaymentController {
 
       const paymentResponse = await this.getPaymentService().verifyPaymentCallback(callbackData);
       
-      // Lưu paymentResponse vào request để middleware có thể xử lý
       req.paymentResponse = paymentResponse;
       
-      // Chuyển tiếp request đến middleware tiếp theo
       next();
     } catch (error) {
       console.error('Payment Callback Error:', error);

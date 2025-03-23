@@ -38,9 +38,8 @@ export class PaymentRepository {
 
   static async updateStatus(orderId: string, status: string): Promise<void> {
     try {
-      // Validate status
       if (!Object.values(PaymentStatus).includes(status as PaymentStatus)) {
-        throw new Error('Invalid payment status');
+        return  Promise.reject(new Error('Invalid payment status'));
       }
 
       const docRef = firestore.collection(this.COLLECTION_NAME).doc(orderId);
@@ -64,7 +63,6 @@ export class PaymentRepository {
     try {
       let queryRef: CollectionReference | Query = firestore.collection(this.COLLECTION_NAME);
       
-      // Apply filters if any
       if (filters) {
         Object.entries(filters).forEach(([key, value]) => {
           queryRef = queryRef.where(key, '==', value);
@@ -75,7 +73,6 @@ export class PaymentRepository {
       const total = querySnapshot.size;
       const totalPages = Math.ceil(total / limit);
       
-      // Apply pagination
       const startIndex = (page - 1) * limit;
       const endIndex = startIndex + limit;
       const items = querySnapshot.docs

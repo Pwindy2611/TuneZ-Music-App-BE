@@ -1,10 +1,10 @@
 import { Response, NextFunction } from "express";
 import { IAuthRequest } from "../interface/IAuthRequest";
-import {auth} from "../config/firebase/FireBaseConfig"; // Import interface
+import {auth} from "../config/firebase/FireBaseConfig";
 
 
 export const authMiddleware = async (req: IAuthRequest, res: Response, next: NextFunction) => {
-    const token = req.cookies?.session; // Lấy token từ cookie.session
+    const token = req.cookies?.session;
 
     if (token) {
         try {

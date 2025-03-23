@@ -12,7 +12,7 @@ import { PaymentStatus } from '../enum/PaymentStatus.js';
 import { PaymentMethod } from '../enum/PaymentMethod.js';
 import { PaymentCurrency } from '../enum/PaymentCurrency.js';
 import { PaymentRepository } from '../repository/PaymentRepository.js';
-import { CryptoUtil } from '../utils/CryptoUtil.js';
+import { CryptoUtil } from '../util/CryptoUtil.js';
 
 export class MomoService implements IPaymentService {
   private readonly MOMO_API_URL: string;
@@ -50,14 +50,13 @@ export class MomoService implements IPaymentService {
           'Content-Type': 'application/json',
           'X-Partner-Id': momoTestConfig.partnerCode
         },
-        timeout: 30000 // 30 seconds timeout
+        timeout: 30000
       });
 
       console.log('Momo Response:', JSON.stringify(response.data, null, 2));
       
       const paymentResponse = this.mapToPaymentResponse(response.data);
       
-      // Lưu vào Firestore
       await PaymentRepository.create({
         orderId: data.orderId,
         amount: paymentResponse.amount,
@@ -170,7 +169,6 @@ export class MomoService implements IPaymentService {
   }
   private verifyIPN(ipnResponse: IMomoIPNResponse): boolean {
     try {
-      // Tạo chuỗi raw signature theo đúng thứ tự của Momo
       const rawSignature = [
         `accessKey=${momoTestConfig.accessKey}`,
         `amount=${ipnResponse.amount}`,
@@ -199,7 +197,6 @@ export class MomoService implements IPaymentService {
     callbackData: Record<string, any>
   ): Promise<IPaymentResponse> {
     try {
-      // Log để debug
       console.log('Momo Callback Data:', JSON.stringify(callbackData, null, 2));
 
       const ipnResponse = callbackData as IMomoIPNResponse;
@@ -207,10 +204,9 @@ export class MomoService implements IPaymentService {
 
       if (!isValid) {
         console.error('Invalid signature from Momo');
-        throw new Error('Invalid signature');
+        return Promise.reject(new Error('Invalid signature'));
       }
 
-      // Log để debug
       console.log('Momo IPN Response:', JSON.stringify(ipnResponse, null, 2));
 
       const status = this.mapMomoResultCodeToStatus(ipnResponse.resultCode);
@@ -221,7 +217,6 @@ export class MomoService implements IPaymentService {
 
       });
       
-      // Cập nhật trạng thái trong Firestore
       await PaymentRepository.updateStatus(ipnResponse.orderId, status);
 
       return paymentResponse;

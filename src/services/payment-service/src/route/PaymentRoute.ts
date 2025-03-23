@@ -4,7 +4,7 @@ import { PaymentServiceFactory } from '../service/PaymentServiceFactory.js';
 import { PaymentMethod } from '../enum/PaymentMethod.js';
 import { PaymentRepository } from '../repository/PaymentRepository.js';
 import { authMiddleware } from '../util/middleware/AuthMiddleware.js';
-import { handlePaymentResponse } from '../utils/middleware/PaymentResponseMiddleware.js';
+import { handlePaymentResponse } from '../util/middleware/PaymentResponseMiddleware.js';
 import { IPaymentRequest } from '../interface/request/IPaymentRequest.js';
 const router = Router();
 const paymentController = PaymentController.getInstance();
@@ -49,44 +49,36 @@ router.post('/create', authMiddleware, async (req: Request, res: Response) => {
   await paymentController.createPayment(req, res);
 });
 
-// Handle payment callback
 router.get('/callback', getPaymentMethod, async (req: IPaymentRequest, res: Response, next: NextFunction) => {
   const paymentService = PaymentServiceFactory.createPaymentService(req.paymentMethod!);
   paymentController.setPaymentService(paymentService);
   await paymentController.handlePaymentCallback(req, res, next);
 }, handlePaymentResponse);
 
-
-
-// Get payment by ID
 router.get('/getPayment/:id', getPaymentMethod, async (req: IPaymentRequest, res: Response) => {
   const paymentService = PaymentServiceFactory.createPaymentService(req.paymentMethod!);
   paymentController.setPaymentService(paymentService);
   await paymentController.getPayment(req, res);
 });
 
-// Update payment status
 router.patch('/updatePayment/:id/status', getPaymentMethod, async (req: IPaymentRequest, res: Response) => {
   const paymentService = PaymentServiceFactory.createPaymentService(req.paymentMethod!);
   paymentController.setPaymentService(paymentService);
   await paymentController.updatePaymentStatus(req, res);
 });
 
-// Cancel payment
 router.post('/cancelPayment/:id', getPaymentMethod, async (req: IPaymentRequest, res: Response) => {
   const paymentService = PaymentServiceFactory.createPaymentService(req.paymentMethod!);
   paymentController.setPaymentService(paymentService);
   await paymentController.cancelPayment(req, res);
 });
 
-// Refund payment
 router.post('/refundPayment/:id', getPaymentMethod, async (req: IPaymentRequest, res: Response) => {
   const paymentService = PaymentServiceFactory.createPaymentService(req.paymentMethod!);
   paymentController.setPaymentService(paymentService);
   await paymentController.refundPayment(req, res);
 });
 
-// List payments
 router.get('/listPayments', async (req: Request, res: Response) => {
   const paymentService = PaymentServiceFactory.createPaymentService(PaymentMethod.MOMO);
   paymentController.setPaymentService(paymentService);

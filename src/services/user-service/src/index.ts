@@ -7,7 +7,6 @@ import http from 'http';
 import userRoute from './route/UserRoute.js';
 import dotenv from 'dotenv';
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
@@ -16,7 +15,6 @@ const port = process.env.PORT || 3001;
 // Middleware
 app.use(cors({
     origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps, curl, Postman)
         if (!origin) {
             callback(null, true);
             return;

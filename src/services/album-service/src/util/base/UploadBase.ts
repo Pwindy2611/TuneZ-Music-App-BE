@@ -22,7 +22,7 @@ class UploadBase {
             const uploadStream = cloudinaryInstance.uploader.upload_stream(
                 {
                     folder: `album-storage/files/${_id}`,
-                    public_id: file.originalName.replace(/\.[^/.]+$/, ""), // Bỏ extension
+                    public_id: file.originalName.replace(/\.[^/.]+$/, ""),
                     resource_type: "auto"
                 },
                 (error, result) => {

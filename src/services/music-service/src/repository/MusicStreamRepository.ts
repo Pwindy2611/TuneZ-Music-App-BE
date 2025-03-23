@@ -71,6 +71,7 @@ export class MusicStreamRepository implements IMusicStreamRepository {
 
                 checkAndPipeRest();
             }).catch(error => {
+                console.error("Error fetching the rest of the music data:", error);
                 if (!outputStream.destroyed) {
                     outputStream.end();
                 }

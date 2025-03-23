@@ -11,8 +11,8 @@ const serverCertPath = process.env.SERVER_CERT_PATH || path.join(process.cwd(), 
 export const httpsOptions = {
   key: fs.readFileSync(serverKeyPath),
   cert: fs.readFileSync(serverCertPath),
-  rejectUnauthorized: false, // Cho phép certificate tự ký
-  minVersion: 'TLSv1.2' as const, // Yêu cầu TLS 1.2 trở lên
+  rejectUnauthorized: false,
+  minVersion: 'TLSv1.2' as const,
   ciphers: [
     'ECDHE-ECDSA-AES128-GCM-SHA256',
     'ECDHE-RSA-AES128-GCM-SHA256',
