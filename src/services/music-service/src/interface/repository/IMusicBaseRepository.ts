@@ -3,8 +3,7 @@ export interface IMusicBaseRepository {
     getAllMusic(): Promise<any>;
     getMusicByArtist(artist: string): Promise<any>;
     getMusicByGenres(genre: string): Promise<any>;
-    getMusicUrlById(musicId: string): Promise<string>;
-    getMusicDurationById(musicId: string): Promise<number>;
+    getMusicById(musicId: string): Promise<any>;
     isOfficialArtistExist(artistId: string): Promise<boolean>;
     incrementLoveCount(musicId: string): Promise<void>
 

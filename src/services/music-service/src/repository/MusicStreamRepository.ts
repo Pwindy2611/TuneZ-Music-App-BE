@@ -32,15 +32,20 @@ export class MusicStreamRepository implements IMusicStreamRepository {
     }
 
     async getStreamMusic(musicId: string): Promise<Readable> {
-        const musicUrl = await MusicBaseService.getMusicUrlById.execute(musicId);
+        const music = await MusicBaseService.getMusicById.execute(musicId);
 
+        if (!music) {
+            throw new Error("Music not found");
+        }
+
+        const musicUrl = music.musicPath || "";
         const outputStream = new PassThrough();
 
         let isFirstChunkDone = false;
 
         try {
             const firstChunk = await axios.get(musicUrl, {
-                headers: { Range: "bytes=0-524288" }, // 512KB đầu tiên
+                headers: { Range: "bytes=0-524288" },
                 responseType: "stream"
             });
 

@@ -17,6 +17,7 @@ router.get('/getMusicLove', authMiddleware, MusicController.getMusicLoveApi);
 
 //STREAM
 router.get('/getStreamMusic/:musicId', authMiddleware, MusicController.getStreamMusicApi);
+router.get('/getMusicInfo/:musicId', authMiddleware, MusicController.getMusicInfoApi);
 router.post('/pauseMusic', authMiddleware, MusicController.pauseMusicApi);
 router.post('/playMusic/:musicId', authMiddleware, MusicController.playMusicApi);
 router.post('/seekMusic/:musicId', authMiddleware, MusicController.seekMusicApi);
