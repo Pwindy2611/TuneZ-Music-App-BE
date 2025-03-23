@@ -35,7 +35,7 @@ app.use((req: express.Request, _res: express.Response, next: express.NextFunctio
 });
 
 // Routes
-app.use('/api/payments', paymentRoute);
+app.use('/api', paymentRoute);
 
 // Health check endpoint
 app.get('/health', (_req: express.Request, res: express.Response) => {

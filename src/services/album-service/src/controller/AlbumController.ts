@@ -6,7 +6,7 @@ import { IFile } from '../interface/object/IFile.js';
 import {IAlbum} from "../interface/object/IAlbum.js";
 
 const uploadMulter = multer({
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+    limits: { fileSize: 10 * 1024 * 1024 },
     fileFilter: (_req, file, cb) => {
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);

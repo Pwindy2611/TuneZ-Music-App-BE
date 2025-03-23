@@ -21,13 +21,11 @@ export const generateThrowBackPlaylist: IPlaylistGenerateService["generateThrowB
         const musicIds = await generateRepo.getThrowBackMusicIds(userId, historyLimit);
         if (!musicIds || musicIds.length === 0) return null;
 
-        // Đếm số lần phát của từng bài hát
         const frequencyMap: Record<string, number> = {};
         musicIds.forEach(id => {
             frequencyMap[id] = (frequencyMap[id] || 0) + 1;
         });
 
-        // Sắp xếp bài hát theo tần suất nghe, lấy top `playlistLimit`
         const sortedIds = Object.entries(frequencyMap)
             .sort((a, b) => b[1] - a[1])
             .map(([id]) => id)

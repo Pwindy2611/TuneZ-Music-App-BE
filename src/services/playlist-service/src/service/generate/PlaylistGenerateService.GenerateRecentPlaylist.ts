@@ -21,13 +21,11 @@ export const generateRecentPlaylist: IPlaylistGenerateService["generateRecentPla
         const musicIds = await FetchBase.fetchMusicIdsFromHistory(userId, historyLimit);
         if (!musicIds || musicIds.length === 0) return null;
 
-        // Đếm số lần phát của mỗi bài hát
         const musicCount: Record<string, number> = {};
         musicIds.forEach(musicId => {
             musicCount[musicId] = (musicCount[musicId] || 0) + 1;
         });
 
-        // Sắp xếp theo số lần phát, lấy top bài hát
         const sortedMusicIds = Object.entries(musicCount)
             .sort((a, b) => b[1] - a[1])
             .map(entry => entry[0])

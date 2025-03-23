@@ -48,13 +48,14 @@ function startServer() {
     const server = new grpc.Server();
     server.addService((followProto as any).FollowService.service, { getFollowingCount: getFollowingCountHandler, getFollowerCount: getFollowerCountHandler });
 
+    const host = process.env.GRPC_HOST || '0.0.0.0';
     const port = process.env.GRPC_PORT_FOLLOW_SERVICE || '50206';
-    server.bindAsync(`0.0.0.0:${port}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
+    server.bindAsync(`${host}:${port}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
         if (err) {
             console.error('Failed to start gRPC server:', err);
             return;
         }
-        console.log(`gRPC server running on port ${port}`);
+        console.log(`Follow gRPC server running on ${host}:${port}`);
     });
 }
 

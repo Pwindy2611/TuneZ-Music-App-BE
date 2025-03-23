@@ -18,7 +18,6 @@ export const momoConfig = {
   logo: process.env.MOMO_LOGO || ''
 };
 
-// Validate required environment variables
 const requiredEnvVars = [
   'MOMO_PARTNER_CODE',
   'MOMO_PUBLIC_KEY',

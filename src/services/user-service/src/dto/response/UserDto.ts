@@ -1,4 +1,3 @@
-// File: src/service/user-service/src/Dto/UserDto.ts
 
 import {IUser} from "../../interface/object/IUser.js";
 import {SubscriptionType} from "../../enum/SubscriptionType.js";

@@ -5,6 +5,9 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
 import userRoute from './route/UserRoute.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3001; 
@@ -12,15 +15,22 @@ const port = process.env.PORT || 3001;
 // Middleware
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin || origin.match(/^https?:\/\/(localhost|tunez-ddb5f\.firebaseapp\.com|api-gateway)(:\d+)?$/)) {
-            callback(null, true); // Cho phép Mobile App, Web App hợp lệ và API Gateway
+        if (!origin) {
+            callback(null, true);
+            return;
+        }
+        
+        const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+        
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
         } else {
             callback(new Error("Not allowed by CORS"));
         }
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-user-id']
 }));
 app.use(compression());
 app.use(cookieParser());

@@ -9,6 +9,5 @@ export interface IMusicBaseService {
     getAllMusic(): Promise<MusicResponseDto[] | null>;
     getMusicByArtist(artist: string): Promise<MusicResponseDto[] | null>;
     getMusicByGenres(genre: string): Promise<MusicResponseDto[] | null>;
-    getMusicUrlById(musicId: string): Promise<string>;
-    getMusicDurationById(musicId: string): Promise<number>;
+    getMusicById(musicId: string): Promise<IMusic | null>;
 }

@@ -1,4 +1,3 @@
-
 # Logs
 logs
 *.log
@@ -135,3 +134,7 @@ key/
 .run/
 
 postman/
+
+# Environment files
+env/
+*.env

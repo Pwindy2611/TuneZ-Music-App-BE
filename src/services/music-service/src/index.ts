@@ -10,17 +10,21 @@ import './config/container/MusicBaseService.HandlerRegister.js'
 import './config/container/MusicUserService.HandlerRegister.js'
 import './config/container/MusicStreamService.HandlerRegister.js'
 import './grpc/index.js'
+import dotenv from 'dotenv';
 
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3003; 
 // Middleware
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || origin.match(/^https?:\/\/(localhost|tunez-ddb5f\.firebaseapp\.com|api-gateway)(:\d+)?$/)) {
-            callback(null, true); // Cho phép Mobile App, Web App hợp lệ và API Gateway
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
         } else {
-            callback(new Error("Not allowed by CORS"));
+            callback(new Error('Not allowed by CORS'));
         }
     },
     credentials: true,

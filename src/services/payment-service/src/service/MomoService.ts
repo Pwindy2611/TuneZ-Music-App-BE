@@ -1,6 +1,5 @@
 import axios from 'axios';
-import crypto from 'crypto';
-import { momoConfig } from '../config/momo/MomoConfig.js';
+import { momoTestConfig } from '../config/momo/MomoConfigTest.js';
 import { IMomoPaymentRequest } from '../interface/request/IMomoPaymentRequest.js';
 import { IMomoPaymentResponse } from '../interface/response/IMomoPaymentResponse.js';
 import { IMomoIPNResponse } from '../interface/response/IMomoIPNResponse.js';
@@ -13,51 +12,52 @@ import { PaymentStatus } from '../enum/PaymentStatus.js';
 import { PaymentMethod } from '../enum/PaymentMethod.js';
 import { PaymentCurrency } from '../enum/PaymentCurrency.js';
 import { PaymentRepository } from '../repository/PaymentRepository.js';
+import { CryptoUtil } from '../util/CryptoUtil.js';
 
 export class MomoService implements IPaymentService {
   private readonly MOMO_API_URL: string;
 
   constructor() {
-    this.MOMO_API_URL = momoConfig.paymentUrl;
-  }
-
-  private generateSignature(data: string): string {
-    return crypto
-      .createHmac('sha256', momoConfig.secretKey)
-      .update(data)
-      .digest('hex');
+    this.MOMO_API_URL = momoTestConfig.paymentUrl;
   }
 
   async createPayment(data: ICreatePaymentRequest): Promise<IPaymentResponse> {
-    const request: IMomoPaymentRequest = {
-      partnerCode: momoConfig.partnerCode,
-      orderId: data.orderId,
-      orderInfo: data.orderInfo || '',
-      amount: data.amount,
-      redirectUrl: momoConfig.returnUrl,
-      ipnUrl: momoConfig.ipnUrl,
-      requestType: 'captureWallet',
-      extraData: data.extraData || '',
-      lang: 'vi',
-      autoCapture: true
-    };
-
-    const rawSignature = `accessKey=${momoConfig.accessKey}&amount=${data.amount}&extraData=${request.extraData}&ipnUrl=${momoConfig.ipnUrl}&orderId=${data.orderId}&orderInfo=${request.orderInfo}&partnerCode=${momoConfig.partnerCode}&redirectUrl=${momoConfig.returnUrl}&requestId=${data.orderId}&requestType=${request.requestType}`;
-    const signature = this.generateSignature(rawSignature);
-
     try {
+      const requestId = CryptoUtil.generateRequestId(data.orderId);
+      const orderInfo = data.orderInfo || '';
+      const extraData = data.extraData || '';
+
+      const rawSignature = `accessKey=${momoTestConfig.accessKey}&amount=${data.amount}&extraData=${extraData}&ipnUrl=${momoTestConfig.ipnUrl}&orderId=${data.orderId}&orderInfo=${orderInfo}&partnerCode=${momoTestConfig.partnerCode}&redirectUrl=${momoTestConfig.redirectUrl}&requestId=${requestId}&requestType=captureWallet`;
+      const signature = CryptoUtil.generateSignature(rawSignature, momoTestConfig.secretKey);
+
+      const request: IMomoPaymentRequest = {
+        partnerCode: momoTestConfig.partnerCode,
+        orderId: data.orderId,
+        orderInfo,
+        amount: data.amount,
+        redirectUrl: momoTestConfig.redirectUrl,
+        ipnUrl: momoTestConfig.ipnUrl,
+        requestType: 'captureWallet',
+        extraData,
+        lang: 'vi',
+        autoCapture: true,
+        requestId,
+        signature
+      };
+
       const response = await axios.post<IMomoPaymentResponse>(this.MOMO_API_URL, request, {
         headers: {
           'Content-Type': 'application/json',
-          'X-Partner-Signature': signature
-        }
+          'X-Partner-Id': momoTestConfig.partnerCode
+        },
+        timeout: 30000
       });
 
+      console.log('Momo Response:', JSON.stringify(response.data, null, 2));
+      
       const paymentResponse = this.mapToPaymentResponse(response.data);
       
-      // Lưu vào Firestore
       await PaymentRepository.create({
-        id: paymentResponse.id,
         orderId: data.orderId,
         amount: paymentResponse.amount,
         method: PaymentMethod.MOMO,
@@ -68,6 +68,13 @@ export class MomoService implements IPaymentService {
 
       return paymentResponse;
     } catch (error) {
+      if (error.response) {
+        console.error('Momo Error Response:', JSON.stringify(error.response.data, null, 2));
+        throw new Error(`Momo API Error: ${error.response.data.message || error.message}`);
+      }
+      if (error.code === 'ECONNABORTED') {
+        throw new Error('Request timeout');
+      }
       throw new Error(`Failed to create Momo payment: ${error.message}`);
     }
   }
@@ -146,36 +153,83 @@ export class MomoService implements IPaymentService {
     };
   }
 
-  async verifyPaymentCallback(
-    paymentId: string,
-    callbackData: Record<string, any>
-  ): Promise<IPaymentResponse> {
-    const ipnResponse = callbackData as IMomoIPNResponse;
-    const isValid = this.verifyIPN(ipnResponse);
-
-    if (!isValid) {
-      throw new Error('Invalid signature');
+  private mapMomoResultCodeToStatus(resultCode: number): PaymentStatus {
+    switch (resultCode) {
+      case 0:
+        return PaymentStatus.SUCCESS;
+      case 1000:
+        return PaymentStatus.PENDING;
+      case 1006:
+        return PaymentStatus.CANCELLED;
+      case 1002:
+        return PaymentStatus.TIMEOUT;
+      default:
+        return PaymentStatus.FAILED;
     }
+  }
+  private verifyIPN(ipnResponse: IMomoIPNResponse): boolean {
+    try {
+      const rawSignature = [
+        `accessKey=${momoTestConfig.accessKey}`,
+        `amount=${ipnResponse.amount}`,
+        `extraData=${ipnResponse.extraData}`,
+        `message=${ipnResponse.message}`,
+        `orderId=${ipnResponse.orderId}`,
+        `orderInfo=${ipnResponse.orderInfo}`,
+        `orderType=${ipnResponse.orderType}`,
+        `partnerCode=${ipnResponse.partnerCode}`,
+        `payType=${ipnResponse.payType}`,
+        `requestId=${ipnResponse.requestId}`,
+        `responseTime=${ipnResponse.responseTime}`,
+        `resultCode=${ipnResponse.resultCode}`,
+        `transId=${ipnResponse.transId}`
+      ].join('&');
 
-    const paymentResponse = this.mapToPaymentResponse(ipnResponse);
-    
-    // Cập nhật trạng thái trong Firestore
-    await PaymentRepository.updateStatus(paymentId, paymentResponse.status);
-
-    return paymentResponse;
+      const signature = CryptoUtil.generateSignature(rawSignature, momoTestConfig.secretKey);
+      return signature === ipnResponse.signature;
+    } catch (error) {
+      console.error('Verify IPN Error:', error);
+      return false;
+    }
   }
 
-  private verifyIPN(ipnResponse: IMomoIPNResponse): boolean {
-    const rawSignature = `accessKey=${momoConfig.accessKey}&amount=${ipnResponse.amount}&extraData=${ipnResponse.extraData}&message=${ipnResponse.message}&orderId=${ipnResponse.orderId}&orderInfo=${ipnResponse.orderInfo}&orderType=${ipnResponse.orderType}&partnerCode=${ipnResponse.partnerCode}&payType=${ipnResponse.payType}&requestId=${ipnResponse.requestId}&responseTime=${ipnResponse.responseTime}&resultCode=${ipnResponse.resultCode}&transId=${ipnResponse.transId}`;
-    const signature = this.generateSignature(rawSignature);
-    
-    return signature === ipnResponse.signature;
+  async verifyPaymentCallback(
+    callbackData: Record<string, any>
+  ): Promise<IPaymentResponse> {
+    try {
+      console.log('Momo Callback Data:', JSON.stringify(callbackData, null, 2));
+
+      const ipnResponse = callbackData as IMomoIPNResponse;
+      const isValid = this.verifyIPN(ipnResponse);
+
+      if (!isValid) {
+        console.error('Invalid signature from Momo');
+        return Promise.reject(new Error('Invalid signature'));
+      }
+
+      console.log('Momo IPN Response:', JSON.stringify(ipnResponse, null, 2));
+
+      const status = this.mapMomoResultCodeToStatus(ipnResponse.resultCode);
+      const paymentResponse = this.mapToPaymentResponse({
+        ...ipnResponse,
+        status,
+        transId: ipnResponse.transId,
+
+      });
+      
+      await PaymentRepository.updateStatus(ipnResponse.orderId, status);
+
+      return paymentResponse;
+    } catch (error) {
+      console.error('Verify Payment Callback Error:', error);
+      throw new Error(`Failed to verify payment callback: ${error.message}`);
+    }
   }
 
   private mapToPaymentResponse(data: any): IPaymentResponse {
     const now = new Date();
     return {
-      id: data.id || data.orderId,
+      id: data.orderId,
       amount: data.amount,
       currency: PaymentCurrency.VND,
       status: data.status || (data.resultCode === 0 ? PaymentStatus.SUCCESS : PaymentStatus.FAILED),
@@ -184,9 +238,12 @@ export class MomoService implements IPaymentService {
       updatedAt: data.updatedAt || now,
       metadata: {
         ...data,
-        paymentUrl: 'payUrl' in data ? data.payUrl : undefined,
+        payUrl: 'payUrl' in data ? data.payUrl : undefined,
         deeplink: 'deeplink' in data ? data.deeplink : undefined,
-        qrCodeUrl: 'qrCodeUrl' in data ? data.qrCodeUrl : undefined
+        qrCodeUrl: 'qrCodeUrl' in data ? data.qrCodeUrl : undefined,
+        transId: data.transId,
+        message: data.message,
+        payType: data.payType
       }
     };
   }

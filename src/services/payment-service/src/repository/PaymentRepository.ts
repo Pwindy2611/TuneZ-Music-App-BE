@@ -1,36 +1,56 @@
 import { firestore } from '../config/firebase/FireBaseConfig.js';
 import { CollectionReference, Query } from 'firebase-admin/firestore';
 import { Payment } from '../interface/model/Payment.js';
+import { PaymentStatus } from '../enum/PaymentStatus.js';
 
 export class PaymentRepository {
   private static readonly COLLECTION_NAME = 'payments';
 
-  static async findById(id: string): Promise<Payment | null> {
-    const docRef = firestore.collection(this.COLLECTION_NAME).doc(id);
-    const docSnap = await docRef.get();
-    
-    if (!docSnap.exists) {
-      return null;
-    }
+  static async findById(orderId: string): Promise<Payment | null> {
+    try {
+      const docRef = firestore.collection(this.COLLECTION_NAME).doc(orderId);
+      const docSnap = await docRef.get();
+      
+      if (!docSnap.exists) {
+        return null;
+      }
 
-    return docSnap.data() as Payment;
+      return docSnap.data() as Payment;
+    } catch (error) {
+      console.error('Find Payment Error:', error);
+      throw new Error('Failed to find payment');
+    }
   }
 
   static async create(payment: Payment): Promise<void> {
-    const docRef = firestore.collection(this.COLLECTION_NAME).doc(payment.id);
-    await docRef.set({
-      ...payment,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
+    try {
+      const docRef = firestore.collection(this.COLLECTION_NAME).doc(payment.orderId);
+      await docRef.set({
+        ...payment,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+    } catch (error) {
+      console.error('Create Payment Error:', error);
+      throw new Error('Failed to create payment');
+    }
   }
 
-  static async updateStatus(id: string, status: string): Promise<void> {
-    const docRef = firestore.collection(this.COLLECTION_NAME).doc(id);
-    await docRef.update({
-      status,
-      updatedAt: new Date()
-    });
+  static async updateStatus(orderId: string, status: string): Promise<void> {
+    try {
+      if (!Object.values(PaymentStatus).includes(status as PaymentStatus)) {
+        return  Promise.reject(new Error('Invalid payment status'));
+      }
+
+      const docRef = firestore.collection(this.COLLECTION_NAME).doc(orderId);
+      await docRef.update({
+        status,
+        updatedAt: new Date()
+      });
+    } catch (error) {
+      console.error('Update Payment Status Error:', error);
+      throw new Error('Failed to update payment status');
+    }
   }
 
   static async list(filters?: Record<string, any>, page: number = 1, limit: number = 10): Promise<{
@@ -40,32 +60,35 @@ export class PaymentRepository {
     limit: number;
     totalPages: number;
   }> {
-    let queryRef: CollectionReference | Query = firestore.collection(this.COLLECTION_NAME);
-    
-    // Apply filters if any
-    if (filters) {
-      Object.entries(filters).forEach(([key, value]) => {
-        queryRef = queryRef.where(key, '==', value);
-      });
+    try {
+      let queryRef: CollectionReference | Query = firestore.collection(this.COLLECTION_NAME);
+      
+      if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+          queryRef = queryRef.where(key, '==', value);
+        });
+      }
+
+      const querySnapshot = await queryRef.get();
+      const total = querySnapshot.size;
+      const totalPages = Math.ceil(total / limit);
+      
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const items = querySnapshot.docs
+        .slice(startIndex, endIndex)
+        .map(doc => doc.data() as Payment);
+
+      return {
+        items,
+        total,
+        page,
+        limit,
+        totalPages
+      };
+    } catch (error) {
+      console.error('List Payments Error:', error);
+      throw new Error('Failed to list payments');
     }
-
-    const querySnapshot = await queryRef.get();
-    const total = querySnapshot.size;
-    const totalPages = Math.ceil(total / limit);
-    
-    // Apply pagination
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const items = querySnapshot.docs
-      .slice(startIndex, endIndex)
-      .map(doc => doc.data() as Payment);
-
-    return {
-      items,
-      total,
-      page,
-      limit,
-      totalPages
-    };
   }
 } 

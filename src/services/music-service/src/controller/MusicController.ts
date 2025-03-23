@@ -346,6 +346,37 @@ class MusicController {
             });
         }
     }
+    getMusicInfoApi = async (req: IAuthRequest, res: Response) => {
+        try {
+            const musicId = req.params.musicId;
+            const musicDetail = await MusicBaseService.getMusicById.execute(musicId);
+
+            if(!musicDetail){
+                res.status(404).json({
+                    status: 404,
+                    success: false,
+                    message: 'Music is not found'
+                })
+                return;
+            }
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                data: {
+                    name: musicDetail.name,
+                    artist: musicDetail.artist,
+                    imgPath: musicDetail.imgPath,
+                }
+            })
+        }catch (error){
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: "Internal Server Error " + error.message,
+            });
+        }
+    }
     getStreamMusicApi = async (req: IAuthRequest, res: Response) => {
         try {
             const musicId = req.params.musicId;
@@ -408,6 +439,7 @@ class MusicController {
             })
         }
     }
+
     pauseMusicApi = async (req: IAuthRequest, res: Response) => {
         try {
             const userId = req.userId;

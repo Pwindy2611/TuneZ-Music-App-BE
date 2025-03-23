@@ -96,7 +96,7 @@ class MailBase {
         if (!otpEntry) throw new Error("OTP not found or already used");
 
         if (new Date() > otpEntry.expiresAt) {
-            delete this.otpStore[email]; // Xóa OTP hết hạn
+            delete this.otpStore[email];
             throw new Error("OTP has expired");
         }
 

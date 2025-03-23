@@ -101,32 +101,13 @@ export class MusicBaseRepository implements IMusicBaseRepository {
         const musicDetails = await FetchBase.fetchMusicDetails(musicIds);
         return musicDetails.length > 0 ? musicDetails : null;
     }
-    async getMusicUrlById(musicId:string): Promise<any> {
+
+    async getMusicById(musicId: string): Promise<any> {
         const musicRef = database.ref(`musics/${musicId}`);
+        const snapshot = await musicRef.get();
+        if (!snapshot.exists()) return null;
 
-        try {
-            const snapshot = await musicRef.once("value");
-            if (snapshot.exists()) {
-                return snapshot.val().musicPath;
-            }
-            return null;
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    }
-
-    async getMusicDurationById(musicId: string): Promise<number> {
-        const musicRef = database.ref(`musics/${musicId}`);
-
-        try {
-            const snapshot = await musicRef.once("value");
-            if (snapshot.exists()) {
-                return snapshot.val().duration;
-            }
-            return -1;
-        } catch (error) {
-            throw new Error(error.message);
-        }
+        return snapshot.val();
     }
 
     async isOfficialArtistExist(artistId: string): Promise<boolean> {

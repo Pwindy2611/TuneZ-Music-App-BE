@@ -1,13 +1,8 @@
 import proxy from "express-http-proxy";
-import {Request, Response, NextFunction, response} from "express";
-import stripAnsi from "strip-ansi";
-import zlib from "zlib";
+import {Request, Response, NextFunction} from "express";
 import * as console from "node:console";
 
-const allowedOrigins = [
-    'https://tunez-ddb5f.firebaseapp.com',
-    'http://localhost:3000'
-];
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
 
 export const createProxy = (serviceUrl: string, pathPrefix: string) => {
     return (req: Request, res: Response, next: NextFunction) => {
@@ -34,7 +29,7 @@ export const createProxy = (serviceUrl: string, pathPrefix: string) => {
                 if (!origin || allowedOrigins.includes(origin)) {
                     res.header("Access-Control-Allow-Origin", origin || "*");
                 } else {
-                    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+                    res.header("Access-Control-Allow-Origin", "");
                 }
                 res.header("Access-Control-Allow-Credentials", "true");
                 res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -57,15 +52,3 @@ export const createProxy = (serviceUrl: string, pathPrefix: string) => {
     };
 };
 
-
-
-/*
-export const followProxy = createProxy('http://follow-service:3006', 'follow');
-export const historyProxy = createProxy('http://history-service:3004', 'history');
-export const loveProxy = createProxy('http://love-service:3005', 'love');
-export const musicProxy = createProxy('http://music-service:3003', 'musics');
-export const officialArtistProxy = createProxy('http://official-artist-service:3002', 'offartist');
-export const playlistProxy = createProxy('http://playlist-service:3007', 'playlists');
-export const userProxy = createProxy('http://user-service:3001', 'users');
-export const albumProxy = createProxy('http://album-service:3008', 'albums');
-export const subscriptionProxy = createProxy('http://subscription-service:3009', 'subscriptions');*/

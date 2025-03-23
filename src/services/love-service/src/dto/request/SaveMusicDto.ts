@@ -30,7 +30,7 @@ export class SaveMusicDto implements ILove{
                 return Promise.reject(new Error(`Validation failed: music is invalid`));
             }
 
-            return true; // Nếu tất cả validation đều hợp lệ, trả về true
+            return true;
         } catch (errors) {
             throw new Error(`Validation failed: ${JSON.stringify(errors)}`);
         }
