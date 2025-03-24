@@ -2,11 +2,12 @@ import { Request, Response, NextFunction } from 'express';
 import { IPaymentService } from '../interface/service/IPaymentService.js';
 import { ICreatePaymentRequest } from '../interface/request/ICreatePaymentRequest.js';
 import { IUpdatePaymentStatusRequest } from '../interface/request/IUpdatePaymentStatusRequest.js';
-import { IAuthRequest } from '../interface/object/IAuthRequest.js';
+import { IAuthRequest } from '../interface/request/IAuthRequest.js';
 import { PaymentCurrency } from '../enum/PaymentCurrency.js';
 import { CryptoUtil } from '../util/CryptoUtil.js';
 import { PaymentMethod } from '../enum/PaymentMethod.js';
 import { IPaymentRequest } from '../interface/request/IPaymentRequest.js';
+import {PaymentRepository} from "../repository/PaymentRepository.js";
 
 export class PaymentController {
   private static instance: PaymentController;
@@ -59,7 +60,6 @@ export class PaymentController {
         });
         return;
       }
-
       if (amount <= 0) {
         res.status(400).json({
           status: 400,
@@ -79,22 +79,25 @@ export class PaymentController {
       }
 
       const orderId = this.generateOrderId(itemId, userId);
-
       const paymentData: ICreatePaymentRequest = {
         orderId,
         amount,
         paymentMethod,
+        referenceId: `${userId}::${itemId}`,
         orderInfo: `Thanh toán đơn hàng ${orderId}`,
         currency: PaymentCurrency.VND,
       };
 
       const paymentResponse = await this.getPaymentService().createPayment(paymentData);
 
+
       res.status(201).json({
         status: 201,
         success: true,
         data: paymentResponse
       });
+
+
     } catch (error) {
       console.error('Create Payment Error:', error);
       return res.status(500).json({
@@ -107,6 +110,50 @@ export class PaymentController {
 
   async handlePaymentCallback(req: IPaymentRequest, res: Response, next: NextFunction) {
     try {
+      const payment = await PaymentRepository.findById(req.query.orderId as string);
+      if (!payment) {
+        res.status(404).json({
+          status: 404,
+          success: false,
+          message: 'Payment not found'
+        });
+        return
+      }
+
+      const referenceId = payment.referenceId;
+      const regex = /^(.+?)::(.+?)$/;
+      const match = referenceId.match(regex);
+      if (!match) {
+        res.status(400).json({
+          status: 400,
+          success: false,
+          message: 'Invalid referenceId format'
+        });
+        return;
+      }
+
+      const userId = match[1];
+
+      const itemId = match[2];
+
+        if (!userId) {
+            res.status(401).json({
+            status: 401,
+            success: false,
+            message: 'Unauthorized'
+            });
+            return;
+        }
+
+        if (!itemId) {
+            res.status(400).json({
+            status: 400,
+            success: false,
+            message: 'Missing required field: itemId'
+            });
+            return;
+        }
+
       const callbackData = {
         partnerCode: req.query.partnerCode as string,
         orderId: req.query.orderId as string,
@@ -124,14 +171,12 @@ export class PaymentController {
       };
 
       if (!callbackData.orderId) {
-        throw new Error('Missing required field: orderId');
+        return Promise.reject( new Error('Missing required field: orderId'));
       }
 
       console.log('Momo Callback Query:', JSON.stringify(callbackData, null, 2));
 
-      const paymentResponse = await this.getPaymentService().verifyPaymentCallback(callbackData);
-      
-      req.paymentResponse = paymentResponse;
+      req.paymentResponse = await this.getPaymentService().verifyPaymentCallback(itemId, userId, callbackData);
       
       next();
     } catch (error) {

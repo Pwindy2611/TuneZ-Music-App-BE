@@ -4,6 +4,7 @@ import { getSubscriptionById } from "./SubscriptionBaseService.GetSubscriptionBy
 import { getAllSubscriptions } from "./SubscriptionBaseService.GetAllSubscriptions.js";
 import { updateSubscription } from "./SubscriptionBaseService.UpdateSubscription.js";
 import { deleteSubscription } from "./SubscriptionBaseService.DeleteSubscription.js";
+import {isSubscription} from "./SubscriptionBaseService.IsSubscription.js";
 
 class SubscriptionBaseService implements ISubscriptionBaseService {
     createSubscription = createSubscription;
@@ -11,6 +12,7 @@ class SubscriptionBaseService implements ISubscriptionBaseService {
     getAllSubscriptions = getAllSubscriptions;
     updateSubscription = updateSubscription;
     deleteSubscription = deleteSubscription;
+    isSubscription = isSubscription;
 }
 
 export const subscriptionBaseService = new SubscriptionBaseService(); 

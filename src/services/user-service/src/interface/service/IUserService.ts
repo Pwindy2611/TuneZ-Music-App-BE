@@ -5,4 +5,5 @@ export interface IUserService {
     resetPassword(email: string): Promise<boolean>;
     verifyEmail(email: string): Promise<boolean>;
     getUserInfoById(userId: string): Promise<IUserProfile | null>;
+    updateSubscriptionType(userId: string): Promise<boolean>;
 }

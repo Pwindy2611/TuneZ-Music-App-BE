@@ -35,7 +35,15 @@ export class PaymentRepository {
       throw new Error('Failed to create payment');
     }
   }
-
+  static async delete(orderId: string): Promise<void> {
+    try {
+      const docRef = firestore.collection(this.COLLECTION_NAME).doc(orderId);
+      await docRef.delete();
+    } catch (error) {
+      console.error('Delete Payment Error:', error);
+      throw new Error('Failed to delete payment');
+    }
+  }
   static async updateStatus(orderId: string, status: string): Promise<void> {
     try {
       if (!Object.values(PaymentStatus).includes(status as PaymentStatus)) {

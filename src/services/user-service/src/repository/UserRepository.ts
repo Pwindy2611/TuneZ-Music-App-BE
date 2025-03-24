@@ -1,6 +1,8 @@
 import {IUserRepository} from "../interface/repository/IUserRepository.js";
 import {followServiceClient, playlistServiceClient} from "../grpc/client/GrpcClients.js";
 import {injectable} from "tsyringe";
+import {database} from "../config/firebase/FireBaseConfig.js";
+import {SubscriptionType} from "../enum/SubscriptionType.js";
 
 @injectable()
 export class UserRepository implements IUserRepository {
@@ -39,5 +41,14 @@ export class UserRepository implements IUserRepository {
                 resolve(response.playlists);
             });
         });
+    }
+
+    async updateSubscriptionType(userId: string): Promise<boolean> {
+        const userRef = database.ref(`users/${userId}`);
+        const userSnapshot = await userRef.get();
+        const user = userSnapshot.val();
+        user.account.subscriptionType = SubscriptionType.PREMIUM;
+        await userRef.update({ account: user.account });
+        return true;
     }
 }

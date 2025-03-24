@@ -6,4 +6,5 @@ export interface ISubscriptionBaseService {
     getAllSubscriptions(): Promise<ISubscription[]>;
     updateSubscription(subscriptionId: string, updatedSubscription: ISubscription): Promise<ISubscription>;
     deleteSubscription(subscriptionId: string): Promise<void>;
+    isSubscription(id: string): Promise<boolean>;
 }
