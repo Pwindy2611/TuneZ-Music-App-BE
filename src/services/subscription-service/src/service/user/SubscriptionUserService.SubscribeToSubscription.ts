@@ -1,5 +1,5 @@
 import { subscriptionBaseService } from "../base/SubscriptionBaseService.js";
-import {database, firestore} from "../../config/firebase/FireBaseConfig.js";
+import {firestore} from "../../config/firebase/FireBaseConfig.js";
 import { ISubscription } from "../../interface/object/ISubscription.js";
 import {userServiceClient} from "../../grpc/client/GrpcClient.js";
 

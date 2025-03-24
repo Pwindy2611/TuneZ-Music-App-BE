@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { PaymentStatus } from '../../enum/PaymentStatus.js';
 import { IPaymentRequest } from '../../interface/request/IPaymentRequest.js';
 import {PaymentRepository} from "../../repository/PaymentRepository.js";
@@ -6,8 +6,8 @@ import {subscriptionServiceClient} from "../../grpc/client/GrpcClient.js";
 
 export const handlePaymentResponse = async (req: IPaymentRequest, res: Response, next: NextFunction) => {
   const paymentResponse = req.paymentResponse;
-  const itemId = paymentResponse.itemId;
-  const userId = paymentResponse.userId;
+  const itemId = paymentResponse.metadata.itemId;
+  const userId = paymentResponse.metadata.userId;
   if (!paymentResponse) {
     return next();
   }
@@ -26,7 +26,7 @@ export const handlePaymentResponse = async (req: IPaymentRequest, res: Response,
         }
 
         if (response.isSubscribed) {
-          subscriptionServiceClient.subscribe({ userId , subscriptionId: itemId }, (error: any, response: any) => {
+          subscriptionServiceClient.subscribe({ userId , subscriptionId: itemId }, (error: any) => {
             if (error) {
               res.status(500).json({
                 status: 500,

@@ -12,7 +12,9 @@ export const getAllSubscriptions: ISubscriptionBaseService['getAllSubscriptions'
         
         const subscriptions: ISubscription[] = [];
         snapshot.forEach((childSnapshot) => {
-            subscriptions.push(childSnapshot.val() as ISubscription);
+            const subscription = childSnapshot.val() as ISubscription;
+            subscription.id = childSnapshot.key;
+            subscriptions.push(subscription);
         });
         
         return subscriptions;

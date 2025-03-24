@@ -36,10 +36,10 @@ async function updateSubscriptionTypeHandler(call: any, callback: any) {
 
 function startServer() {
     const server = new grpc.Server();
-    server.addService((userProto as any).UserSerivce.service, {updateSubscriptionType: updateSubscriptionTypeHandler });
+    server.addService((userProto as any).UserService.service, {updateSubscriptionType: updateSubscriptionTypeHandler });
 
     const host = process.env.GRPC_HOST || '0.0.0.0';
-    const port = process.env.GRPC_PORT_SUBSCRIPTION_SERVICE || '50201';
+    const port = process.env.GRPC_PORT_USER_SERVICE || '50201';
     server.bindAsync(`${host}:${port}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
         if (err) {
             console.error('Failed to start gRPC server:', err);

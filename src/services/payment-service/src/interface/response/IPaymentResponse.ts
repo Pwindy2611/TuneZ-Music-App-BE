@@ -4,8 +4,6 @@ import { PaymentCurrency } from '../../enum/PaymentCurrency.js';
 
 export interface IPaymentResponse {
   id: string;
-  itemId: string;
-  userId: string;
   amount: number;
   currency: PaymentCurrency;
   status: PaymentStatus;

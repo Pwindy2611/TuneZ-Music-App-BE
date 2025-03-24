@@ -236,8 +236,6 @@ export class MomoService implements IPaymentService {
     const now = new Date();
     return {
       id: data.orderId,
-      itemId: data.itemId,
-      userId: data.userId,
       amount: data.amount,
       currency: PaymentCurrency.VND,
       status: data.status || (data.resultCode === 0 ? PaymentStatus.SUCCESS : PaymentStatus.FAILED),
