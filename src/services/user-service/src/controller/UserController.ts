@@ -54,6 +54,22 @@ class UserController {
             }
         }
     }
+    getUserLibraryApi = async (req: IAuthRequest, res: Response) => {
+        try {
+            const userId = req.userId;
+
+            if(!userId){
+                res.status(401).json({ status: 401, success: false, message: 'Unauthorized' });
+                return;
+            }
+
+            const userLibrary = await UserService.getUserLibrary.execute(userId);
+
+            res.status(200).json({ status: 200, userLibrary });
+        }catch (error) {
+            res.status(500).json({ status: 500, message: error.message });
+        }
+    }
     registerApi = async (req: Request, res: Response) => {
         try {
             const { email, password, username } = req.body;
@@ -107,7 +123,6 @@ class UserController {
             }
         }
     };
-
     sendForgetPasswordApi = async (req: Request, res: Response) => {
         try {
             const { email } = req.body;
@@ -123,7 +138,6 @@ class UserController {
             }
         }
     };
-
     sendOtpEmailApi = async (req: Request, res: Response) => {
         const { email } = req.body;
 
@@ -153,7 +167,6 @@ class UserController {
             return;
         }
     }
-
     verifyOtpEmailApi = async (req: Request, res: Response) => {
         const { email , otp } = req.body;
 

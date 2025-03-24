@@ -5,6 +5,7 @@ package follow;
 service FollowService {
   rpc GetFollowingCount (GetFollowingCountRequest) returns (GetFollowingCountResponse) {}
   rpc GetFollowerCount (GetFollowerCountRequest) returns (GetFollowerCountResponse) {}
+  rpc GetFollowing (GetFollowingRequest) returns (GetFollowingResponse) {}
 }
 
 message GetFollowingCountRequest {
@@ -21,4 +22,18 @@ message GetFollowerCountRequest {
 
 message GetFollowerCountResponse {
   int32 count = 1;
+}
+
+message GetFollowingRequest {
+  string userId = 1;
+}
+
+message Following {
+  string id = 1;
+  string name = 2;
+  string profileImage = 3;
+}
+
+message GetFollowingResponse {
+  repeated Following following = 1;
 }

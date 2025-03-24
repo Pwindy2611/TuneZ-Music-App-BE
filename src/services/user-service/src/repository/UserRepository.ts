@@ -3,6 +3,7 @@ import {followServiceClient, playlistServiceClient} from "../grpc/client/GrpcCli
 import {injectable} from "tsyringe";
 import {database} from "../config/firebase/FireBaseConfig.js";
 import {SubscriptionType} from "../enum/SubscriptionType.js";
+import {response} from "express";
 
 @injectable()
 export class UserRepository implements IUserRepository {
@@ -41,6 +42,29 @@ export class UserRepository implements IUserRepository {
                 resolve(response.playlists);
             });
         });
+    }
+
+    async getFollowing(userId: string): Promise<any> {
+        return await new Promise<any[]>((resolve, reject) => {
+            followServiceClient.getFollowing({ userId }, (err: any, response: any) => {
+                if (err) {
+                    reject(new Error(`gRPC error: ${err.message}`));
+                    return;
+                }
+                resolve(response.following);
+            });
+        });
+    }
+
+    async getUserLibrary(userId: string): Promise<any> {
+        const following = await this.getFollowing(userId);
+
+        const userPlaylists = await this.getPlaylist(userId);
+
+        return {
+            userPlaylists,
+            following,
+        };
     }
 
     async updateSubscriptionType(userId: string): Promise<boolean> {
