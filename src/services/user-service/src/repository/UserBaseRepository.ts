@@ -8,7 +8,13 @@ import {injectable} from "tsyringe";
 export class UserBaseRepository implements IUserBaseRepository {
     async createUser(user: IUser): Promise<void> {
         const userRef = database.ref(`users/${user._id}`);
-        return await userRef.set(user);
+        await userRef.set(user);
+
+        const userFirestore = firestore.collection('users').doc(user._id);
+        await userFirestore.set({
+            followingCount: 0,
+            followerCount: 0,
+        });
     }
 
     async deleteUser(userId: string): Promise<void> {

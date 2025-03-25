@@ -379,20 +379,20 @@ class MusicController {
     }
     getStreamMusicApi = async (req: IAuthRequest, res: Response) => {
         try {
+            const userId = req.userId;
+
+            if (!userId) {
+                res.status(401).send("Unauthorized");
+                return;
+            }
+
             const musicId = req.params.musicId;
-            const stream = await MusicStreamService.getStreamMusic.execute(musicId);
 
-            res.writeHead(206, {
-                'Content-Type': 'audio/mpeg',
-                'Transfer-Encoding': 'chunked'
-            });
-            res.flushHeaders();
+            const musicStream = await MusicStreamService.getStreamMusic.execute(musicId);
 
-            stream.pipe(res);
+            res.setHeader("Content-Type", "audio/mpeg");
 
-            stream.on('end', () => {
-                res.end();
-            });
+            musicStream.pipe(res);
         } catch (error) {
             console.error("Error in streaming endpoint:", error);
             res.status(500).json({
