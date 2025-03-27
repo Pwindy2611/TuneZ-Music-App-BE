@@ -377,15 +377,8 @@ class MusicController {
             });
         }
     }
-    getStreamMusicApi = async (req: IAuthRequest, res: Response) => {
+    getStreamMusicApi = async (req: Request, res: Response) => {
         try {
-            const userId = req.userId;
-
-            if (!userId) {
-                res.status(401).send("Unauthorized");
-                return;
-            }
-
             const musicId = req.params.musicId;
 
             const musicStream = await MusicStreamService.getStreamMusic.execute(musicId);

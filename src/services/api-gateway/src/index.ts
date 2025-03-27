@@ -109,14 +109,13 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 });
 // Start the server
 
-
-/*app.listen(port, () => {
+app.listen(port, () => {
      console.log(`API Gateway running on http://localhost:${port}`);
-});*/
+});
 
 // Code HTTPS được giữ lại để sau này dùng
 
-const server = createHttpsServer(app);
+/*const server = createHttpsServer(app);
 server.listen(port, () => {
     console.log(`API Gateway running on https://localhost:${port}`);
-});
+});*/

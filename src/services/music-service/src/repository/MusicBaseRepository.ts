@@ -29,27 +29,7 @@ export class MusicBaseRepository implements IMusicBaseRepository {
         await musicRef.set(newMusicData);
         return musicId;
     }
-    async uploadMusic(musicData: any): Promise<string> {
-        const musicRef = database.ref(`musics`).push();
-        const musicId = musicRef.key as string;
-        const [musicPath, imgPath] = await Promise.all([
-            UploadBase.uploadAndGetUrl(musicData.musicFile, musicId),
-            UploadBase.uploadAndGetUrl(musicData.imgFile, musicId)
-        ]);
-
-        const newMusicData: IMusic = {
-            name: musicData.name,
-            songType: musicData.songType,
-            artist: musicData.artist,
-            duration: musicData.duration,
-            genres: musicData.genres,
-            userId: musicData.userId,
-            musicPath: musicPath ?? '',
-            imgPath: imgPath?? ''
-        }
-        await musicRef.set(newMusicData);
-        return musicId;
-    }
+        
 
     async getAllMusic(): Promise<any> {
         const musicRef = database.ref("musics");

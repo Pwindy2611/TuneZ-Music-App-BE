@@ -78,4 +78,4 @@ This project is created for educational purposes only. It is not affiliated with
 
 #### Dependency Injection
 - **Music Service:** `src/services/music-service/src/config/container/` - Container configuration
-- Uses tsyringe for dependency management throughout services
+- Uses tsyringe for dependency m anagement throughout services
