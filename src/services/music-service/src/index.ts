@@ -1,3 +1,6 @@
+import 'reflect-metadata';
+import './grpc/index.js'
+import './config/container/Container.js'
 import express from 'express';
 import bodyParser from 'body-parser';
 import compression from 'compression';
@@ -5,8 +8,6 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
 import musicRoute from './route/MusicRoute.js';
-import 'reflect-metadata';
-import './grpc/index.js'
 import dotenv from 'dotenv';
 
 dotenv.config();
