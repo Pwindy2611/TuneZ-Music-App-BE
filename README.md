@@ -48,23 +48,10 @@ This project is created for educational purposes only. It is not affiliated with
 
 ### Behavioral Patterns
 
-#### Mediator
-- **Music Service:** `src/services/music-service/src/service/MusicBaseMediator.ts` - Coordinates communication between components
-- **Music Service:** `src/services/music-service/src/service/MusicStreamMediator.ts` - Handles stream-related communications
-- **Music Service:** `src/services/music-service/src/service/MusicUserMediator.ts` - Manages user-related communications
-
-#### Command/CQRS
-- **Music Service:** `src/services/music-service/src/service/music_base/command/CreateMusicCommand.ts` - Command implementation
-- **Music Service:** `src/services/music-service/src/service/music_base/query/GetAllMusicQuery.ts` - Query implementation
-- **Music Service:** `src/services/music-service/src/config/container/MusicBaseService.HandlerRegister.ts` - Command registration
-
 #### Strategy
 - **Playlist Service:** `src/services/playlist-service/src/service/generate/strategy/user_group/` - User playlist strategies
 - **Playlist Service:** `src/services/playlist-service/src/service/generate/strategy/follow_group/` - Follow-based playlist strategies
 - **Playlist Service:** `src/services/playlist-service/src/service/generate/strategy/history_group/` - History-based playlist strategies
-
-#### Observer
-- **Payment Service:** Evident in the service workflow handling payment notifications and updates
 
 ### Architectural Patterns
 

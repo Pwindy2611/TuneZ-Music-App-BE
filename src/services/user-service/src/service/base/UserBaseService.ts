@@ -8,10 +8,6 @@ import { GetUserCustomTokenService } from "./UserBaseService.GetUserCustomToken.
 import {DeleteUserService} from "./UserBaseService.DeleteUser.js";
 import {GetUserByIdService} from "./UserBaseService.GetUserById.js";
 
-container.register("UserBaseRepository", {
-    useClass: UserBaseRepository,
-});
-
 export const UserBaseService = {
     createUserService: container.resolve(CreateUserService),
     deleteUserService: container.resolve(DeleteUserService),

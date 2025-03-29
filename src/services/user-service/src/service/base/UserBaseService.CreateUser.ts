@@ -5,13 +5,14 @@ import { SubscriptionType } from "../../enum/SubscriptionType.js";
 import dotenv from "dotenv";
 import {IUserBaseService} from "../../interface/service/IUserBaseService.js";
 import {UserBaseRepository} from "../../repository/UserBaseRepository.js";
+import {IUserBaseRepository} from "../../interface/repository/IUserBaseRepository.js";
 
 dotenv.config();
 
 @injectable()
 export class CreateUserService {
     constructor(
-        @inject("UserBaseRepository") private repository: UserBaseRepository) {}
+        @inject(UserBaseRepository) private repository: IUserBaseRepository) {}
 
     execute: IUserBaseService["createUser"] = async (user) => {
         try {

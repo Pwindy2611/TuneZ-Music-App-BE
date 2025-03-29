@@ -1,11 +1,9 @@
 import {IUserRepository} from "../interface/repository/IUserRepository.js";
 import {followServiceClient, playlistServiceClient} from "../grpc/client/GrpcClients.js";
-import {injectable} from "tsyringe";
+import {singleton} from "tsyringe";
 import {database} from "../config/firebase/FireBaseConfig.js";
 import {SubscriptionType} from "../enum/SubscriptionType.js";
-import {response} from "express";
-
-@injectable()
+@singleton()
 export class UserRepository implements IUserRepository {
     async getFollowerCount(userId: string): Promise<any> {
         return await new Promise<number>((resolve, reject) => {
