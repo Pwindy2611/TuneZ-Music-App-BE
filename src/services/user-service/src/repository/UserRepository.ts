@@ -71,8 +71,19 @@ export class UserRepository implements IUserRepository {
         const userRef = database.ref(`users/${userId}`);
         const userSnapshot = await userRef.get();
         const user = userSnapshot.val();
-        user.account.subscriptionType = SubscriptionType.PREMIUM;
-        await userRef.update({ account: user.account });
+
+        const newSubscriptionType =
+            user.account.subscriptionType === SubscriptionType.PREMIUM
+                ? SubscriptionType.NORMAL
+                : SubscriptionType.PREMIUM;
+
+        await userRef.update({
+            account: {
+                ...user.account,
+                subscriptionType: newSubscriptionType
+            }
+        });
+
         return true;
     }
 }

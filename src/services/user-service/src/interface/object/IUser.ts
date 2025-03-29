@@ -9,8 +9,8 @@ export interface IUser {
     profilePictureUrl?: string;
     account? : {
         subscriptionType: SubscriptionType,
-        createdAt: Date,
-        lastLogin: Date,
+        createdAt: string,
+        lastLogin: string,
     };
     sessionToken?: string | null;
 }

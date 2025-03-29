@@ -1,13 +1,14 @@
 import { ISubscription } from "../../interface/object/ISubscription.js";
 import { firestore } from "../../config/firebase/FireBaseConfig.js";
+import {ISubscriptionUserService} from "../../interface/service/ISubscriptionUserService.js";
 
-export const getUserSubscriptions = async (userId: string): Promise<ISubscription[]> => {
+export const getUserSubscriptions: ISubscriptionUserService['getUserSubscriptions'] = async (userId: string): Promise<ISubscription | null> => {
     try {
         const userSubscriptionRef = firestore.collection('users').doc(userId).collection('subscription').doc('current');
         const userSubscriptionDoc = await userSubscriptionRef.get();
 
         if (!userSubscriptionDoc.exists || !userSubscriptionDoc.data()) {
-            return [];
+            return null;
         }
 
         const subscription = userSubscriptionDoc.data() as ISubscription & { 
@@ -32,10 +33,10 @@ export const getUserSubscriptions = async (userId: string): Promise<ISubscriptio
             });
 
             await userSubscriptionRef.delete();
-            return [];
+            return null;
         }
 
-        return [subscription];
+        return subscription;
     } catch (error) {
         console.error("Error getting user subscriptions:", error);
         throw error;

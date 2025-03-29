@@ -110,14 +110,31 @@ export class PaymentController {
 
   async handlePaymentCallback(req: IPaymentRequest, res: Response, next: NextFunction) {
     try {
-      const payment = await PaymentRepository.findById(req.query.orderId as string);
+      console.log('Momo Callback received', {
+        query: req.query,
+        body: req.body
+      });
+
+      // MoMo always sends IPN callbacks as POST with data in request body
+      const callbackData = req.body;
+
+      if (!callbackData.orderId || !callbackData.signature) {
+        res.status(400).json({
+          status: 400,
+          success: false,
+          message: 'Missing required fields: orderId or signature'
+        });
+        return;
+      }
+
+      const payment = await PaymentRepository.findById(callbackData.orderId);
       if (!payment) {
         res.status(404).json({
           status: 404,
           success: false,
           message: 'Payment not found'
         });
-        return
+        return;
       }
 
       const referenceId = payment.referenceId;
@@ -132,59 +149,36 @@ export class PaymentController {
         return;
       }
 
-      const userId = match[1];
+      const [ _ , userId, itemId] = match;
 
-      const itemId = match[2];
-
-        if (!userId) {
-            res.status(401).json({
-            status: 401,
-            success: false,
-            message: 'Unauthorized'
-            });
-            return;
-        }
-
-        if (!itemId) {
-            res.status(400).json({
-            status: 400,
-            success: false,
-            message: 'Missing required field: itemId'
-            });
-            return;
-        }
-
-      const callbackData = {
-        partnerCode: req.query.partnerCode as string,
-        orderId: req.query.orderId as string,
-        requestId: req.query.requestId as string,
-        amount: Number(req.query.amount),
-        orderInfo: req.query.orderInfo as string,
-        orderType: req.query.orderType as string,
-        transId: req.query.transId as string,
-        resultCode: Number(req.query.resultCode),
-        message: req.query.message as string,
-        payType: req.query.payType as string,
-        responseTime: Number(req.query.responseTime),
-        extraData: req.query.extraData as string,
-        signature: req.query.signature as string
+      const formattedCallbackData = {
+        partnerCode: callbackData.partnerCode,
+        orderId: callbackData.orderId,
+        requestId: callbackData.requestId,
+        amount: Number(callbackData.amount),
+        orderInfo: callbackData.orderInfo,
+        orderType: callbackData.orderType,
+        transId: callbackData.transId,
+        resultCode: Number(callbackData.resultCode),
+        message: callbackData.message,
+        payType: callbackData.payType,
+        responseTime: Number(callbackData.responseTime),
+        extraData: callbackData.extraData,
+        signature: callbackData.signature,
+        userId,
+        itemId
       };
 
-      if (!callbackData.orderId) {
-        return Promise.reject( new Error('Missing required field: orderId'));
-      }
+      console.log('Formatted Momo Callback Data:', JSON.stringify(formattedCallbackData, null, 2));
 
-      console.log('Momo Callback Query:', JSON.stringify(callbackData, null, 2));
-
-      req.paymentResponse = await this.getPaymentService().verifyPaymentCallback(itemId, userId, callbackData);
-      
+      req.paymentResponse = await this.getPaymentService().verifyPaymentCallback(formattedCallbackData);
       next();
     } catch (error) {
       console.error('Payment Callback Error:', error);
       res.status(500).json({
         status: 500,
-        success: false,
-        message: error.message
+        message: error.message,
+        resultCode: -1
       });
     }
   }

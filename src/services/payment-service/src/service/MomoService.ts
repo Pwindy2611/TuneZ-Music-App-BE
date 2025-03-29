@@ -196,8 +196,6 @@ export class MomoService implements IPaymentService {
   }
 
   async verifyPaymentCallback(
-    itemId: string,
-    userId: string,
     callbackData: Record<string, any>
   ): Promise<IPaymentResponse> {
     try {
@@ -216,8 +214,6 @@ export class MomoService implements IPaymentService {
       const status = this.mapMomoResultCodeToStatus(ipnResponse.resultCode);
       const paymentResponse = this.mapToPaymentResponse({
         ...ipnResponse,
-        itemId,
-        userId,
         status,
         transId: ipnResponse.transId,
 

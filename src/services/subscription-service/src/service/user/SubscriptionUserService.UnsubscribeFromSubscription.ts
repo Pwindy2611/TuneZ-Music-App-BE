@@ -1,5 +1,7 @@
 import { subscriptionBaseService } from "../base/SubscriptionBaseService.js";
 import { firestore } from "../../config/firebase/FireBaseConfig.js";
+import {SubscriptionStatus} from "../../enum/SubscriptionStatus.js";
+import {userServiceClient} from "../../grpc/client/GrpcClient.js";
 
 export const unsubscribeFromSubscription = async (userId: string, subscriptionId: string): Promise<void> => {
     try {
@@ -30,11 +32,20 @@ export const unsubscribeFromSubscription = async (userId: string, subscriptionId
         await historyRef.set({
             ...userSubscription,
             endDate: new Date().toISOString(),
-            status: 'cancelled'
+            status: SubscriptionStatus.CANCELLED,
         });
 
         await userSubscriptionRef.delete();
 
+        await new Promise((resolve, reject) => {
+            userServiceClient.updateSubscriptionType({ userId }, (err: any, data:any) => {
+                if (err) {
+                    console.error("Error updating subscription type:", err);
+                    return reject(err);
+                }
+                resolve(data);
+            });
+        })
     } catch (error) {
         console.error("Error unsubscribing from subscription:", error);
         throw error;

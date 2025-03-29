@@ -25,8 +25,8 @@ const subscriptionProto = grpc.loadPackageDefinition(packageDefinition).subscrip
 async function isSubscriptionHandler(call: any, callback: any) {
     try {
         const { id } = call.request;
-        const isSubscription = await subscriptionBaseService.isSubscription(id);
-        callback(null, { isSubscription });
+        const isSubscribed = await subscriptionBaseService.isSubscription(id);
+        callback(null, { isSubscribed });
     } catch (error) {
         callback({
             code: grpc.status.INTERNAL,
