@@ -8,9 +8,8 @@ import {SongType} from "../enum/SongType.js";
 import {UploadMusicDto} from "../dto/request/UploadMusicDto.js";
 import {MusicUserService} from "../service/music_user/MusicUserService.js";
 import {IAuthRequest} from "../interface/object/IAuthRequest.js";
-import {MusicStreamService} from "../service/music_stream/MusicStreamService.js";
-import {musicBaseRepository, musicStreamRepository} from "../config/container/Container.js";
-
+import {musicBaseRepository, musicStreamRepository, musicStreamService} from "../config/container/Container.js";
+import "reflect-metadata";
 
 const uploadMulter = multer({
     limits: { fileSize: 10 * 1024 * 1024 },
@@ -22,6 +21,7 @@ const uploadMulter = multer({
         }
     }
 });
+
 class MusicController {
     createMusicApi = [
         uploadMulter.fields([
@@ -377,22 +377,13 @@ class MusicController {
             });
         }
     }
-    getStreamMusicApi = async (req: IAuthRequest, res: Response) => {
+    getStreamMusicApi = async (req: Request, res: Response) => {
         try {
             const musicId = req.params.musicId;
-            const stream = await MusicStreamService.getStreamMusic.execute(musicId);
+            const musicStream = await musicStreamService.getStreamMusic(musicId);
 
-            res.writeHead(206, {
-                'Content-Type': 'audio/mpeg',
-                'Transfer-Encoding': 'chunked'
-            });
-            res.flushHeaders();
-
-            stream.pipe(res);
-
-            stream.on('end', () => {
-                res.end();
-            });
+            res.setHeader("Content-Type", "audio/mpeg");
+            musicStream.pipe(res);
         } catch (error) {
             console.error("Error in streaming endpoint:", error);
             res.status(500).json({
@@ -405,53 +396,48 @@ class MusicController {
     playMusicApi = async (req: IAuthRequest, res: Response) => {
         try {
             const userId = req.userId;
-
             const musicId = req.params.musicId;
+
             if (!userId) {
                 res.status(401).send("Unauthorized");
                 return;
             }
-            const previousState = await MusicStreamService.getUserMusicState.execute(userId);
 
-            if(previousState.currentMusicId !== musicId ){
+            const currentState = await musicStreamService.getUserMusicState(userId, musicId);
+
+            if (currentState.currentMusicId !== musicId) {
                 await musicStreamRepository.incrementPlayCount(musicId);
                 await musicStreamRepository.saveHistory(userId, musicId);
             }
 
-            let startFrom = 0;
-
-            if (previousState.currentMusicId === musicId && !previousState.isPlaying) {
-                startFrom = previousState.timestamp;
-            }
-
-            await MusicStreamService.updateUserMusicState.execute(userId, musicId, startFrom, true);
+            await musicStreamService.updateUserMusicState(userId, musicId, 'playing');
 
             res.status(200).json({
                 status: 200,
                 success: true,
                 message: 'Music playing',
-            })
-        }catch (error){
+                state: await musicStreamService.getUserMusicState(userId, musicId)
+            });
+        } catch (error) {
             res.status(500).json({
                 status: 500,
                 success: false,
                 message: `Internal Server Error ${error.message}`,
-            })
+            });
         }
     }
-
     pauseMusicApi = async (req: IAuthRequest, res: Response) => {
         try {
             const userId = req.userId;
-
             if (!userId) {
                 res.status(401).send("Unauthorized");
                 return;
             }
 
-            const state = await MusicStreamService.getUserMusicState.execute(userId);
+            const musicId = req.params.musicId;
+            const currentState = await musicStreamService.getUserMusicState(userId, musicId);
 
-            if(!state.currentMusicId){
+            if (!currentState.currentMusicId) {
                 res.status(400).json({
                     status: 400,
                     success: false,
@@ -461,25 +447,29 @@ class MusicController {
             }
 
             const newTimestamp = await musicStreamRepository.calculateCurrentTimestamp(userId);
-            await MusicStreamService.updateUserMusicState.execute(userId, state.currentMusicId, newTimestamp, false);
+            
+            const context = await musicStreamService.getOrCreateContext(userId, currentState.currentMusicId);
+            context.setCurrentTime(newTimestamp);
+            
+            await musicStreamService.updateUserMusicState(userId, currentState.currentMusicId, 'paused');
 
             res.status(200).json({
                 status: 200,
                 success: true,
                 message: 'Music paused',
-            })
-        }catch (error) {
+                state: await musicStreamService.getUserMusicState(userId, currentState.currentMusicId)
+            });
+        } catch (error) {
             res.status(500).json({
                 status: 500,
                 success: false,
                 message: `Internal Server Error ${error.message}`,
-            })
+            });
         }
     }
     seekMusicApi = async (req: IAuthRequest, res: Response) => {
         try {
             const userId = req.userId;
-
             if (!userId) {
                 res.status(401).send("Unauthorized");
                 return;
@@ -488,19 +478,36 @@ class MusicController {
             const musicId = req.params.musicId;
             const seekTime = Number(req.query.seek);
 
-            await MusicStreamService.updateUserMusicState.execute(userId, musicId, seekTime, false);
+            const currentState = await musicStreamService.getUserMusicState(userId, musicId);
+            
+            if (!currentState.currentMusicId) {
+                res.status(400).json({
+                    status: 400,
+                    success: false,
+                    message: 'No music is playing',
+                });
+                return;
+            }
+            
+            const context = await musicStreamService.getOrCreateContext(userId, musicId);
+            context.setCurrentTime(seekTime);
+            
+            const isPlaying = currentState.isPlaying;
+            const state = isPlaying ? 'playing' : 'paused';
+            await musicStreamService.updateUserMusicState(userId, musicId, state);
 
             res.status(200).json({
                 status: 200,
                 success: true,
                 message: 'Music seeked',
-            })
-        }catch (error) {
+                state: await musicStreamService.getUserMusicState(userId, musicId)
+            });
+        } catch (error) {
             res.status(500).json({
                 status: 500,
                 success: false,
                 message: `Internal Server Error ${error.message}`,
-            })
+            });
         }
     }
     getUserMusicStateApi = async (req: IAuthRequest, res: Response) => {
@@ -511,28 +518,14 @@ class MusicController {
                 return;
             }
 
-            const state = await MusicStreamService.getUserMusicState.execute(userId);
-
-            if (!state.currentMusicId) {
-                res.status(200).json({
-                    status: 200,
-                    success: true,
-                    message: "No music is playing",
-                    state: { currentMusicId: null, timestamp: 0, lastUpdated: 0, isPlaying: false }
-                });
-                return;
-            }
-
-            const newTimestamp = await musicStreamRepository.calculateCurrentTimestamp(userId);
+            const musicId = req.params.musicId;
+            const state = await musicStreamService.getUserMusicState(userId, musicId);
 
             res.status(200).json({
                 status: 200,
                 success: true,
                 message: "Fetched user music state",
-                state: {
-                    ...state,
-                    timestamp: newTimestamp
-                }
+                state
             });
         } catch (error) {
             res.status(500).json({

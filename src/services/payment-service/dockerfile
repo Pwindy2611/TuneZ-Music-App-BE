@@ -20,7 +20,7 @@ COPY . .
 EXPOSE 3010 9237 50060
 
 # Generate proto files
-#RUN npm run generate-proto
+RUN npm run generate-proto
 
 # Command to run the application
 CMD ["npm", "start"] 

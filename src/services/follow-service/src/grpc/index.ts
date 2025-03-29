@@ -44,9 +44,25 @@ async function getFollowerCountHandler(call: any, callback: any) {
     }
 }
 
+async function getFollowingHandler(call: any, callback: any) {
+    try {
+        const { userId } = call.request;
+        const following = await FollowUserService.getFollowingUsers(userId);
+        callback(null, { following });
+    }catch (error) {
+        callback({
+            code: grpc.status.INTERNAL,
+            message: `Error fetching following: ${error.message}`
+        });
+    }
+}
 function startServer() {
     const server = new grpc.Server();
-    server.addService((followProto as any).FollowService.service, { getFollowingCount: getFollowingCountHandler, getFollowerCount: getFollowerCountHandler });
+    server.addService((followProto as any).FollowService.service, {
+        getFollowingCount: getFollowingCountHandler,
+        getFollowerCount: getFollowerCountHandler,
+        getFollowing: getFollowingHandler
+    });
 
     const host = process.env.GRPC_HOST || '0.0.0.0';
     const port = process.env.GRPC_PORT_FOLLOW_SERVICE || '50206';

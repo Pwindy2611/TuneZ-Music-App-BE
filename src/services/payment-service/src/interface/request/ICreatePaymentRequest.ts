@@ -6,6 +6,7 @@ export interface ICreatePaymentRequest {
   amount: number;
   currency: PaymentCurrency;
   paymentMethod: PaymentMethod;
+  referenceId?: string;
   orderInfo?: string;
   extraData?: string;
   description?: string;

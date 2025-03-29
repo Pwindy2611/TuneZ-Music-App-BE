@@ -7,7 +7,8 @@
     "start": "tsx src/index.ts",
     "dev": "npx tsx watch src/index.ts",
     "debug": "node --inspect=0.0.0.0:9227 --nolazy --import tsx src/index.ts",
-    "build": "npx"
+    "build": "npx",
+    "generate-proto": "mkdir -p ./src/grpc/proto ./src/grpc/generated && protoc --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out=./src/grpc/generated -I ./src/grpc/proto ./src/grpc/proto/*.proto"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +24,8 @@
     "dotenv": "^16.4.7",
     "express": "^5.0.1",
     "firebase-admin": "^13.2.0",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "ts-protoc-gen": "^0.15.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.5",

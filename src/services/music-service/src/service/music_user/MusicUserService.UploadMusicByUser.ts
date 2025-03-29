@@ -1,6 +1,5 @@
 import {Lifecycle, scoped} from "tsyringe";
-import {musicUserRepository, musicUserMediator} from "../../config/container/Container.js";
-import {UploadMusicByUserCommand} from "./command/UploadMusicByUserCommand.js";
+import {musicUserRepository} from "../../config/container/Container.js";
 import {IMusicUserService} from "../../interface/service/IMusicUserService.js";
 @scoped(Lifecycle.ResolutionScoped)
 export class UploadMusicByUserService {
@@ -20,6 +19,6 @@ export class UploadMusicByUserService {
             imgFile
         }
 
-        return await musicUserMediator.send(new UploadMusicByUserCommand(musicData))
+        return await musicUserRepository.uploadMusicByUser(musicData)
     }
 }

@@ -6,6 +6,7 @@ import cors from 'cors';
 import http from 'http';
 import subscriptionRoute from './route/SubscriptionRoute.js';
 import 'reflect-metadata';
+import './grpc/index.js';
 import dotenv from 'dotenv';
 
 dotenv.config();

@@ -40,9 +40,10 @@ export class MomoService implements IPaymentService {
         requestType: 'captureWallet',
         extraData,
         lang: 'vi',
+        referenceId: data.referenceId,
         autoCapture: true,
         requestId,
-        signature
+        signature,
       };
 
       const response = await axios.post<IMomoPaymentResponse>(this.MOMO_API_URL, request, {
@@ -59,6 +60,7 @@ export class MomoService implements IPaymentService {
       
       await PaymentRepository.create({
         orderId: data.orderId,
+        referenceId: data.referenceId || "",
         amount: paymentResponse.amount,
         method: PaymentMethod.MOMO,
         status: PaymentStatus.PENDING,

@@ -3,12 +3,32 @@ import {IUser} from "../interface/object/IUser.js";
 import {UserDto} from "../dto/response/UserDto.js";
 import {auth, database, firestore} from "../config/firebase/FireBaseConfig.js";
 import {injectable} from "tsyringe";
+import {SubscriptionType} from "../enum/SubscriptionType.js";
+import {UserRole} from "../enum/UserRole.js";
 
 @injectable()
 export class UserBaseRepository implements IUserBaseRepository {
     async createUser(user: IUser): Promise<void> {
+        const userData: IUser = {
+            _id: user._id,
+            email: user.email,
+            username: user.username,
+            role: UserRole.LISTENER,
+            profilePictureUrl: user.profilePictureUrl,
+            account: {
+                subscriptionType: SubscriptionType.NORMAL,
+                createdAt: new Date().toISOString(),
+                lastLogin: new Date().toISOString(),
+            }
+        }
         const userRef = database.ref(`users/${user._id}`);
-        return await userRef.set(user);
+        await userRef.set(userData);
+
+        const userFirestore = firestore.collection('users').doc(user._id);
+        await userFirestore.set({
+            followingCount: 0,
+            followerCount: 0,
+        });
     }
 
     async deleteUser(userId: string): Promise<void> {

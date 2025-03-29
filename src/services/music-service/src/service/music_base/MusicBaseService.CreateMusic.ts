@@ -1,7 +1,7 @@
 import {IMusicBaseService} from "../../interface/service/IMusicBaseService.js";
-import {musicBaseMediator, musicBaseRepository} from "../../config/container/Container.js";
-import {CreateMusicCommand} from "./command/CreateMusicCommand.js";
-import {Lifecycle, scoped} from "tsyringe";
+import {musicBaseRepository} from "../../config/container/Container.js";
+import { Lifecycle, scoped } from "tsyringe";
+
 @scoped(Lifecycle.ResolutionScoped)
 export class CreateMusicService{
 
@@ -20,7 +20,7 @@ export class CreateMusicService{
             musicFile,
             imgFile
         }
-        return await musicBaseMediator.send(new CreateMusicCommand(musicData));
+        return await musicBaseRepository.createMusic(musicData);
     };
 }
 

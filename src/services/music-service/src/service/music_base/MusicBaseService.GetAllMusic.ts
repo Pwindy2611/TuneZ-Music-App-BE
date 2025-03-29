@@ -1,10 +1,10 @@
 import {IMusicBaseService} from "../../interface/service/IMusicBaseService.js";
-import {musicBaseMediator} from "../../config/container/Container.js";
-import {GetAllMusicQuery} from "./query/GetAllMusicQuery.js";
 import {singleton} from "tsyringe";
+import { musicBaseRepository } from "../../config/container/Container.js";
+
 @singleton()
 export class GetAllMusicService {
     execute: IMusicBaseService["getAllMusic"] = async () => {
-        return await musicBaseMediator.send(new GetAllMusicQuery());
+        return await musicBaseRepository.getAllMusic();
     }
 }

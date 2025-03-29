@@ -3,6 +3,7 @@ import { PaymentStatus } from '../../enum/PaymentStatus.js';
 
 export interface Payment {
   orderId: string;
+  referenceId: string;
   amount: number;
   method: PaymentMethod;
   status: PaymentStatus;

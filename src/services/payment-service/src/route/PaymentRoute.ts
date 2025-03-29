@@ -11,7 +11,7 @@ const paymentController = PaymentController.getInstance();
 
 const getPaymentMethod = async (req: IPaymentRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const orderId =req.query.orderId as string;
+    const orderId =req.query.orderId as string || req.body.orderId;
     
     if (!orderId) {
       res.status(400).json({ 
@@ -49,13 +49,13 @@ router.post('/create', authMiddleware, async (req: Request, res: Response) => {
   await paymentController.createPayment(req, res);
 });
 
-router.get('/callback', getPaymentMethod, async (req: IPaymentRequest, res: Response, next: NextFunction) => {
+router.post('/callback', getPaymentMethod, async (req: IPaymentRequest, res: Response, next: NextFunction) => {
   const paymentService = PaymentServiceFactory.createPaymentService(req.paymentMethod!);
   paymentController.setPaymentService(paymentService);
   await paymentController.handlePaymentCallback(req, res, next);
 }, handlePaymentResponse);
 
-router.get('/getPayment/:id', getPaymentMethod, async (req: IPaymentRequest, res: Response) => {
+router.get('/getPayment', getPaymentMethod, async (req: IPaymentRequest, res: Response) => {
   const paymentService = PaymentServiceFactory.createPaymentService(req.paymentMethod!);
   paymentController.setPaymentService(paymentService);
   await paymentController.getPayment(req, res);

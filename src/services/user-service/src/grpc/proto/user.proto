@@ -1,0 +1,15 @@
+syntax = 'proto3';
+
+package user;
+
+service UserService {
+  rpc UpdateSubscriptionType (UpdateSubscriptionTypeRequest) returns (UpdateSubscriptionTypeResponse) {}
+}
+
+message UpdateSubscriptionTypeRequest {
+  string userId = 1;
+}
+
+message UpdateSubscriptionTypeResponse {
+  bool success = 1;
+}

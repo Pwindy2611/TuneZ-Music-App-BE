@@ -6,6 +6,7 @@ import cors from 'cors';
 import http from 'http';
 import userRoute from './route/UserRoute.js';
 import dotenv from 'dotenv';
+import './grpc/index.js'
 
 dotenv.config();
 

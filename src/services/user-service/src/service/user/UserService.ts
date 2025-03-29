@@ -1,6 +1,8 @@
 import {container} from "tsyringe";
 import {UserRepository} from "../../repository/UserRepository.js";
 import {GetUserInfoByIdService} from "./UserService.GetUserInfoById.js";
+import {UpdateSubscriptionTypeService} from "./UserService.UpdateSubscriptionType.js";
+import {GetUserLibraryService} from "./UserService.GetUserLibrary.js";
 
 container.register("UserRepository", {
     useClass: UserRepository,
@@ -8,4 +10,6 @@ container.register("UserRepository", {
 
 export const UserService = {
     getUserInfoById: container.resolve(GetUserInfoByIdService),
+    updateSubscriptionType: container.resolve(UpdateSubscriptionTypeService),
+    getUserLibrary: container.resolve(GetUserLibraryService),
 }

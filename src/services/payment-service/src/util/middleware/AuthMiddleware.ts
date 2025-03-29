@@ -1,5 +1,5 @@
 import { Response, NextFunction } from "express";
-import { IAuthRequest } from "../../interface/object/IAuthRequest.js";
+import { IAuthRequest } from "../../interface/request/IAuthRequest.js";
 
 export const authMiddleware = (req: IAuthRequest, res: Response, next: NextFunction) => {
     const userId = req.headers["x-user-id"];

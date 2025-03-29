@@ -13,6 +13,7 @@ router.post('/login', authValidate.validateLogin);
 router.get('/getAllUser', MusicController.getAllUsersApi);
 router.get('/getUserCustomToken', MusicController.getUserCustomTokenApi);
 router.get('/getUserInfo', authMiddleware, MusicController.getUserInfoByIdApi);
+router.get('/getUserLibrary', authMiddleware, MusicController.getUserLibraryApi);
 
 //Send Email
 router.post('/sendEmailVerify', MusicController.sendVerificationEmailApi);
