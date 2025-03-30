@@ -36,7 +36,7 @@ export const generateThrowBackPlaylist: IPlaylistGenerateService["generateThrowB
 
         const playlistResponse: IPlaylistResponseDto = {
             title: throwbackPlaylist.title,
-            coverImage: throwbackPlaylist.coverImage || 'https://example.com/default-cover.jpg', // Ảnh mặc định nếu thiếu
+            coverImage: throwbackPlaylist.coverImage || '',
             tracks: musicDetails
         };
 

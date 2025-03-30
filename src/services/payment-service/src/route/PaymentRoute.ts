@@ -53,7 +53,7 @@ router.post('/callback', getPaymentMethod, async (req: IPaymentRequest, res: Res
   const paymentService = PaymentServiceFactory.createPaymentService(req.paymentMethod!);
   paymentController.setPaymentService(paymentService);
   await paymentController.handlePaymentCallback(req, res, next);
-}, handlePaymentResponse);
+},handlePaymentResponse);
 
 router.get('/getPayment', getPaymentMethod, async (req: IPaymentRequest, res: Response) => {
   const paymentService = PaymentServiceFactory.createPaymentService(req.paymentMethod!);

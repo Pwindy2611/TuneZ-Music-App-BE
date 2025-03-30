@@ -1,7 +1,7 @@
 import { subscriptionBaseService } from "../base/SubscriptionBaseService.js";
 import { firestore } from "../../config/firebase/FireBaseConfig.js";
 import {SubscriptionStatus} from "../../enum/SubscriptionStatus.js";
-import {userServiceClient} from "../../grpc/client/GrpcClient.js";
+import {userServiceClient} from "../../grpc/client/GrpcClients.js";
 
 export const unsubscribeFromSubscription = async (userId: string, subscriptionId: string): Promise<void> => {
     try {

@@ -4,6 +4,7 @@ import { getDatabase, Database } from "firebase-admin/database";
 import { getFirestore, Firestore } from "firebase-admin/firestore";
 import * as fs from "fs";
 import * as path from "path";
+import { envConfig } from "../EnvConfig.js";
 
 dotenv.config();
 
@@ -17,12 +18,7 @@ class FirebaseSingleton {
         if (getApps().length > 0) {
             this.app = getApp();
         } else {
-            const serviceAccountPath = process.env.FIREBASE_KEY_PATH;
-
-            if (!serviceAccountPath) {
-                throw new Error("Firebase key path is not set in environment variables.");
-            }
-
+            const serviceAccountPath = envConfig.getFirebaseKeyPath();
             const absoluteServiceAccountPath = path.resolve(serviceAccountPath);
 
             let serviceAccount;
@@ -34,8 +30,8 @@ class FirebaseSingleton {
 
             this.app = initializeApp({
                 credential: cert(serviceAccount),
-                databaseURL: process.env.FIREBASE_DATABASE_URL,
-                projectId: process.env.FIREBASE_PROJECT_ID,
+                databaseURL: envConfig.getFirebaseDatabaseUrl(),
+                projectId: envConfig.getFirebaseProjectId(),
             });
         }
 

@@ -1,7 +1,7 @@
 import {Response } from 'express';
 import {FollowCreateDto} from "../dto/request/FollowCreateDto";
-import {FollowBaseService} from "../service/FollowBaseService";
-import {FollowUserService} from "../service/FollowUserService";
+import {FollowBaseService} from "../service/base/FollowBaseService";
+import {FollowUserService} from "../service/user/FollowUserService";
 import {IAuthRequest} from "../interface/object/IAuthRequest";
 class FollowController {
     async addFollowApi(req: IAuthRequest, res: Response) {

@@ -6,18 +6,16 @@ import cors from 'cors';
 import http from 'http';
 import playlistRoute from './route/PlaylistRoute.js';
 import 'reflect-metadata';
-import './grpc/index.js'
-import dotenv from 'dotenv';
-
-dotenv.config();
+import './grpc/index.js';
+import { envConfig } from './config/EnvConfig.js';
 
 const app = express();
-const port = process.env.PORT || 3007;
-// Middleware
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+const port = envConfig.getPort();
 
+// Middleware
 app.use(cors({
     origin: (origin, callback) => {
+        const allowedOrigins = envConfig.getAllowedOrigins();
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
@@ -28,6 +26,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());

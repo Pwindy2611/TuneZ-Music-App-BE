@@ -1,6 +1,6 @@
-import { ILoveBaseService } from "../interface/service/ILoveBaseService.js";
-import { firestore } from "../config/firebase/FireBaseConfig.js";
-import { musicServiceClient } from "../grpc/client/GrpcClient.js";
+import { ILoveBaseService } from "../../interface/service/ILoveBaseService.js";
+import { firestore } from "../../config/firebase/FireBaseConfig.js";
+import { musicServiceClient } from "../../grpc/client/GrpcClient.js";
 import {Timestamp} from "firebase-admin/firestore";
 
 export const saveLoveMusic: ILoveBaseService["saveLoveMusic"] = async (love) => {

@@ -1,7 +1,10 @@
 import {PlaylistFactory} from "./factory/PlaylistFactory.js";
+import PlaylistCacheService from "../cache/PlaylistCacheService.js";
 
 class PlaylistGenerateService {
     async generate(userId: string) {
+        await PlaylistCacheService.cleanExpiredCache();
+
         const playlistGroups = await PlaylistFactory.getPlaylistGroup(userId);
 
         let playlists: any[] = [];

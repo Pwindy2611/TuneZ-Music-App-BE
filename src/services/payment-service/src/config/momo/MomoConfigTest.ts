@@ -1,22 +1,22 @@
-import dotenv from 'dotenv';
 import { IMomoConfigTest } from '../../interface/object/IMomoConfigTest.js';
+import { envConfig } from '../EnvConfig.js';
 
-dotenv.config();
+const config = envConfig.getMomoTestConfig();
 
 export const momoTestConfig: IMomoConfigTest = {
-  partnerCode: process.env.MOMO_TEST_PARTNER_CODE || '',
-  accessKey: process.env.MOMO_TEST_ACCESS_KEY || '',
-  secretKey: process.env.MOMO_TEST_SECRET_KEY || '',
-  redirectUrl: process.env.MOMO_TEST_RETURN_URL || '',
-  ipnUrl: process.env.MOMO_TEST_IPN_URL || '',
-  paymentUrl: process.env.MOMO_TEST_PAYMENT_URL || '',
-  aesTokenUrl: process.env.MOMO_TEST_AES_TOKEN_URL || '',
-  disbursementUrl: process.env.MOMO_TEST_DISBURSEMENT_URL || '',
-  transactionStatusUrl: process.env.MOMO_TEST_TRANSACTION_STATUS_URL || '',
-  storeId: process.env.MOMO_TEST_STORE_ID || '',
-  storeName: process.env.MOMO_STORE_NAME || '',
-  logo: process.env.MOMO_LOGO || '',
-  publicKey: process.env.MOMO_PUBLIC_KEY || ''
+  partnerCode: config.partnerCode,
+  accessKey: config.accessKey,
+  secretKey: config.secretKey,
+  redirectUrl: config.redirectUrl,
+  ipnUrl: config.ipnUrl,
+  paymentUrl: config.paymentUrl,
+  aesTokenUrl: config.aesTokenUrl || '',
+  disbursementUrl: config.disbursementUrl || '',
+  transactionStatusUrl: config.transactionStatusUrl || '',
+  storeId: config.storeId,
+  storeName: config.storeName,
+  logo: config.logo,
+  publicKey: config.publicKey
 };
 
 const requiredEnvVars = [

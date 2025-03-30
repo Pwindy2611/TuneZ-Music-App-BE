@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express';
 import { PaymentStatus } from '../../enum/PaymentStatus.js';
 import { IPaymentRequest } from '../../interface/request/IPaymentRequest.js';
 import {PaymentRepository} from "../../repository/PaymentRepository.js";
-import {subscriptionServiceClient} from "../../grpc/client/GrpcClient.js";
+import {subscriptionServiceClient} from "../../grpc/client/GrpcClients.js";
 
 export const handlePaymentResponse = async (req: IPaymentRequest, res: Response, next: NextFunction) => {
   const paymentResponse = req.paymentResponse;

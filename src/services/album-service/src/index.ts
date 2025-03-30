@@ -7,15 +7,16 @@ import http from 'http';
 import albumRoute from './route/AlbumRoute.js'
 import './grpc/index.js'
 import 'reflect-metadata';
+import {envConfig} from "./config/EnvConfig.js";
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3008;
+const port = envConfig.getPort();
 
 // Middleware
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+const allowedOrigins = envConfig.getAllowedOrigins();
 
 app.use(cors({
     origin: (origin, callback) => {

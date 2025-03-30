@@ -1,8 +1,8 @@
-import { database, firestore } from "../config/firebase/FireBaseConfig";
-import { FollowResponseDto } from "../dto/response/FollowResponseDto";
+import { database, firestore } from "../../config/firebase/FireBaseConfig";
+import { FollowResponseDto } from "../../dto/response/FollowResponseDto";
 import { getFollowerCount } from "./FollowUserService.GetFollowerCount";
-import { IFollowing } from "../interface/object/IFollowing";
-import { IFollowUserService } from "../interface/service/IFollowUserService";
+import { IFollowing } from "../../interface/object/IFollowing";
+import { IFollowUserService } from "../../interface/service/IFollowUserService";
 
 const getUserData = async (id: string, type: string): Promise<FollowResponseDto | null> => {
     const path = type === 'user' ? `users/${id}` : `officialArtists/${id}`;

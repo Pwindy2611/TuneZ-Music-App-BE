@@ -6,15 +6,13 @@ import cors from 'cors';
 import http from 'http';
 import officialArtistRoute from './route/OfficialArtistRoute.js'
 import 'reflect-metadata';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { envConfig } from './config/EnvConfig.js';
 
 const app = express();
-const port = process.env.PORT || 3002;
+const port = envConfig.getPort();
 
 // Middleware
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+const allowedOrigins = envConfig.getAllowedOrigins();
 
 app.use(cors({
     origin: (origin, callback) => {

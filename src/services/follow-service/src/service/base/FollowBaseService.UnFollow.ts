@@ -1,6 +1,6 @@
-import {IFollowBaseService} from "../interface/service/IFollowBaseService";
-import {firestore} from "../config/firebase/FireBaseConfig";
-import {FollowType} from "../enum/FollowType";
+import {IFollowBaseService} from "../../interface/service/IFollowBaseService";
+import {firestore} from "../../config/firebase/FireBaseConfig";
+import {FollowType} from "../../enum/FollowType";
 
 export const unFollow: IFollowBaseService["unFollow"] = async (userId, followingId) => {
     try {

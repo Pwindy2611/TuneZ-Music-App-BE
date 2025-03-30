@@ -1,7 +1,7 @@
 import {IOfficialArtistBaseService} from "../../interface/service/IOfficialArtistBaseService.js";
 import {database} from "../../config/firebase/FireBaseConfig.js";
 import {IOfficialArtist} from "../../interface/object/IOfficialArtist.js";
-import {albumServiceClient} from "../../grpc/client/GrpcClient.js";
+import {albumServiceClient} from "../../grpc/client/GrpcClients.js";
 
 export const getOfficialArtistInfo: IOfficialArtistBaseService["getOfficialArtistInfo"] = async (artistId) => {
     try {

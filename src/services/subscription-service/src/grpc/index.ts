@@ -3,10 +3,8 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
 import {subscriptionBaseService} from '../service/base/SubscriptionBaseService.js';
-import dotenv from 'dotenv';
 import {subscriptionUserService} from "../service/user/SubscriptionUserService.js";
-
-dotenv.config();
+import { envConfig } from '../config/EnvConfig.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,12 +45,13 @@ async function subscribeHandler(call: any, callback: any) {
         });
     }
 }
+
 function startServer() {
     const server = new grpc.Server();
     server.addService((subscriptionProto as any).SubscriptionService.service, { isSubscription: isSubscriptionHandler, subscribe: subscribeHandler });
 
-    const host = process.env.GRPC_HOST || '0.0.0.0';
-    const port = process.env.GRPC_PORT_SUBSCRIPTION_SERVICE || '50209';
+    const host = envConfig.getRpcHost();
+    const port = envConfig.getRpcHostPort();
     server.bindAsync(`${host}:${port}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
         if (err) {
             console.error('Failed to start gRPC server:', err);

@@ -2,9 +2,7 @@ import { fileURLToPath } from 'url';
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { envConfig } from '../../config/EnvConfig.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,8 +29,8 @@ const historyPackageDefinition = protoLoader.loadSync(HISTORY_PROTO_PATH, {
 const loveProto = grpc.loadPackageDefinition(lovePackageDefinition).love;
 const historyProto = grpc.loadPackageDefinition(historyPackageDefinition).history;
 
-const loveServicePort = process.env.GRPC_PORT_LOVE_SERVICE || '50205';
-const historyServicePort = process.env.GRPC_PORT_HISTORY_SERVICE || '50204';
+const loveServicePort = envConfig.getRpcLoveServicePort();
+const historyServicePort = envConfig.getRpcHistoryServicePort();
 
 export const loveServiceClient = new (loveProto as any).LoveService(
     `love-service:${loveServicePort}`,

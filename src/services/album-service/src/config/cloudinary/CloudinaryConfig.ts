@@ -1,23 +1,28 @@
 import { v2 as cloudinary, ConfigOptions } from "cloudinary";
 import * as dotenv from "dotenv";
+import {envConfig} from "../EnvConfig.js";
 
 dotenv.config();
 
 class CloudinarySingleton {
     private static instance: CloudinarySingleton;
+    private _cloudinaryCloudName: string;
+    private _cloudinaryApiKey: string;
+    private _cloudinaryApiSecret: string;
     public cloudinary;
 
     private constructor() {
-        if (!process.env.CLOUDINARY_CLOUD_NAME ||
-            !process.env.CLOUDINARY_API_KEY ||
-            !process.env.CLOUDINARY_API_SECRET) {
+        this._cloudinaryCloudName = envConfig.getCloudinaryCloudName();
+        this._cloudinaryApiKey = envConfig.getCloudinaryApiKey();
+        this._cloudinaryApiSecret = envConfig.getCloudinaryApiSecret();
+        if (!this._cloudinaryCloudName || !this._cloudinaryApiKey || !this._cloudinaryApiSecret) {
             throw new Error("Cloudinary environment variables are not set.");
         }
 
         cloudinary.config({
-            cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-            api_key: process.env.CLOUDINARY_API_KEY,
-            api_secret: process.env.CLOUDINARY_API_SECRET,
+            cloud_name: this._cloudinaryCloudName,
+            api_key: this._cloudinaryApiKey,
+            api_secret: this._cloudinaryApiSecret,
         } as ConfigOptions);
 
         this.cloudinary = cloudinary;

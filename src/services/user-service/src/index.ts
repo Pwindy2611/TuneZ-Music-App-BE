@@ -5,13 +5,11 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
 import userRoute from './route/UserRoute.js';
-import dotenv from 'dotenv';
 import './grpc/index.js'
-
-dotenv.config();
+import { envConfig } from './config/EnvConfig.js';
 
 const app = express();
-const port = process.env.PORT || 3001; 
+const port = envConfig.getPort();
 
 // Middleware
 app.use(cors({
@@ -21,7 +19,7 @@ app.use(cors({
             return;
         }
         
-        const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+        const allowedOrigins = envConfig.getAllowedOrigins();
         
         if (allowedOrigins.includes(origin)) {
             callback(null, true);

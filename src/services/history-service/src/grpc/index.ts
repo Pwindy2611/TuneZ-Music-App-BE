@@ -1,13 +1,11 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
-import { getMusicIdsByUserHistory } from '../service/HistoryUserService.GetMusicIdsByUserHistory';
-import { saveHistory } from '../service/HistoryBaseService.SaveHistory';
+import { getMusicIdsByUserHistory } from '../service/user/HistoryUserService.GetMusicIdsByUserHistory';
+import { saveHistory } from '../service/base/HistoryBaseService.SaveHistory';
 import { SaveHistoryDto } from '../dto/request/SaveHistoryDto';
 import { IHistory } from '../interface/object/IHistory';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { envConfig } from '../config/EnvConfig.js';
 
 const PROTO_PATH = path.resolve(__dirname, './proto/history.proto');
 
@@ -62,8 +60,8 @@ function startServer() {
     const server = new grpc.Server();
     server.addService((historyProto as any).HistoryService.service, { getMusicIds, addMusicId });
 
-    const host = process.env.GRPC_HOST || '0.0.0.0';
-    const port = process.env.GRPC_PORT_HISTORY_SERVICE || '50204';
+    const host = envConfig.getRpcHost();
+    const port = envConfig.getRpcHostPort();
     server.bindAsync(`${host}:${port}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
         if (err) {
             console.error('Failed to start gRPC server:', err);

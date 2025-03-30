@@ -1,5 +1,5 @@
-import {IHistoryUserService} from "../interface/service/IHistoryUserService";
-import {firestore} from "../config/firebase/FireBaseConfig";
+import {IHistoryUserService} from "../../interface/service/IHistoryUserService";
+import {firestore} from "../../config/firebase/FireBaseConfig";
 
 export const getMusicIdsByUserHistory: IHistoryUserService["getMusicIdsByUserHistory"] = async (userId, limit) => {
     try {

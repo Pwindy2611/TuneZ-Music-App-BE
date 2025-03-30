@@ -2,7 +2,7 @@ import {IMusicStreamRepository} from "../interface/repository/IMusicStreamReposi
 import {IMusicState} from "../interface/object/IMusicState.js";
 import redisClient from "../config/redis/RedisConfig.js";
 import {firestore} from "../config/firebase/FireBaseConfig.js";
-import {MusicBaseService} from "../service/music_base/MusicBaseService.js";
+import {MusicBaseService} from "../service/base/MusicBaseService.js";
 import {singleton} from "tsyringe";
 import {PassThrough, Readable} from "stream";
 import axios from "axios";

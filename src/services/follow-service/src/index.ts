@@ -6,15 +6,13 @@ import bodyParser from 'body-parser';
 import 'reflect-metadata';
 import './grpc/index'
 import FollowRoute from "./route/FollowRoute";
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { envConfig } from './config/EnvConfig.js';
 
 const app = express();
-const port = process.env.PORT || 3006;
+const port = envConfig.getPort();
 
 // Middleware
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+const allowedOrigins = envConfig.getAllowedOrigins();
 
 app.use(cors({
     origin: (origin, callback) => {
