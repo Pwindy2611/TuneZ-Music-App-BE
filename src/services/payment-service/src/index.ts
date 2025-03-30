@@ -13,17 +13,10 @@ const port = envConfig.getPort();
 
 // Middleware
 app.use(cors({
-    origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
-        const allowedOrigins = envConfig.getAllowedOrigins();
-        if (!origin || allowedOrigins.some(allowedOrigin => origin.match(new RegExp(`^${allowedOrigin}$`)))) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
+    origin: false,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id']
 }));
 
 app.use(compression());

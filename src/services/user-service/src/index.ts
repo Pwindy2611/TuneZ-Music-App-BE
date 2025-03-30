@@ -13,23 +13,10 @@ const port = envConfig.getPort();
 
 // Middleware
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin) {
-            callback(null, true);
-            return;
-        }
-        
-        const allowedOrigins = envConfig.getAllowedOrigins();
-        
-        if (allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
+    origin: false,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-user-id']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id']
 }));
 app.use(compression());
 app.use(cookieParser());
