@@ -11,7 +11,6 @@ export class MusicStreamService {
     async updateUserMusicState(userId: string, musicId: string, state: 'playing' | 'paused' | 'stopped'): Promise<void> {
         const context = await this.getOrCreateContext(userId, musicId);
         
-        // Cập nhật state trong context
         switch(state) {
             case 'playing':
                 await context.play();
@@ -26,10 +25,8 @@ export class MusicStreamService {
                 throw new Error('Invalid state');
         }
         
-        // Lấy thông tin state mới từ context
         const stateInfo = context.getState();
         
-        // Lưu trực tiếp vào Redis
         await musicStreamRepository.updateUserMusicState(
             userId,
             {
@@ -42,17 +39,13 @@ export class MusicStreamService {
     }
 
     async getUserMusicState(userId: string, musicId: string): Promise<StreamStateInfo> {
-        // Lấy state từ Redis trước
         const redisState = await musicStreamRepository.getUserMusicState(userId);
         
-        // Nếu có state trong Redis và đang phát bài hát khác
         if (redisState.currentMusicId && redisState.currentMusicId !== musicId) {
-            // Tạo context mới cho bài hát cũ trong Redis
             const context = await this.getOrCreateContext(userId, redisState.currentMusicId);
             return context.getState();
         }
         
-        // Nếu không có state hoặc đang phát bài hát này
         const context = await this.getOrCreateContext(userId, musicId);
         return context.getState();
     }

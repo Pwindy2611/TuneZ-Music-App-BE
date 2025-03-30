@@ -1,10 +1,8 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
-import { FollowUserService } from '../service/FollowUserService';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { FollowUserService } from '../service/user/FollowUserService';
+import { envConfig } from '../config/EnvConfig.js';
 
 const PROTO_PATH = path.resolve(__dirname, './proto/follow.proto');
 
@@ -56,6 +54,7 @@ async function getFollowingHandler(call: any, callback: any) {
         });
     }
 }
+
 function startServer() {
     const server = new grpc.Server();
     server.addService((followProto as any).FollowService.service, {
@@ -64,8 +63,8 @@ function startServer() {
         getFollowing: getFollowingHandler
     });
 
-    const host = process.env.GRPC_HOST || '0.0.0.0';
-    const port = process.env.GRPC_PORT_FOLLOW_SERVICE || '50206';
+    const host = envConfig.getRpcHost();
+    const port = envConfig.getRpcHostPort();
     server.bindAsync(`${host}:${port}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
         if (err) {
             console.error('Failed to start gRPC server:', err);

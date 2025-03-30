@@ -1,7 +1,7 @@
-import { IFollowBaseService } from "../interface/service/IFollowBaseService";
-import { firestore } from "../config/firebase/FireBaseConfig"
+import { IFollowBaseService } from "../../interface/service/IFollowBaseService";
+import { firestore } from "../../config/firebase/FireBaseConfig"
 import * as admin from "firebase-admin";
-import {FollowType} from "../enum/FollowType";
+import {FollowType} from "../../enum/FollowType";
 
 export const addFollow: IFollowBaseService["addFollow"] = async (follow) => {
     try {

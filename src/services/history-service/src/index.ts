@@ -6,27 +6,19 @@ import bodyParser from 'body-parser';
 import 'reflect-metadata';
 import './grpc/index'
 import HistoryRoute from "./route/HistoryRoute";
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { envConfig } from './config/EnvConfig.js';
 
 const app = express();
-const port = process.env.PORT || 3004;
+const port = envConfig.getPort();
 
 // Middleware
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+const allowedOrigins = envConfig.getAllowedOrigins();
 
 app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: false,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id']
 }));
 app.use(compression());
 app.use(cookieParser());

@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
 import {IHistory} from "../interface/object/IHistory";
 import {SaveHistoryDto} from "../dto/request/SaveHistoryDto";
-import {HistoryBaseService} from "../service/HistoryBaseService";
-import {HistoryUserService} from "../service/HistoryUserService";
+import {HistoryBaseService} from "../service/base/HistoryBaseService";
+import {HistoryUserService} from "../service/user/HistoryUserService";
 
 class HistoryController {
     saveHistoryApi = async (req: Request, res: Response) => {

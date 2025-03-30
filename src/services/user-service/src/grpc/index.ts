@@ -3,9 +3,7 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
 import {UserService} from '../service/user/UserService.js';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { envConfig } from '../config/EnvConfig.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -38,8 +36,8 @@ function startServer() {
     const server = new grpc.Server();
     server.addService((userProto as any).UserService.service, {updateSubscriptionType: updateSubscriptionTypeHandler });
 
-    const host = process.env.GRPC_HOST || '0.0.0.0';
-    const port = process.env.GRPC_PORT_USER_SERVICE || '50201';
+    const host = envConfig.getRpcHost();
+    const port = envConfig.getRpcHostPort();
     server.bindAsync(`${host}:${port}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
         if (err) {
             console.error('Failed to start gRPC server:', err);

@@ -4,25 +4,19 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
+import { envConfig } from './config/EnvConfig.js';
 
 import paymentRoute from './route/PaymentRoute.js';
 
-
 const app = express();
-const port = process.env.PORT || 3010;
+const port = envConfig.getPort();
 
 // Middleware
 app.use(cors({
-    origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
-        if (!origin || origin.match(/^https?:\/\/(localhost|tunez-ddb5f\.firebaseapp\.com|api-gateway)(:\d+)?$/)) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
+    origin: false,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id']
 }));
 
 app.use(compression());

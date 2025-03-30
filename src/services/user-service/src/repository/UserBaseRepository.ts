@@ -2,11 +2,11 @@ import {IUserBaseRepository} from "../interface/repository/IUserBaseRepository.j
 import {IUser} from "../interface/object/IUser.js";
 import {UserDto} from "../dto/response/UserDto.js";
 import {auth, database, firestore} from "../config/firebase/FireBaseConfig.js";
-import {injectable} from "tsyringe";
+import {singleton} from "tsyringe";
 import {SubscriptionType} from "../enum/SubscriptionType.js";
 import {UserRole} from "../enum/UserRole.js";
 
-@injectable()
+@singleton()
 export class UserBaseRepository implements IUserBaseRepository {
     async createUser(user: IUser): Promise<void> {
         const userData: IUser = {

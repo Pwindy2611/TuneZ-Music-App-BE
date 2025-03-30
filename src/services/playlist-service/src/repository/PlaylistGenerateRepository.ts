@@ -50,9 +50,6 @@ export class PlaylistGenerateRepository implements IPlaylistGenerateRepository{
 
         return historySnapshot.docs.map(doc => doc.data().musicId);
     }
-
-
-
 }
 
 export const generateRepo = new PlaylistGenerateRepository();

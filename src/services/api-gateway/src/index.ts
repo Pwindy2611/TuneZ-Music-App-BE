@@ -4,30 +4,18 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import { Request, Response, NextFunction } from "express";
-import { createHttpsServer } from './config/https/HttpsConfig.js';
+import { envConfig } from './config/EnvConfig.js';
 
 import {
-    /*followProxy,
-    historyProxy,
-    loveProxy,
-    musicProxy,
-    officialArtistProxy,
-    playlistProxy,
-    userProxy,
-    albumProxy,
-    subscriptionProxy,*/
     createProxy
 } from "./proxy/CreateProxy";
 import {authMiddleware} from "./middleware/AuthMiddleware";
-import * as dotenv from "dotenv";
-
-dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = envConfig.getPort();
 
 // Middleware
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+const allowedOrigins = envConfig.getAllowedOrigins();
 
 app.use(cors({
     origin: (origin, callback) => {
@@ -39,8 +27,22 @@ app.use(cors({
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    exposedHeaders: ['Set-Cookie'],
+    allowedHeaders: [
+        'Content-Type', 
+        'Authorization', 
+        'X-Requested-With',
+        'Accept',
+        'Origin',
+        'Access-Control-Allow-Headers',
+        'Access-Control-Request-Method',
+        'Access-Control-Request-Headers'
+    ],
+    exposedHeaders: [
+        'Set-Cookie',
+        'Access-Control-Allow-Origin',
+        'Access-Control-Allow-Credentials'
+    ],
+    maxAge: 86400 // 24 hours
 }));
 app.use(compression());
 app.use(cookieParser());
@@ -55,22 +57,7 @@ app.use((req, _res, next) => {
 });
 
 // Service URLs from environment variables
-type ServiceUrls = {
-    [key: string]: string | undefined;
-};
-
-const serviceUrls: ServiceUrls = {
-    users: process.env.USER_SERVICE_URL,
-    offartist: process.env.OFFICIAL_ARTIST_SERVICE_URL,
-    musics: process.env.MUSIC_SERVICE_URL,
-    history: process.env.HISTORY_SERVICE_URL,
-    love: process.env.LOVE_SERVICE_URL,
-    follow: process.env.FOLLOW_SERVICE_URL,
-    playlists: process.env.PLAYLIST_SERVICE_URL,
-    albums: process.env.ALBUM_SERVICE_URL,
-    subscriptions: process.env.SUBSCRIPTION_SERVICE_URL,
-    payment: process.env.PAYMENT_SERVICE_URL,
-};
+const serviceUrls = envConfig.getServiceUrls();
 
 app.use(
     "/api/:service",
@@ -89,9 +76,6 @@ app.use(
     }
 );
 
-
-
-
 // Health check endpoint
 app.get('/health', (_req, res) => {
     res.status(200).json({ status: 'UP' });
@@ -106,6 +90,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
         success: false,
         message: err.message || 'Something went wrong!'
     });
+    next()
 });
 
 // Start the server

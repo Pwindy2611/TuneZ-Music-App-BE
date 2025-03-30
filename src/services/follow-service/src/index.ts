@@ -6,27 +6,19 @@ import bodyParser from 'body-parser';
 import 'reflect-metadata';
 import './grpc/index'
 import FollowRoute from "./route/FollowRoute";
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { envConfig } from './config/EnvConfig.js';
 
 const app = express();
-const port = process.env.PORT || 3006;
+const port = envConfig.getPort();
 
 // Middleware
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+const allowedOrigins = envConfig.getAllowedOrigins();
 
 app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: false,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id']
 }));
 app.use(compression());
 app.use(cookieParser());
@@ -53,6 +45,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
         success: false,
         message: err.message || 'Something went wrong!'
     });
+    next();
 });
 
 // Start the server

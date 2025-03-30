@@ -1,21 +1,19 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { envConfig } from '../EnvConfig.js';
 
 export const momoConfig = {
-  partnerCode: process.env.MOMO_PARTNER_CODE || '',
-  publicKey: process.env.MOMO_PUBLIC_KEY || '',
-  returnUrl: process.env.MOMO_RETURN_URL || '',
-  paymentUrl: process.env.MOMO_PAYMENT_URL || '',
-  aesTokenUrl: process.env.MOMO_AES_TOKEN_URL || '',
-  ipnUrl: process.env.MOMO_IPN_URL || '',
-  disbursementUrl: process.env.MOMO_DISBURSEMENT_URL || '',
-  transactionStatusUrl: process.env.MOMO_TRANSACTION_STATUS_URL || '',
-  accessKey: process.env.MOMO_ACCESS_KEY || '',
-  secretKey: process.env.MOMO_SECRET_KEY || '',
-  storeId: process.env.MOMO_STORE_ID || '',
-  storeName: process.env.MOMO_STORE_NAME || '',
-  logo: process.env.MOMO_LOGO || ''
+  partnerCode: envConfig.getMomoConfig().partnerCode,
+  publicKey: envConfig.getMomoConfig().publicKey,
+  returnUrl: envConfig.getMomoConfig().returnUrl,
+  paymentUrl: envConfig.getMomoConfig().paymentUrl,
+  aesTokenUrl: envConfig.getMomoConfig().aesTokenUrl,
+  ipnUrl: envConfig.getMomoConfig().ipnUrl,
+  disbursementUrl: envConfig.getMomoConfig().disbursementUrl,
+  transactionStatusUrl: envConfig.getMomoConfig().transactionStatusUrl,
+  accessKey: envConfig.getMomoConfig().accessKey,
+  secretKey: envConfig.getMomoConfig().secretKey,
+  storeId: envConfig.getMomoConfig().storeId,
+  storeName: envConfig.getMomoConfig().storeName,
+  logo: envConfig.getMomoConfig().logo
 };
 
 const requiredEnvVars = [

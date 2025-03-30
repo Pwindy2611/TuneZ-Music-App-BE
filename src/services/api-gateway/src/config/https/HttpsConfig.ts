@@ -1,12 +1,9 @@
 import https from 'https';
 import fs from 'fs';
-import path from 'path';
-import dotenv from 'dotenv';
+import { envConfig } from '../EnvConfig.js';
 
-dotenv.config();
-
-const serverKeyPath = process.env.SERVER_KEY_PATH || path.join(process.cwd(), 'localhost-key.pem');
-const serverCertPath = process.env.SERVER_CERT_PATH || path.join(process.cwd(), 'localhost.pem');
+const serverKeyPath = envConfig.getServerKeyPath();
+const serverCertPath = envConfig.getServerCertPath();
 
 export const httpsOptions = {
   key: fs.readFileSync(serverKeyPath),

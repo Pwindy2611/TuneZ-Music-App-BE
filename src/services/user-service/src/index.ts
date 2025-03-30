@@ -5,33 +5,18 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
 import userRoute from './route/UserRoute.js';
-import dotenv from 'dotenv';
 import './grpc/index.js'
-
-dotenv.config();
+import { envConfig } from './config/EnvConfig.js';
 
 const app = express();
-const port = process.env.PORT || 3001; 
+const port = envConfig.getPort();
 
 // Middleware
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin) {
-            callback(null, true);
-            return;
-        }
-        
-        const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
-        
-        if (allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
+    origin: false,
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'x-user-id']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id']
 }));
 app.use(compression());
 app.use(cookieParser());
@@ -58,6 +43,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
         success: false,
         message: err.message || 'Something went wrong!'
     });
+    next();
 });
 
 // Start the server

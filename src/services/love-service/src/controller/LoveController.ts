@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
 import {ILove} from "../interface/object/ILove.js";
 import {SaveMusicDto} from "../dto/request/SaveMusicDto.js";
-import {LoveBaseService} from "../service/LoveBaseService.js";
-import {LoveUserService} from "../service/LoveUserService.js";
+import {LoveBaseService} from "../service/base/LoveBaseService.js";
+import {LoveUserService} from "../service/user/LoveUserService.js";
 import {IAuthRequest} from "../interface/object/IAuthRequest.js";
 
 class LoveController {
