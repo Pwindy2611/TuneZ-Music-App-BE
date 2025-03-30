@@ -21,7 +21,7 @@ export const getOfficialArtistInfo: IOfficialArtistBaseService["getOfficialArtis
                     resolve(response.albums);
                 }
             });
-        });;
+        });
 
         return {
             ...artist,

@@ -3,7 +3,6 @@ import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { albumBaseService } from '../service/base/AlbumBaseService.js';
-import dotenv from 'dotenv';
 import {envConfig} from "../config/EnvConfig.js";
 
 const __filename = fileURLToPath(import.meta.url);

@@ -4,7 +4,6 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import { Request, Response, NextFunction } from "express";
-import { createHttpsServer } from './config/https/HttpsConfig.js';
 import { envConfig } from './config/EnvConfig.js';
 
 import {
@@ -77,6 +76,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
         success: false,
         message: err.message || 'Something went wrong!'
     });
+    next()
 });
 
 // Start the server

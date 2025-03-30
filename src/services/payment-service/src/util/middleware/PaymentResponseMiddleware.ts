@@ -70,7 +70,7 @@ async function processSuccessfulPayment(itemId: string, userId: string) {
         console.error('gRPC error in isSubscription:', error);
         reject(new Error(`Error checking subscription: ${error.message}`));
         return;
-      };
+      }
 
       if (response.isSubscribed) {
         const subscriptionId = itemId;

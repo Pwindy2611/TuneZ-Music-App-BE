@@ -1,6 +1,5 @@
 import { subscriptionBaseService } from "../base/SubscriptionBaseService.js";
 import {firestore} from "../../config/firebase/FireBaseConfig.js";
-import { ISubscription } from "../../interface/object/ISubscription.js";
 import {userServiceClient} from "../../grpc/client/GrpcClients.js";
 import {SubscriptionStatus} from "../../enum/SubscriptionStatus.js";
 

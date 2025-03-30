@@ -1,6 +1,5 @@
 import https from 'https';
 import fs from 'fs';
-import path from 'path';
 import { envConfig } from '../EnvConfig.js';
 
 const serverKeyPath = envConfig.getServerKeyPath();

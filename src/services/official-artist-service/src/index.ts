@@ -52,6 +52,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
         success: false,
         message: err.message || 'Something went wrong!'
     });
+    next();
 });
 
 // Start the server
