@@ -5,6 +5,10 @@ services:
       context: ../src/services/api-gateway
     ports:
       - "3000:3000"
+    logging:
+      driver: 'gcplogs'
+      options:
+        gcp-project: 'united-bongo-455204-v2'
     env_file:
       - ../env/common/database.env
       - ../env/common/cors.env
