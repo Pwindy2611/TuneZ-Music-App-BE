@@ -1,15 +1,22 @@
-import {IsString, validateOrReject} from "class-validator";
+import {IsString, IsNotEmpty, MinLength, MaxLength, IsEnum, validateOrReject} from "class-validator";
 import {IPlaylist} from "../../interface/object/IPlaylist.js";
+import {PlaylistType} from "../../enum/PlaylistType.js";
 
 export class CreatePlaylistDto implements IPlaylist{
     @IsString()
+    @IsNotEmpty()
+    @MinLength(1)
+    @MaxLength(100)
     title: string;
 
     @IsString()
+    @IsNotEmpty()
+    @IsEnum(PlaylistType)
     type: string;
 
     @IsString()
-    value:string
+    @IsNotEmpty()
+    value: string;
 
     constructor(playlist: IPlaylist) {
         this.title = playlist.title;

@@ -7,7 +7,9 @@ import { PaymentCurrency } from '../enum/PaymentCurrency.js';
 import { CryptoUtil } from '../util/CryptoUtil.js';
 import { PaymentMethod } from '../enum/PaymentMethod.js';
 import { IPaymentRequest } from '../interface/request/IPaymentRequest.js';
-import {PaymentRepository} from "../repository/PaymentRepository.js";
+import { PaymentRepository } from "../repository/PaymentRepository.js";
+import { GetAllOrdersDto } from '../dto/request/GetAllOrdersDto.js';
+import { DeleteExpiredPendingOrdersDto } from '../dto/request/DeleteExpiredPendingOrdersDto.js';
 
 export class PaymentController {
   private static instance: PaymentController;
@@ -301,6 +303,51 @@ export class PaymentController {
         status: 500,
         success: false,
         message: error.message
+      });
+    }
+  }
+
+  async getAllOrders(req: Request, res: Response) {
+    try {
+      const filters = new GetAllOrdersDto(req.query);
+      await filters.validate();
+
+      const result = await PaymentRepository.getAllOrders(filters);
+
+      res.status(200).json({
+        status: 200,
+        success: true,
+        data: result
+      });
+    } catch (error) {
+      console.error('Get All Orders Error:', error);
+      res.status(500).json({
+        status: 500,
+        success: false,
+        message: error.message || 'Internal server error'
+      });
+    }
+  }
+
+  async deleteExpiredPendingOrders(req: Request, res: Response) {
+    try {
+      const filters = new DeleteExpiredPendingOrdersDto(req.query);
+      await filters.validate();
+
+      const result = await PaymentRepository.deleteExpiredPendingOrders(filters);
+
+      res.status(200).json({
+        status: 200,
+        success: true,
+        message: `Successfully deleted ${result.deletedCount} expired pending orders`,
+        data: result
+      });
+    } catch (error) {
+      console.error('Delete Expired Pending Orders Error:', error);
+      res.status(500).json({
+        status: 500,
+        success: false,
+        message: error.message || 'Internal server error'
       });
     }
   }

@@ -555,6 +555,46 @@ class MusicController {
             })
         }
     }
+    updateMusicApi = async (req: Request, res: Response) => {
+        try {
+            const musicId = req.params.musicId;
+            const updateData = req.body;
+            
+            const updatedMusic = await MusicBaseService.updateMusic.execute(musicId, updateData);
+            
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Music updated successfully',
+                data: updatedMusic
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`
+            });
+        }
+    }
+    deleteMusicApi = async (req: Request, res: Response) => {
+        try {
+            const musicId = req.params.musicId;
+            
+            await MusicBaseService.deleteMusic.execute(musicId);
+            
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Music deleted successfully'
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`
+            });
+        }
+    }
 }
 
 export default new MusicController();

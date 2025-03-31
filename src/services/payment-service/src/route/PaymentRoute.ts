@@ -85,4 +85,13 @@ router.get('/listPayments', async (req: Request, res: Response) => {
   await paymentController.listPayments(req, res);
 });
 
+// Admin routes
+router.get('/orders',  async (req: Request, res: Response) => {
+  await paymentController.getAllOrders(req, res);
+});
+
+router.delete('/expired-pending-orders', async (req: Request, res: Response) => {
+  await paymentController.deleteExpiredPendingOrders(req, res);
+});
+
 export default router;

@@ -6,4 +6,4 @@ export interface IUserPlaylist{
     musicIds?: string[];
     createdAt?: string;
     updatedAt?: string;
- }
+}

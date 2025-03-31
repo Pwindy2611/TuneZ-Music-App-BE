@@ -7,6 +7,8 @@ const router = express.Router();
 //CURD
 router.post('/createNewMusic', MusicController.createMusicApi);
 router.post('/uploadMusicByUser', authMiddleware, MusicController.uploadMusicByUserApi);
+router.put('/updateMusic/:musicId', authMiddleware, MusicController.updateMusicApi);
+router.delete('/deleteMusic/:musicId', authMiddleware, MusicController.deleteMusicApi);
 
 //GET REQUEST
 router.get('/getAllMusic', MusicController.getAllMusicsApi);
@@ -25,4 +27,8 @@ router.get('/getUserMusicState', authMiddleware, MusicController.getUserMusicSta
 
 //MICROSERVICE
 router.post('/incrementLoveCount/:musicId', MusicController.incrementLoveCountApi);
+
+//UPDATE & DELETE
+
+
 export default router;

@@ -8,10 +8,12 @@ export const getAllAlbums: IAlbumBaseService['getAllAlbums'] = async () => {
         if (!snapshot.exists()) {
             return [];
         }
-        
+
         const albums: IAlbum[] = [];
         snapshot.forEach((childSnapshot) => {
-            albums.push(childSnapshot.val() as IAlbum);
+            const album = childSnapshot.val() as IAlbum;
+            album.id = childSnapshot.key;
+            albums.push(album);
         });
         
         return albums;

@@ -4,22 +4,19 @@ import { authMiddleware } from '../util/middleware/AuthMiddleware.js';
 
 const router = Router();
 
+//SYSTEM
 router.post('/createSubscription', subscriptionController.createSubscriptionApi);
-
-router.get('/getSubscriptionById/:id', subscriptionController.getSubscriptionByIdApi);
-
-router.get('/getAllSubscriptions', subscriptionController.getAllSubscriptionsApi);
-
 router.post('/updateSubscription/:id', subscriptionController.updateSubscriptionApi);
-
 router.delete('/deleteSubscription/:id', subscriptionController.deleteSubscriptionApi);
 
-router.get('/getUserSubscriptions', authMiddleware, subscriptionController.getUserSubscriptionsApi);
-
+//USER
 router.post('/subscribeToSubscription/:subscriptionId', authMiddleware, subscriptionController.subscribeToSubscriptionApi);
-
 router.post('/unsubscribeFromSubscription/:subscriptionId', authMiddleware, subscriptionController.unsubscribeFromSubscriptionApi);
-
 router.post('/renewSubscription/:subscriptionId', authMiddleware, subscriptionController.renewSubscriptionApi);
+
+//GET
+router.get('/getSubscriptionById/:id', subscriptionController.getSubscriptionByIdApi);
+router.get('/getAllSubscriptions', subscriptionController.getAllSubscriptionsApi);
+router.get('/getUserSubscriptions', authMiddleware, subscriptionController.getUserSubscriptionsApi);
 
 export default router; 
