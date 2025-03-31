@@ -367,6 +367,7 @@ class MusicController {
                     name: musicDetail.name,
                     artist: musicDetail.artist,
                     imgPath: musicDetail.imgPath,
+                    lyrics: musicDetail.lyrics,
                 }
             })
         }catch (error){

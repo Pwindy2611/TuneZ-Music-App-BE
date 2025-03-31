@@ -28,7 +28,7 @@ class AuthenticationValidate {
             res.status(400).json({ status: 400, success: false, message: 'Must have >= 3 & <= 16' });
             return;
         }
-        const existingUser = await UserBaseService.getUserByEmailService.execute(email);
+        const existingUser = await UserBaseService.getUserByEmail.execute(email);
 
         if (existingUser) {
             res.status(400).json({status: 400, success: false, message: 'User already exists' });
@@ -59,12 +59,12 @@ class AuthenticationValidate {
                 return;
             }
 
-            const existingUser = await UserBaseService.getUserByEmailService.execute(user.email ?? "");
+            const existingUser = await UserBaseService.getUserByEmail.execute(user.email ?? "");
 
             if (!existingUser) {
                 firstRegister = true;
                 const firebaseUser = await auth.getUser(user.uid);
-                await UserBaseService.createUserService.execute({
+                await UserBaseService.createUser.execute({
                     _id: firebaseUser.uid,
                     email: firebaseUser.email ?? "",
                     username: firebaseUser.displayName ?? "",
@@ -77,6 +77,10 @@ class AuthenticationValidate {
 
             await saveSessionTokenToDatabase(user.uid, sessionCookie);
 
+            if (existingUser?.account) {
+                existingUser.account.lastLogin = new Date().toISOString();
+                await UserBaseService.updateUser.execute(existingUser);
+            }
 
             res.cookie('session', sessionCookie, {
                 maxAge: expiresIn,

@@ -31,6 +31,12 @@ export class UserBaseRepository implements IUserBaseRepository {
         });
     }
 
+    async updateUser(user: IUser): Promise<void> {
+        const userRef = database.ref(`users/${user._id}`);
+        await userRef.set(user);
+    }
+
+
     async deleteUser(userId: string): Promise<void> {
         await auth.deleteUser(userId);
 

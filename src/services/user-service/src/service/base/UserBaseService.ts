@@ -6,12 +6,14 @@ import { GetUserByEmailService } from "./UserBaseService.GetUserByEmail.js";
 import { GetUserCustomTokenService } from "./UserBaseService.GetUserCustomToken.js";
 import {DeleteUserService} from "./UserBaseService.DeleteUser.js";
 import {GetUserByIdService} from "./UserBaseService.GetUserById.js";
+import {UpdateUserService} from "./UserBaseService.UpdateUser.js";
 
 export const UserBaseService = {
-    createUserService: container.resolve(CreateUserService),
-    deleteUserService: container.resolve(DeleteUserService),
-    getAllUsersService: container.resolve(GetAllUsersService),
-    getUserByEmailService: container.resolve(GetUserByEmailService),
+    createUser: container.resolve(CreateUserService),
+    deleteUser: container.resolve(DeleteUserService),
+    updateUser: container.resolve(UpdateUserService),
+    getAllUsers: container.resolve(GetAllUsersService),
+    getUserByEmail: container.resolve(GetUserByEmailService),
     getUserCustomToken: container.resolve(GetUserCustomTokenService),
     getUserById: container.resolve(GetUserByIdService),
 };
