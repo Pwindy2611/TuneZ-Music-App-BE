@@ -166,7 +166,7 @@ class OfficialArtistController {
         }
     }
 
-    getAllOfficialArtistApi = async (req: IAuthRequest, res: Response) => {
+    getAllOfficialArtistByUserApi = async (req: IAuthRequest, res: Response) => {
         try {
             const userId = req.userId;
 
@@ -188,6 +188,21 @@ class OfficialArtistController {
             res.status(200).json({status: 200, success: true, artists});
         }catch (error) {
             res.status(500).json({status: 500, success: false, message: error.message});
+        }
+    }
+
+    getAllOfficialArtistApi = async (req: Request, res: Response) => {
+        try {
+            const officialArtists = await OfficialArtistBaseService.getAllOfficialArtists();
+
+            if (officialArtists.length === 0) {
+                res.status(404).json({ status: 404, success: false, message: 'No official artists found' });
+                return;
+            }
+
+            res.status(200).json({ status: 200, success: true, artists: officialArtists });
+        } catch (error) {
+            res.status(500).json({ status: 500, success: false, message: error.message });
         }
     }
 }

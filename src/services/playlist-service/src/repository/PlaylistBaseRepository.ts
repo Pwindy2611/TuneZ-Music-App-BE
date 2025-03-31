@@ -78,6 +78,12 @@ class PlaylistBaseRepository implements IPlaylistBaseRepository {
 
         return allPlaylists.filter(playlist => valueArray.includes(playlist.value));
     }
+
+    async getAllPlaylists(): Promise<IPlaylist[]> {
+        const playlistRef = database.ref("playlists");
+        const snapshot = await playlistRef.get();
+        return Object.values(snapshot.val());
+    }
 }
 
 export const baseRepo = new PlaylistBaseRepository();

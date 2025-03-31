@@ -5,6 +5,7 @@ export interface IMusicBaseRepository {
     getMusicByGenres(genre: string): Promise<any>;
     getMusicById(musicId: string): Promise<any>;
     isOfficialArtistExist(artistId: string): Promise<boolean>;
-    incrementLoveCount(musicId: string): Promise<void>
-
+    incrementLoveCount(musicId: string): Promise<void>;
+    updateMusic(musicId: string, updateData: any): Promise<any>;
+    deleteMusic(musicId: string): Promise<void>;
 }

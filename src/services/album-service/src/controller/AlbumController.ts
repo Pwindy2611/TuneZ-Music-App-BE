@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import multer from 'multer';
 import { albumBaseService } from '../service/base/AlbumBaseService.js';
 import { CreateAlbumDto } from '../dto/request/CreateAlbumDto.js';
+import { UpdateAlbumDto } from '../dto/request/UpdateAlbumDto.js';
 import { IFile } from '../interface/object/IFile.js';
 import {IAlbum} from "../interface/object/IAlbum.js";
 
@@ -24,7 +25,7 @@ export class AlbumController {
 
         async (req: Request, res: Response) => {
             try {
-                const { title, officialArtistId, type, musicIds } = req.body;
+                const data= req.body;
 
                 const multerFile = (req.files as { coverImage?: Express.Multer.File[] })?.coverImage?.[0];
 
@@ -38,10 +39,11 @@ export class AlbumController {
                 }
 
                 const createAlbumDto = new CreateAlbumDto(
-                    title,
-                    officialArtistId,
-                    type,
-                    musicIds ? JSON.parse(musicIds) : undefined
+                    data.title,
+                    data.officialArtistId,
+                    data.type,
+                    data.musicIds ? JSON.parse(data.musicIds) : undefined,
+                    data.releaseDate ? new Date(data.releaseDate).toISOString() : undefined
                 );
 
                 await createAlbumDto.validate();
@@ -77,11 +79,17 @@ export class AlbumController {
 
         async (req: Request, res: Response) => {
             try {
-                const { title, officialArtistId, type, musicIds } = req.body;
+                const { title, officialArtistId, type, musicIds, releaseDate } = req.body;
                 const albumId = req.params.id;
                 const multerFile = (req.files as { coverImage?: Express.Multer.File[] })?.coverImage?.[0];
                 
-                const updateAlbumDto = new CreateAlbumDto(title, officialArtistId, type, musicIds);
+                const updateAlbumDto = new UpdateAlbumDto(
+                    title, 
+                    officialArtistId, 
+                    type, 
+                    musicIds ? JSON.parse(musicIds) : undefined,
+                    releaseDate
+                );
 
                 await updateAlbumDto.validate();
                 let imgObject: IFile | undefined;

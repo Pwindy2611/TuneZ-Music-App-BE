@@ -5,5 +5,5 @@ export interface IAlbum {
     type: string;
     coverImage?: string;
     musicIds?: string[];
-    releaseDate?: string;
+    releaseDate: string;
 }

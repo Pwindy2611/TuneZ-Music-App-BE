@@ -156,12 +156,18 @@ class PlaylistController {
 
             const { title } = req.body;
 
-            await playlistUserService.createUserPlaylist(userId, title);
+            if (!title) {
+                res.status(400).json({ message: "Title is required" });
+                return;
+            }
+
+            const newPlaylist = await playlistUserService.createUserPlaylist(userId, title);
 
             res.status(201).json({
                 status: 201,
                 success: true,
                 message: "Playlist created successfully",
+                data: newPlaylist
             });
         }catch (error) {
             res.status(500).json({
@@ -186,9 +192,15 @@ class PlaylistController {
 
                 const { playlistId, title, description } = req.body;
 
+                if (!playlistId) {
+                    res.status(400).json({ message: "Playlist ID is required" });
+                    return;
+                }
+
                 const updatePlaylist: IUserPlaylist = {
+                    id: playlistId,
                     title,
-                    description,
+                    description
                 }
 
                 const multerFile = (req.files as { coverImage?: Express.Multer.File[] })?.coverImage?.[0];
@@ -203,12 +215,13 @@ class PlaylistController {
                     };
                 }
 
-                await playlistUserService.updateUserPlaylist(userId, playlistId, updatePlaylist, coverImage);
+                const updatedPlaylist = await playlistUserService.updateUserPlaylist(userId, playlistId, updatePlaylist, coverImage);
 
                 res.status(200).json({
                     status: 200,
                     success: true,
                     message: "Playlist updated successfully",
+                    data: updatedPlaylist
                 });
             }catch (error) {
                 res.status(500).json({
@@ -321,6 +334,49 @@ class PlaylistController {
                 success: false,
                 message: error.message
             })
+        }
+    }
+    async deletePlaylistApi(req: Request, res: Response) {
+        try {
+            const { playlistId } = req.body;
+
+            if (!playlistId) {
+                res.status(400).json({ message: "Playlist ID is required" });
+                return;
+            }
+
+            await PlaylistBaseService.deletePlaylist(playlistId);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: "Playlist deleted successfully"
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: error.message
+            });
+        }
+    }
+ 
+    async getAllPlaylistsApi(req: Request, res: Response) {
+        try {
+            const playlists = await PlaylistBaseService.getAllPlaylists();
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: "All playlists fetched successfully",
+                data: playlists
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: error.message
+            });
         }
     }
 }

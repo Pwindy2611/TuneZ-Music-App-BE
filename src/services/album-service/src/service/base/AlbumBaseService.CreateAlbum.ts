@@ -20,7 +20,8 @@ export const createAlbum: IAlbumBaseService['createAlbum'] = async (album, cover
             officialArtistId: album.officialArtistId,
             type: album.type,
             coverImage: coverImagePath,
-            releaseDate: new Date().toISOString(),
+            musicIds: album.musicIds,
+            releaseDate: album.releaseDate
         }
 
         await albumRef.set(newAlbum);

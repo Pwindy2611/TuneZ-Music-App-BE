@@ -7,6 +7,8 @@ const router = express.Router();
 //SYSTEM
 router.post('/createNewPlaylist', PlaylistController.createPlaylistApi);
 router.post('/updatePlaylist', PlaylistController.updatePlaylistApi);
+router.delete('/deletePlaylist', PlaylistController.deletePlaylistApi);
+router.get('/getAllPlaylist', PlaylistController.getAllPlaylistsApi);
 router.get('/generatePlaylist', authMiddleware, PlaylistController.generatePlaylistApi);
 
 

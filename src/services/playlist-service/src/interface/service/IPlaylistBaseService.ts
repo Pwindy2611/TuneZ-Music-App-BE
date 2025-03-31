@@ -6,4 +6,5 @@ export interface IPlaylistBaseService {
     updatePlaylist(id: string, playlist: IPlaylist, imgFile?: IFile): Promise<void>;
     deletePlaylist(id: string): Promise<void>;
     getPlaylistByFilter(values: string | string[], type: string): Promise<IPlaylist[]>;
+    getAllPlaylists(): Promise<IPlaylist[]>;
 }

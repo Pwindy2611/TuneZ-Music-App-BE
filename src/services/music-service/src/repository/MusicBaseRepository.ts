@@ -4,6 +4,7 @@ import FetchBase from "../util/base/FetchBase.js";
 import {singleton} from "tsyringe";
 import UploadBase from "../util/base/UploadBase.js";
 import {IMusic} from "../interface/object/IMusic.js";
+import {IMusicFile} from "../interface/object/IMusicFile.js";
 
 @singleton()
 export class MusicBaseRepository implements IMusicBaseRepository {
@@ -110,4 +111,30 @@ export class MusicBaseRepository implements IMusicBaseRepository {
         });
     }
 
+    async updateMusic(musicId: string, updateData: any): Promise<any> {
+        const musicRef = database.ref(`musics/${musicId}`);
+        const snapshot = await musicRef.get();
+        
+        if (!snapshot.exists()) {
+            throw new Error('Music not found');
+        }
+
+        await musicRef.update(updateData);
+        return await this.getMusicById(musicId);
+    }
+
+    async deleteMusic(musicId: string): Promise<void> {
+        const musicRef = database.ref(`musics/${musicId}`);
+        const snapshot = await musicRef.get();
+        
+        if (!snapshot.exists()) {
+            throw new Error('Music not found');
+        }
+
+        await musicRef.remove();
+    }
+
+    async uploadMusicFile(musicId: string, file: IMusicFile): Promise<string> {
+        return await UploadBase.uploadAndGetUrl(file, musicId) ?? '';
+    }
 }
