@@ -12,7 +12,7 @@ import {musicBaseRepository, musicStreamRepository, musicStreamService} from "..
 import "reflect-metadata";
 
 const uploadMulter = multer({
-    limits: { fileSize: 10 * 1024 * 1024 },
+    limits: { fileSize: 50 * 1024 * 1024 },
     fileFilter: (_req, file, cb) => {
         if (file.mimetype.startsWith('audio/') || file.mimetype.startsWith('image/')) {
             cb(null, true);
