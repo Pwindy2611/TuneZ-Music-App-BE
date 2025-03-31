@@ -12,8 +12,6 @@ import { envConfig } from './config/EnvConfig.js';
 const app = express();
 const port = envConfig.getPort();
 
-// Middleware
-const allowedOrigins = envConfig.getAllowedOrigins();
 
 app.use(cors({
     origin: false,
