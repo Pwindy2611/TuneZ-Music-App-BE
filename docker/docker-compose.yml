@@ -5,10 +5,6 @@ services:
       context: ../src/services/api-gateway
     ports:
       - "3000:3000"
-    logging:
-      driver: 'gcplogs'
-      options:
-        gcp-project: 'united-bongo-455204-v2'
     env_file:
       - ../env/common/database.env
       - ../env/common/cors.env
@@ -224,6 +220,33 @@ services:
       - ../env/common/grpc.env
       - ../env/common/cors.env
       - ../env/services/payment.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+  search-service:
+    build:
+      context: ../src/services/search-service
+    ports:
+      - "3011:3000"
+      - "50211:50211"
+    depends_on:
+      - music-service
+      - official-artist-service
+      - user-service
+      - history-service
+      - love-service
+      - follow-service
+      - playlist-service
+      - album-service
+    env_file:
+      - ../env/common/database.env
+      - ../env/common/grpc.env
+      - ../env/common/cors.env
+      - ../env/services/search.env
     volumes:
       - ../key/key.json:/usr/src/app/key.json
       - ../tsconfig.json:/usr/src/app/tsconfig.json

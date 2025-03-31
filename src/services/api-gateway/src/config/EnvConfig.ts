@@ -45,6 +45,7 @@ class EnvConfig {
             albums: this.env.ALBUM_SERVICE_URL,
             subscriptions: this.env.SUBSCRIPTION_SERVICE_URL,
             payment: this.env.PAYMENT_SERVICE_URL,
+            search: this.env.SEARCH_SERVICE_URL,
         };
 
         // Kiểm tra xem có URL nào bị thiếu không

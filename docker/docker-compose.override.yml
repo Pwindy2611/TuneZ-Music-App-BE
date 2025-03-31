@@ -54,3 +54,8 @@ services:
     ports:
       - "9237:9227"
     command: npm run debug
+
+  search-service:
+    ports:
+      - "9238:9227"
+    command: npm run debug
