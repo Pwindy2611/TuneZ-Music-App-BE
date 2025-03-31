@@ -4,37 +4,34 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'http';
-import officialArtistRoute from './route/OfficialArtistRoute.js'
-import 'reflect-metadata';
-import './grpc/index.js'
 import { envConfig } from './config/EnvConfig.js';
+import searchRoute from './route/SearchRoute.js';
 
 const app = express();
 const port = envConfig.getPort();
 
 // Middleware
-const allowedOrigins = envConfig.getAllowedOrigins();
-
 app.use(cors({
     origin: false,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id']
 }));
+
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use((req, _res, next) => {
-    console.log(`[Official Artist Api] Request method: ${req.method}, path: ${req.path}`);
+app.use((req, res, next) => {
+    console.log(`[Search Api] Request method: ${req.method}, path: ${req.path}`);
     next();
 });
 
 // Routes
-app.use('/api', officialArtistRoute);
+app.use('/api', searchRoute);
 
 // Health check endpoint
-app.get('/health', (_req, res) => {
+app.get('/health', (req, res) => {
     res.status(200).json({ status: 'UP' });
 });
 
@@ -53,5 +50,5 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 // Start the server
 const server = http.createServer(app);
 server.listen(port, () => {
-    console.log(`Official Artist service is running on http://localhost:${port}/`);
+    console.log(`Search service is running on http://localhost:${port}/`);
 });

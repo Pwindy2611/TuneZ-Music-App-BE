@@ -12,7 +12,7 @@ class FetchBase {
             if (!musicData) return null;
 
             return new MusicResponseDto(
-                musicSnap.key as string,
+                musicId,
                 musicData.name,
                 musicData.artist,
                 musicData.genres,

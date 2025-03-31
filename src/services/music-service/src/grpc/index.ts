@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { musicBaseRepository } from '../config/container/Container.js';
 import { envConfig } from '../config/EnvConfig.js';
+import {MusicBaseService} from "../service/base/MusicBaseService.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,9 +33,31 @@ async function incrementLoveCountHandler(call: any, callback: any) {
     }
 }
 
+async function getAllMusicHandler(call: any, callback: any) {
+    try {
+        const response = await MusicBaseService.getAllMusic.execute();
+
+        if (!response) {
+            callback({
+                code: grpc.status.NOT_FOUND,
+                message: 'No music found'
+            });
+            return;
+        }
+
+        const musicWithType = response.map((music: any) => ({ ...music, type: 'Song' }));
+
+        callback(null, { music: musicWithType });
+    } catch (error) {
+        callback({
+            code: grpc.status.INTERNAL,
+            message: `Error getting all music: ${error.message}`
+        });
+    }
+}
 function startServer() {
     const server = new grpc.Server();
-    server.addService((musicProto as any).MusicService.service, { incrementLoveCount: incrementLoveCountHandler });
+    server.addService((musicProto as any).MusicService.service, { incrementLoveCount: incrementLoveCountHandler, getAllMusic: getAllMusicHandler });
 
     const host = envConfig.getRpcHost();
     const port = envConfig.getRpcHostPort();
