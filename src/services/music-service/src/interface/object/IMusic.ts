@@ -9,4 +9,5 @@ export interface IMusic {
     officialArtistId?: string;
     musicPath?: string;
     imgPath?: string;
+    lyrics?: string;
 }

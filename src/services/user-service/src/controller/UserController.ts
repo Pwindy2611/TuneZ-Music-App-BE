@@ -8,7 +8,7 @@ import {UserService} from "../service/user/UserService.js";
 class UserController {
     getAllUsersApi = async (_req: Request, res: Response) => {
         try {
-            const users = await UserBaseService.getAllUsersService.execute();
+            const users = await UserBaseService.getAllUsers.execute();
             res.status(200).json({ status: 200, users });
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -101,7 +101,7 @@ class UserController {
         try {
             const userId = req.userId || req.params.userId;
 
-            await UserBaseService.deleteUserService.execute(userId);
+            await UserBaseService.deleteUser.execute(userId);
 
             res.status(200).json({ status: 200, message: 'Delete user successfully' });
         } catch (error) {
