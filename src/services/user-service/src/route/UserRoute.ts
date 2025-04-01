@@ -22,6 +22,6 @@ router.post('/sendOtpEmail', MusicController.sendOtpEmailApi);
 router.post('/verifyOtp', MusicController.verifyOtpEmailApi);
 
 //CRUD
-router.post('/deleteUser/:userId', MusicController.deleteUserApi);
+router.delete('/deleteUser/:userId', MusicController.deleteUserApi);
 
 export default router;
