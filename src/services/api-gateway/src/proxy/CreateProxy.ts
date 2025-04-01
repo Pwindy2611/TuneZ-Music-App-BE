@@ -16,7 +16,8 @@ export const createProxy = (serviceUrl: string, pathPrefix: string) => {
                 proxyReqOpts.headers = {
                     'Content-Type': req.headers['content-type'] || '',
                     'Authorization': req.headers['authorization'] || '',
-                    'x-user-id': req.headers['x-user-id'] || ''
+                    'x-user-id': req.headers['x-user-id'] || '',
+                    'Cookie': req.headers['cookie'] || ''
                 };
                 
                 console.log(`[PROXY] Requesting: ${proxyReqOpts.protocol}//${proxyReqOpts.host}${proxyReqOpts.path}`);
@@ -24,6 +25,10 @@ export const createProxy = (serviceUrl: string, pathPrefix: string) => {
             },
             userResDecorator: async (proxyRes: any, proxyResData: any, req: Request, res: Response) => {
                 console.log(`[PROXY] Response received from ${serviceUrl}: ${proxyRes.statusCode}`);
+
+                if (proxyRes.headers['set-cookie']) {
+                    res.setHeader('set-cookie', proxyRes.headers['set-cookie']);
+                }
 
                 const resContentType = proxyRes.headers["content-type"] || "";
                 if (resContentType.startsWith("audio/")) {

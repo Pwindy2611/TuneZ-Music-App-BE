@@ -21,7 +21,7 @@ class UserController {
     getUserCustomTokenApi = async (req: Request, res: Response) => {
         try {
             const email = req.query.email as string;
-            const cookie = req.cookies.session as string;
+            const cookie = req.cookies?.session as string;
             const userIdentifier = email || cookie ;
 
             const token = await UserBaseService.getUserCustomToken.execute(userIdentifier);
@@ -99,7 +99,7 @@ class UserController {
     };
     deleteUserApi = async (req: IAuthRequest, res: Response) => {
         try {
-            const userId = req.userId || req.params.userId;
+            const userId = req.params.userId;
 
             await UserBaseService.deleteUser.execute(userId);
 
