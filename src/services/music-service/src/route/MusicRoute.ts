@@ -7,8 +7,8 @@ const router = express.Router();
 //CURD
 router.post('/createNewMusic', MusicController.createMusicApi);
 router.post('/uploadMusicByUser', authMiddleware, MusicController.uploadMusicByUserApi);
-router.put('/updateMusic/:musicId', authMiddleware, MusicController.updateMusicApi);
-router.delete('/deleteMusic/:musicId', authMiddleware, MusicController.deleteMusicApi);
+router.put('/updateMusic/:musicId', MusicController.updateMusicApi);
+router.delete('/deleteMusic/:musicId', MusicController.deleteMusicApi);
 
 //GET REQUEST
 router.get('/getAllMusic', MusicController.getAllMusicsApi);
