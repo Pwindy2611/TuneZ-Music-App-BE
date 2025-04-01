@@ -49,7 +49,11 @@ app.use(cookieParser());
 app.use(bodyParser.json({
     limit: '50mb',
 }));
+<<<<<<< HEAD
 app.use(bodyParser.urlencoded({ extended: true , limit: '50mb'}));
+=======
+app.use(bodyParser.urlencoded({ extended: true }));
+>>>>>>> parent of e345b63 (new api)
 
 // Log request method and URL
 app.use((req, _res, next) => {

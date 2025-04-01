@@ -1,0 +1,24 @@
+syntax = 'proto3';
+
+package subscription;
+
+service SubscriptionService {
+  rpc IsSubscription (IsSubscriptionRequest) returns (IsSubscriptionResponse) {}
+  rpc Subscribe (SubscribeRequest) returns (SubscribeResponse) {}
+}
+
+message IsSubscriptionRequest {
+  string id = 1;
+}
+
+message IsSubscriptionResponse {
+  bool isSubscribed = 1;
+}
+
+message SubscribeRequest {
+  string userId = 1;
+  string subscriptionId = 2;
+}
+
+message SubscribeResponse {
+}

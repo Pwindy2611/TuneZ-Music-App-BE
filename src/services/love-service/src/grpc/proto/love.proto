@@ -1,0 +1,17 @@
+// src/services/love-service/src/grpc/proto/love.proto
+syntax = "proto3";
+
+package love;
+
+service LoveService {
+  rpc GetMusicIds (GetMusicIdsRequest) returns (GetMusicIdsResponse) {}
+}
+
+message GetMusicIdsRequest {
+  string userId = 1;
+  int32 limit = 2;
+}
+
+message GetMusicIdsResponse {
+  repeated string musicIds = 1;
+}

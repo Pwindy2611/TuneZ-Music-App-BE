@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package album;
+
+service AlbumService {
+  rpc GetAlbumsByArtist (GetAlbumsByArtistRequest) returns (GetAlbumsByArtistResponse) {}
+}
+
+message GetAlbumsByArtistRequest {
+  string artistId = 1;
+}
+
+message Album {
+  string id = 1;
+  string title = 2;
+  string type = 3;
+  string coverImage = 4;
+  string releaseDate = 5;
+}
+
+message GetAlbumsByArtistResponse {
+  repeated Album albums = 1;
+}
