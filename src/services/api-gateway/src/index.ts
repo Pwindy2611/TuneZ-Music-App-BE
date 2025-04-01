@@ -49,7 +49,7 @@ app.use(cookieParser());
 app.use(bodyParser.json({
     limit: '50mb',
 }));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true , limit: '50mb'}));
 
 // Log request method and URL
 app.use((req, _res, next) => {

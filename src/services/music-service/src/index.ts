@@ -24,8 +24,8 @@ app.use(cors({
 }));
 app.use(compression());
 app.use(cookieParser());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ extended: true , limit: '50mb'}));
 app.use((req, _res, next) => {
     console.log(`[Music Api] Request method: ${req.method}, path: ${req.path}`);
     next();
