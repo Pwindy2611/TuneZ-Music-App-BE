@@ -31,7 +31,7 @@ class MusicController {
         ]),
         async (req: Request, res: Response) => {
             try {
-                const { name, artist, duration, genres, officialArtistId } = req.body;
+                const { name, artist, duration, genres, officialArtistId, lyrics } = req.body;
 
                 const arrGenres: IMusicGenre[] = JSON.parse(genres);
 
@@ -41,7 +41,8 @@ class MusicController {
                     artist,
                     duration: Number(duration),
                     genres: arrGenres,
-                    officialArtistId
+                    officialArtistId,
+                    lyrics: lyrics || ""
                 };
 
                 const createMusicDto = new CreateMusicDto(musicData);
@@ -101,6 +102,29 @@ class MusicController {
             }
         },
     ];
+
+    updateMusicApi = async (req: Request, res: Response) => {
+        try {
+            const musicId = req.params.musicId;
+            const updateData: IMusic = {
+                ...req.body,
+            };
+            const updatedMusic = await MusicBaseService.updateMusic.execute(musicId, updateData);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Music updated successfully',
+                data: updatedMusic
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`
+            });
+        }
+    }
 
     uploadMusicByUserApi = [
         uploadMulter.fields([
@@ -558,26 +582,6 @@ class MusicController {
                 success: false,
                 message: `Internal Server Error ${error.message}`,
             })
-        }
-    }
-    updateMusicApi = async (req: Request, res: Response) => {
-        try {
-            const musicId = req.params.musicId;
-            const updateData = req.body;
-            const updatedMusic = await MusicBaseService.updateMusic.execute(musicId, updateData);
-            
-            res.status(200).json({
-                status: 200,
-                success: true,
-                message: 'Music updated successfully',
-                data: updatedMusic
-            });
-        } catch (error) {
-            res.status(500).json({
-                status: 500,
-                success: false,
-                message: `Internal Server Error ${error.message}`
-            });
         }
     }
     deleteMusicApi = async (req: Request, res: Response) => {

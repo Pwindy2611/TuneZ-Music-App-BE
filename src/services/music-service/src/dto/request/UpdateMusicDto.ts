@@ -1,6 +1,7 @@
-import { IsString, IsNumber, IsOptional, IsNotEmpty, validateOrReject } from 'class-validator';
+import {IsString, IsNumber, IsOptional, IsNotEmpty, validateOrReject, IsArray} from 'class-validator';
 import {IMusic} from "../../interface/object/IMusic.js";
 import {SongType} from "../../enum/SongType.js";
+import {IMusicGenre} from "../../interface/object/IMusicGenre.js";
 
 export class UpdateMusicDto implements Partial<IMusic> {
     @IsOptional()
@@ -18,9 +19,9 @@ export class UpdateMusicDto implements Partial<IMusic> {
     duration?: number;
 
     @IsOptional()
-    @IsString()
+    @IsArray()
     @IsNotEmpty()
-    genres?: string;
+    genres?: string[] | IMusicGenre[];
 
     @IsOptional()
     @IsString()
