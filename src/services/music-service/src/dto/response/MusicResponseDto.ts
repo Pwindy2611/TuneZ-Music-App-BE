@@ -1,15 +1,17 @@
+import { IMusicGenre } from "../../interface/object/IMusicGenre.js";
+
 export class MusicResponseDto {
     _id: string;
     name: string;
     artist: string;
-    genres: string;
+    genres: IMusicGenre[];
     duration: number;
     imgPath: string;
     
     constructor(_id: string,
                 name: string,
                 artist: string,
-                genres: string,
+                genres: IMusicGenre[],
                 duration: number, 
                 imgPath: string,) {
         this._id = _id;

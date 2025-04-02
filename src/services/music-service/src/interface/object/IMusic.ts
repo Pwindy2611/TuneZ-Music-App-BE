@@ -1,12 +1,13 @@
-import {SongType} from '../../enum/SongType.js'
+import { IMusicGenre } from "./IMusicGenre.js";
+
 export interface IMusic {
     name: string;
-    songType: SongType;
+    songType: string;
     artist: string;
     duration: number;
-    genres: string;
-    userId?: string;
+    genres: string[] | IMusicGenre[];
     officialArtistId?: string;
+    userId?: string;
     musicPath?: string;
     imgPath?: string;
     lyrics?: string;
