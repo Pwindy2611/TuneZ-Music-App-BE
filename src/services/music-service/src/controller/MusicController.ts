@@ -139,7 +139,7 @@ class MusicController {
                     res.status(401).send("Unauthorized");
                     return;
                 }
-                const { name, artist, duration, genres } = req.body;
+                const { name, artist, duration, genres, lyrics } = req.body;
 
                 const arrGenres: IMusicGenre[] = JSON.parse(genres);
 
@@ -149,7 +149,8 @@ class MusicController {
                     artist,
                     duration: Number(duration),
                     genres: arrGenres,
-                    userId
+                    userId,
+                    lyrics: lyrics || ""
                 };
 
                 const uploadMusicDto = new UploadMusicDto(musicData);
@@ -190,22 +191,13 @@ class MusicController {
                     message: 'User uploaded music successfully',
                     music: newMusic,
                 });
-            } catch (error: unknown) {
-                if (error instanceof Error) {
-                    console.error('Error uploading user music:', error.message);
-                    res.status(500).json({
-                        status: 500,
-                        success: false,
-                        message: error.message,
-                    });
-                } else {
-                    console.error('Unexpected error while uploading user music');
-                    res.status(500).json({
-                        status: 500,
-                        success: false,
-                        message: 'Unexpected error occurred',
-                    });
-                }
+            } catch (error) {
+                console.error('Unexpected error while uploading user music');
+                res.status(500).json({
+                    status: 500,
+                    success: false,
+                    message: error.message,
+                });
             }
         },
     ];

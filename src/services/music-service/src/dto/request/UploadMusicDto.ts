@@ -25,6 +25,9 @@ export class UploadMusicDto implements IMusic {
     @IsNotEmpty()
     userId?: string;
 
+    @IsString()
+    lyrics: string
+
     constructor(music: IMusic) {
         this.name = music.name;
         this.artist = music.artist;
@@ -32,6 +35,7 @@ export class UploadMusicDto implements IMusic {
         this.genres = music.genres;
         this.songType = music.songType;
         this.userId = music.userId;
+        this.lyrics = music.lyrics || '';
     }
 
     async validate() {

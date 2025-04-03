@@ -127,10 +127,15 @@ export class MusicBaseRepository implements IMusicBaseRepository {
     async deleteMusic(musicId: string): Promise<void> {
         const musicRef = database.ref(`musics/${musicId}`);
         const snapshot = await musicRef.get();
-        
+
         if (!snapshot.exists()) {
             throw new Error('Music not found');
         }
+        const firestoreRef = firestore.collection('musics').doc(musicId);
+        await firestoreRef.delete();
+
+        await UploadBase.deleteFolder(musicId);
+
 
         await musicRef.remove();
     }
