@@ -25,10 +25,8 @@ class OfficialArtistController {
         ]),
         async (req: Request, res: Response) => {
             try {
-                const {name, bio, genres} = req.body;
-                
+                const {name, bio, genres, social} = req.body;
                 const verified = req.body.verified === "true"
-                
                 const multerFile = (req.files as { imgFile?: Express.Multer.File[] })?.imgFile?.[0];
 
                 if (!multerFile) {
@@ -41,12 +39,12 @@ class OfficialArtistController {
                     verified,
                     profile: {
                         bio,
-                        genres,
-                    }
+                        genres: JSON.parse(genres),
+                    },
+                    social
                 }
                 
                 const createOfficialArtistDto = new CreateOfficialArtistDto(artistData);
-
                 await createOfficialArtistDto.validate();
 
                 const imgObject: IFile = {
@@ -79,9 +77,8 @@ class OfficialArtistController {
         async (req: Request, res: Response) => {
             try {
                 const { artistId } = req.params;
-                const { name, bio, genres } = req.body;
+                const { name, bio, genres , social} = req.body;
                 const verified = req.body.verified === "true";
-
                 const multerFile = (req.files as { imgFile?: Express.Multer.File[] })?.imgFile?.[0];
                 
                 const artistData: IOfficialArtist = {
@@ -89,8 +86,9 @@ class OfficialArtistController {
                     verified,
                     profile: {
                         bio,
-                        genres,
-                    }
+                        genres: JSON.parse(genres),
+                    },
+                    social
                 }
 
                 const imgObject: IFile | undefined = multerFile ? {
