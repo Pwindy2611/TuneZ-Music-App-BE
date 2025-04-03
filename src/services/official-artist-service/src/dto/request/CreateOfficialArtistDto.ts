@@ -14,10 +14,18 @@ export class CreateOfficialArtistDto {
         profileImage?: string;
         genres: string[];
     }
+
+    social?: {
+        twitter: string;
+        facebook: string;
+        instagram: string;
+    }
+
     constructor(artist: IOfficialArtist) {
         this.name = artist.name;
         this.verified = artist.verified;
         this.profile = artist.profile;
+        this.social = artist.social;
     }
 
     async validate() {

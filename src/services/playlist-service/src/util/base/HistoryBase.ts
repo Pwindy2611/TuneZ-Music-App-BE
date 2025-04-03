@@ -13,8 +13,12 @@ class HistoryBase {
                 artistCount[record.artist] = (artistCount[record.artist] || 0) + 1;
             }
 
-            if(record.genres){
-                genresCount[record.genres] = (genresCount[record.genres] || 0) + 1;
+            if(record.genres && Array.isArray(record.genres)){
+                record.genres.forEach(genre => {
+                    if(genre.id) {
+                        genresCount[genre.name] = (genresCount[genre.name] || 0) + 1;
+                    }
+                });
             }
         })
 
@@ -30,8 +34,8 @@ class HistoryBase {
     async getUserPreferences(userId: string) {
         const { artistCount, genresCount } = await this.analyzeUserHistory(userId);
 
-        const topArtists = this.getTopItems(artistCount, 3);
-        const topGenres = this.getTopItems(genresCount, 3);
+        const topArtists = this.getTopItems(artistCount, 5);
+        const topGenres = this.getTopItems(genresCount, 5);
 
         return { topArtists, topGenres };
     }

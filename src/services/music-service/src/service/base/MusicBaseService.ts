@@ -7,6 +7,12 @@ import { GetMusicByCategoryService } from "./MusicBaseService.GetMusicByGenres.j
 import {GetMusicById} from "./MusicBaseService.GetMusicById.js";
 import { UpdateMusicService } from "./MusicBaseService.UpdateMusic.js";
 import { DeleteMusicService } from "./MusicBaseService.DeleteMusic.js";
+import { CreateGenreService } from "./MusicBaseService.CreateGenre.js";
+import { GetAllGenresService } from "./MusicBaseService.GetAllGenres.js";
+import { GetGenreByIdService } from "./MusicBaseService.GetGenreById.js";
+import { UpdateGenreService } from "./MusicBaseService.UpdateGenre.js";
+import { DeleteGenreService } from "./MusicBaseService.DeleteGenre.js";
+import { IsGenreExistService } from "./MusicBaseService.IsGenreExist.js";
 
 export const MusicBaseService = {
     createMusic: container.resolve(CreateMusicService),
@@ -15,5 +21,13 @@ export const MusicBaseService = {
     getMusicByCategory: container.resolve(GetMusicByCategoryService),
     getMusicById: container.resolve(GetMusicById),
     updateMusic: container.resolve(UpdateMusicService),
-    deleteMusic: container.resolve(DeleteMusicService)
+    deleteMusic: container.resolve(DeleteMusicService),
+    
+    // Genres services
+    createGenre: container.resolve(CreateGenreService),
+    getAllGenres: container.resolve(GetAllGenresService),
+    getGenreById: container.resolve(GetGenreByIdService),
+    updateGenre: container.resolve(UpdateGenreService),
+    deleteGenre: container.resolve(DeleteGenreService),
+    isGenreExist: container.resolve(IsGenreExistService)
 }

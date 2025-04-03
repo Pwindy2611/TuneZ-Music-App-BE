@@ -36,27 +36,47 @@ class FetchBase {
 
         return historySnapshot.empty ? [] : historySnapshot.docs.map(doc => doc.data().musicId);
     }
-    async fetchMusicIdsFromArtist(artist: string, limit: number) {
+    async fetchMusicIdsFromArtist(artist: string, limit: number = 20) {
         const musicRef = database.ref('musics');
         const snapshot = await musicRef.orderByChild('artist').equalTo(artist).limitToFirst(limit).get();
 
         if (!snapshot.exists()) return [];
         return Object.keys(snapshot.val());
     }
-    async fetchMusicIdsFromGenre(genre: string, limit: number) {
+
+    async fetchMusicIdsFromGenres(genreName: string, limit: number = 20) {
         const musicRef = database.ref('musics');
-        const snapshot = await musicRef.orderByChild('genres').equalTo(genre).limitToFirst(limit).get();
+        const snapshot = await musicRef.get();
 
         if (!snapshot.exists()) return [];
-        return Object.keys(snapshot.val());
-    }
 
-    async fetchMusicIdsFromGenres(genre: string, limit: number) {
-        const musicRef = database.ref('musics');
-        const snapshot = await musicRef.orderByChild('genres').equalTo(genre).limitToFirst(limit).get();
+        const musics = snapshot.val();
 
-        if (!snapshot.exists()) return [];
-        return Object.keys(snapshot.val());
+        console.log(`Searching for genre: "${genreName}"`);
+
+        const filteredMusicIds: string[] = [];
+
+        Object.entries(musics).forEach(([musicId, musicData]: [string, any]) => {
+            if (!musicData.genres || !Array.isArray(musicData.genres)) {
+                return;
+            }
+
+            const hasMatchingGenre = musicData.genres.some((genre: any) => {
+                console.log(`Music ${musicId} - comparing genre "${genre.name}" with "${genreName}"`);
+
+                return genre.name.toLowerCase() === genreName.toLowerCase();
+            });
+
+            if (hasMatchingGenre) {
+                console.log(`Found matching music: ${musicId}`);
+                filteredMusicIds.push(musicId);
+            }
+        });
+
+        const result = filteredMusicIds.slice(0, limit);
+        console.log(`Returning ${result.length} music IDs`);
+
+        return result;
     }
     async fetchMusicIdsFromLove(userId: string, limit: number) {
         const historySnapshot = await firestore

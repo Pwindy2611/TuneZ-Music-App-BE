@@ -18,6 +18,7 @@ class FetchBase {
                 musicData.genres,
                 musicData.duration,
                 musicData.imgPath,
+                musicData.lyrics
             );
         });
 

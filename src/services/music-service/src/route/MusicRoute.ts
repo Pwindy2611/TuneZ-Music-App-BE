@@ -28,7 +28,11 @@ router.get('/getUserMusicState', authMiddleware, MusicController.getUserMusicSta
 //MICROSERVICE
 router.post('/incrementLoveCount/:musicId', MusicController.incrementLoveCountApi);
 
-//UPDATE & DELETE
-
+//GENRES
+router.post('/createGenre', MusicController.createGenreApi);
+router.get('/getAllGenres', MusicController.getAllGenresApi);
+router.get('/getGenreById/:genreId', MusicController.getGenreByIdApi);
+router.put('/updateGenre/:genreId', MusicController.updateGenreApi);
+router.delete('/deleteGenre/:genreId', MusicController.deleteGenreApi);
 
 export default router;

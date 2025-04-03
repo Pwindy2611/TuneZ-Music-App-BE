@@ -21,28 +21,34 @@ export const generateFollowedGenresPlaylist: IPlaylistGenerateService["generateF
         }
 
         const artistIds = await generateRepo.getIdsArtistFollowed(userId);
-        if (artistIds.length === 0) return null;
+        if (!artistIds || artistIds.length === 0) {
+            return null;
+        }
 
-        const genrePlaylists: IPlaylistResponseDto[] = [];
+        const genrePlaylistsMap = new Map<string, IPlaylistResponseDto>();
 
         for (const artistId of artistIds) {
-            const genre = await generateRepo.getGenresFromArtist(artistId);
-            if (!genre) continue;
+            const genres = await generateRepo.getGenresFromArtist(artistId);
+            if (!genres || genres.length === 0) continue;
 
-            const playlists = await PlaylistBaseService.getPlaylistByFilter(genre, PlaylistType.FOLLOWED_GENRE);
-            if (!playlists || playlists.length === 0) continue;
+            for (const genre of genres) {
+                if (genrePlaylistsMap.has(genre.id)) continue;
 
-            const musicIds = await FetchBase.fetchMusicIdsFromGenre(genre, 20);
-            const musicDetails = await FetchBase.fetchMusicDetails(musicIds);
+                const playlists = await PlaylistBaseService.getPlaylistByFilter(genre.name, PlaylistType.FOLLOWED_GENRE);
+                if (!playlists || playlists.length === 0) continue;
 
-            for (const playlist of playlists) {
-                genrePlaylists.push({
-                    title: playlist.title,
-                    coverImage: playlist.coverImage || 'https://example.com/default-cover.jpg', // Giá trị mặc định
+                const musicIds = await FetchBase.fetchMusicIdsFromGenres(genre.name);
+                const musicDetails = await FetchBase.fetchMusicDetails(musicIds);
+
+                genrePlaylistsMap.set(genre.id, {
+                    title: playlists[0].title,
+                    coverImage: playlists[0].coverImage || '',
                     tracks: musicDetails
                 });
             }
         }
+
+        const genrePlaylists = Array.from(genrePlaylistsMap.values());
 
         if (genrePlaylists.length > 0) {
             await PlaylistCacheService.saveToCache(userId, 'followed-genres', genrePlaylists);

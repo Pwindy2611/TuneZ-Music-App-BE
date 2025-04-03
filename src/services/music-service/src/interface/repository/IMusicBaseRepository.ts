@@ -8,4 +8,12 @@ export interface IMusicBaseRepository {
     incrementLoveCount(musicId: string): Promise<void>;
     updateMusic(musicId: string, updateData: any): Promise<any>;
     deleteMusic(musicId: string): Promise<void>;
+
+    // Genres methods
+    createGenre(name: string, description?: string): Promise<string>;
+    getAllGenres(): Promise<any[]>;
+    getGenreById(genreId: string): Promise<any>;
+    updateGenre(genreId: string, updateData: any): Promise<any>;
+    deleteGenre(genreId: string): Promise<void>;
+    isGenreExist(genreId: string): Promise<boolean>;
 }

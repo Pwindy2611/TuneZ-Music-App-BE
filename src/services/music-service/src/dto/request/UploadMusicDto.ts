@@ -1,13 +1,13 @@
-import { IsString, IsNumber, IsNotEmpty, validateOrReject } from 'class-validator';
+import {IsString, IsNumber, IsNotEmpty, validateOrReject, IsArray} from 'class-validator';
 import {IMusic} from "../../interface/object/IMusic.js";
-import {SongType} from "../../enum/SongType.js";
+import {IMusicGenre} from "../../interface/object/IMusicGenre.js";
 
 export class UploadMusicDto implements IMusic {
     @IsString()
     @IsNotEmpty()
     name: string;
 
-    songType: SongType;
+    songType: string;
 
     @IsString()
     @IsNotEmpty()
@@ -17,9 +17,9 @@ export class UploadMusicDto implements IMusic {
     @IsNotEmpty()
     duration: number;
 
-    @IsString()
+    @IsArray()
     @IsNotEmpty()
-    genres: string;
+    genres: string[] | IMusicGenre[];
 
     @IsString()
     @IsNotEmpty()

@@ -5,6 +5,7 @@ import {singleton} from "tsyringe";
 import UploadBase from "../util/base/UploadBase.js";
 import {IMusic} from "../interface/object/IMusic.js";
 import {IMusicFile} from "../interface/object/IMusicFile.js";
+import {IGenre} from "../interface/object/IGenre.js";
 
 @singleton()
 export class MusicBaseRepository implements IMusicBaseRepository {
@@ -136,5 +137,81 @@ export class MusicBaseRepository implements IMusicBaseRepository {
 
     async uploadMusicFile(musicId: string, file: IMusicFile): Promise<string> {
         return await UploadBase.uploadAndGetUrl(file, musicId) ?? '';
+    }
+
+    async createGenre(name: string, description?: string): Promise<string> {
+        const genreRef = database.ref(`genres`).push();
+        const genreId = genreRef.key as string;
+
+        const newGenreData: Omit<IGenre, 'id'> = {
+            name,
+            description: description || '',
+            createdAt: new Date().toISOString()
+        };
+
+        await genreRef.set(newGenreData);
+        return genreId;
+    }
+
+    async getAllGenres(): Promise<IGenre[]> {
+        const genreRef = database.ref("genres");
+        const snapshot = await genreRef.get();
+        
+        if (!snapshot.exists()) {
+            return [];
+        }
+
+        const genres: IGenre[] = [];
+        snapshot.forEach(child => {
+            genres.push({
+                id: child.key,
+                ...child.val()
+            });
+        });
+
+        return genres;
+    }
+
+    async getGenreById(genreId: string): Promise<IGenre | null> {
+        const genreRef = database.ref(`genres/${genreId}`);
+        const snapshot = await genreRef.get();
+        
+        if (!snapshot.exists()) {
+            return null;
+        }
+
+        return {
+            id: snapshot.key,
+            ...snapshot.val()
+        };
+    }
+
+    async updateGenre(genreId: string, updateData: Partial<IGenre>): Promise<IGenre> {
+        const genreRef = database.ref(`genres/${genreId}`);
+        const snapshot = await genreRef.get();
+        
+        if (!snapshot.exists()) {
+            throw new Error('Genre not found');
+        }
+
+        await genreRef.update(updateData);
+        return await this.getGenreById(genreId) as IGenre;
+    }
+
+    async deleteGenre(genreId: string): Promise<void> {
+        const genreRef = database.ref(`genres/${genreId}`);
+        const snapshot = await genreRef.get();
+        
+        if (!snapshot.exists()) {
+            throw new Error('Genre not found');
+        }
+
+        await genreRef.remove();
+    }
+
+    async isGenreExist(genreId: string): Promise<boolean> {
+        const genreRef = database.ref(`genres/${genreId}`);
+        const snapshot = await genreRef.once("value");
+        return snapshot.exists();
     }
 }

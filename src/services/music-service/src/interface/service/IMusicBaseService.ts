@@ -10,4 +10,12 @@ export interface IMusicBaseService {
     getMusicByArtist(artist: string): Promise<MusicResponseDto[] | null>;
     getMusicByGenres(genre: string): Promise<MusicResponseDto[] | null>;
     getMusicById(musicId: string): Promise<IMusic | null>;
+
+    // Genres methods
+    createGenre(name: string, description?: string): Promise<string | null>;
+    getAllGenres(): Promise<any[] | null>;
+    getGenreById(genreId: string): Promise<any | null>;
+    updateGenre(genreId: string, updateData: any): Promise<string | null>;
+    deleteGenre(genreId: string): Promise<string | null>;
+    isGenreExist(genreId: string): Promise<boolean>;
 }

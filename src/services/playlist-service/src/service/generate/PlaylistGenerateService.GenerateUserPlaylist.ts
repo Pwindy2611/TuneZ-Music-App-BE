@@ -33,15 +33,15 @@ export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylis
         }
 
         const artistPlaylists = await PlaylistBaseService.getPlaylistByFilter(topArtists, PlaylistType.USER_ARTIST);
-        const categoryPlaylists = await PlaylistBaseService.getPlaylistByFilter(topGenres, PlaylistType.USER_GENRE);
+        const genresPlaylists = await PlaylistBaseService.getPlaylistByFilter(topGenres, PlaylistType.USER_GENRE);
 
         const fetchSongsByArtist = async (artist: string): Promise<MusicResponseDto[]> => {
-            const musicIds = await FetchBase.fetchMusicIdsFromArtist(artist, 10);
+            const musicIds = await FetchBase.fetchMusicIdsFromArtist(artist);
             return musicIds.length > 0 ? await FetchBase.fetchMusicDetails(musicIds) : [];
         };
 
-        const fetchSongsByCategory = async (genre: string): Promise<MusicResponseDto[]> => {
-            const musicIds = await FetchBase.fetchMusicIdsFromGenres(genre, 10);
+        const fetchSongsByGenres = async (genre: string): Promise<MusicResponseDto[]> => {
+            const musicIds = await FetchBase.fetchMusicIdsFromGenres(genre);
             return musicIds.length > 0 ? await FetchBase.fetchMusicDetails(musicIds) : [];
         };
 
@@ -62,7 +62,7 @@ export const generateUserPlaylist: IPlaylistGenerateService["generateUserPlaylis
         };
 
         const playlistsByArtist = await populatePlaylistsWithSongs(artistPlaylists, fetchSongsByArtist);
-        const playlistsByCategory = await populatePlaylistsWithSongs(categoryPlaylists, fetchSongsByCategory);
+        const playlistsByCategory = await populatePlaylistsWithSongs(genresPlaylists, fetchSongsByGenres);
 
         const finalPlaylists = [...playlistsByArtist, ...playlistsByCategory];
 

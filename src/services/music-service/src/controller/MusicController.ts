@@ -10,6 +10,7 @@ import {MusicUserService} from "../service/user/MusicUserService.js";
 import {IAuthRequest} from "../interface/object/IAuthRequest.js";
 import {musicBaseRepository, musicStreamRepository, musicStreamService} from "../config/container/Container.js";
 import "reflect-metadata";
+import {IMusicGenre} from "../interface/object/IMusicGenre.js";
 
 const uploadMulter = multer({
     limits: { fileSize: 500 * 1024 * 1024 },
@@ -30,15 +31,18 @@ class MusicController {
         ]),
         async (req: Request, res: Response) => {
             try {
-                const { name, artist, duration, genres, officialArtistId } = req.body;
+                const { name, artist, duration, genres, officialArtistId, lyrics } = req.body;
+
+                const arrGenres: IMusicGenre[] = JSON.parse(genres);
 
                 const musicData: IMusic = {
                     name,
                     songType: SongType.OFFICIAL,
                     artist,
                     duration: Number(duration),
-                    genres: genres,
-                    officialArtistId
+                    genres: arrGenres,
+                    officialArtistId,
+                    lyrics: lyrics || ""
                 };
 
                 const createMusicDto = new CreateMusicDto(musicData);
@@ -99,6 +103,29 @@ class MusicController {
         },
     ];
 
+    updateMusicApi = async (req: Request, res: Response) => {
+        try {
+            const musicId = req.params.musicId;
+            const updateData: IMusic = {
+                ...req.body,
+            };
+            const updatedMusic = await MusicBaseService.updateMusic.execute(musicId, updateData);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Music updated successfully',
+                data: updatedMusic
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`
+            });
+        }
+    }
+
     uploadMusicByUserApi = [
         uploadMulter.fields([
             { name: "musicFile", maxCount: 1 },
@@ -114,12 +141,14 @@ class MusicController {
                 }
                 const { name, artist, duration, genres } = req.body;
 
+                const arrGenres: IMusicGenre[] = JSON.parse(genres);
+
                 const musicData: IMusic = {
                     name,
                     songType: SongType.USER_GENERATED,
                     artist,
                     duration: Number(duration),
-                    genres: genres,
+                    genres: arrGenres,
                     userId
                 };
 
@@ -555,27 +584,6 @@ class MusicController {
             })
         }
     }
-    updateMusicApi = async (req: Request, res: Response) => {
-        try {
-            const musicId = req.params.musicId;
-            const updateData = req.body;
-            
-            const updatedMusic = await MusicBaseService.updateMusic.execute(musicId, updateData);
-            
-            res.status(200).json({
-                status: 200,
-                success: true,
-                message: 'Music updated successfully',
-                data: updatedMusic
-            });
-        } catch (error) {
-            res.status(500).json({
-                status: 500,
-                success: false,
-                message: `Internal Server Error ${error.message}`
-            });
-        }
-    }
     deleteMusicApi = async (req: Request, res: Response) => {
         try {
             const musicId = req.params.musicId;
@@ -586,6 +594,136 @@ class MusicController {
                 status: 200,
                 success: true,
                 message: 'Music deleted successfully'
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`
+            });
+        }
+    }
+
+    // GENRES APIs
+    createGenreApi = async (req: Request, res: Response) => {
+        try {
+            const { name, description } = req.body;
+
+            if (!name) {
+                res.status(400).json({
+                    status: 400,
+                    success: false,
+                    message: 'Genre name is required'
+                });
+                return;
+            }
+
+            const genreId = await MusicBaseService.createGenre.execute(name, description);
+
+            res.status(201).json({
+                status: 201,
+                success: true,
+                message: 'Genre created successfully',
+                data: { id: genreId, name, description }
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`
+            });
+        }
+    }
+
+    getAllGenresApi = async (_req: Request, res: Response) => {
+        try {
+            const genres = await MusicBaseService.getAllGenres.execute();
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Fetched all genres successfully',
+                data: genres
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`
+            });
+        }
+    }
+
+    getGenreByIdApi = async (req: Request, res: Response) => {
+        try {
+            const genreId = req.params.genreId;
+            const genre = await MusicBaseService.getGenreById.execute(genreId);
+
+            if (!genre) {
+                res.status(404).json({
+                    status: 404,
+                    success: false,
+                    message: 'Genre not found'
+                });
+                return;
+            }
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Fetched genre successfully',
+                data: genre
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`
+            });
+        }
+    }
+
+    updateGenreApi = async (req: Request, res: Response) => {
+        try {
+            const genreId = req.params.genreId;
+            const updateData = req.body;
+
+            if (!updateData.name) {
+                res.status(400).json({
+                    status: 400,
+                    success: false,
+                    message: 'Genre name is required'
+                });
+                return;
+            }
+
+            const updatedGenreId = await MusicBaseService.updateGenre.execute(genreId, updateData);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Genre updated successfully',
+                data: { id: updatedGenreId, ...updateData }
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error ${error.message}`
+            });
+        }
+    }
+
+    deleteGenreApi = async (req: Request, res: Response) => {
+        try {
+            const genreId = req.params.genreId;
+            
+            await MusicBaseService.deleteGenre.execute(genreId);
+            
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: 'Genre deleted successfully'
             });
         } catch (error) {
             res.status(500).json({

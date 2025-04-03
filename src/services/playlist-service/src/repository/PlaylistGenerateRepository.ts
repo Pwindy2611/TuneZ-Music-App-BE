@@ -1,6 +1,7 @@
 import {IPlaylistGenerateRepository} from "../interface/repository/IPlaylistGenerateRepository.js";
 import {auth, database, firestore} from "../config/firebase/FireBaseConfig.js";
 import {Timestamp} from "firebase-admin/firestore";
+import { IGenre } from "../interface/object/IGenre.js";
 
 export class PlaylistGenerateRepository implements IPlaylistGenerateRepository{
     async getIdsArtistFollowed(userId: string): Promise<string[]> {
@@ -18,13 +19,20 @@ export class PlaylistGenerateRepository implements IPlaylistGenerateRepository{
 
         return snapshot.val().name;
     }
-    async getGenresFromArtist(artistId: string): Promise<string> {
+
+    async getGenresFromArtist(artistId: string): Promise<IGenre[]> {
         const artistRef = database.ref(`/officialArtists/${artistId}`);
         const snapshot = await artistRef.once('value');
 
         if (!snapshot.exists()) return Promise.reject('Artist not found');
 
-        return snapshot.val().profile.genres;
+        const genres = snapshot.val().profile.genres;
+        if (!genres || !Array.isArray(genres)) return [];
+
+        return genres.map((genre: any) => ({
+            id: genre.id,
+            name: genre.name
+        }));
     }
 
     async isUserExists(userId: string): Promise<boolean> {
