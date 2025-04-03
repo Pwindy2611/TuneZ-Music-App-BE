@@ -33,21 +33,45 @@ class LoveController {
                 newLoveMusic
             });
         }catch (error){
-            if (error instanceof Error) {
-                console.error('Error save new history:', error.message);
-                res.status(500).json({
-                    status: 500,
-                    success: false,
-                    message: error.message,
-                });
-            } else {
-                console.error('Unexpected error while save history');
-                res.status(500).json({
-                    status: 500,
-                    success: false,
-                    message: 'Unexpected error occurred',
-                });
+            console.error('Unexpected error while save history');
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: error.message,
+            });
+        }
+    }
+
+    unLoveMusicApi = async (req: IAuthRequest, res: Response) => {
+        try {
+            const userId = req.userId;
+
+            if (!userId){
+                res.status(401).send({error: "User not found"});
+                return;
             }
+
+            const musicId = req.params.musicId;
+
+            if (!musicId) {
+                res.status(400).send({error: "Music ID is required"});
+                return;
+            }
+
+            await LoveBaseService.unLoveMusic(userId, musicId);
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: "Successfully removed music from favorites"
+            });
+
+        }catch (error){
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: error.message,
+            })
         }
     }
     getMusicIdsByUserLoveApi = async (req: Request, res: Response) => {
