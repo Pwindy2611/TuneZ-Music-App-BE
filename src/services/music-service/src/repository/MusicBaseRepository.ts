@@ -26,7 +26,8 @@ export class MusicBaseRepository implements IMusicBaseRepository {
             genres: musicData.genres,
             officialArtistId: musicData.officialArtistId,
             musicPath: musicPath ?? '',
-            imgPath: imgPath?? ''
+            imgPath: imgPath?? '',
+            lyrics: musicData.lyrics,
         }
         await musicRef.set(newMusicData);
         return musicId;
