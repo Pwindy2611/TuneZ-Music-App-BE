@@ -1,0 +1,26 @@
+FROM node:18
+
+WORKDIR /usr/src/app
+
+#Install protoc 
+RUN apt-get update && \
+    apt-get install -y protobuf-compiler && \
+    apt-get clean
+
+# Copy package files
+COPY package*.json ./
+
+# Cài đặt dependencies
+RUN npm install 
+
+# Copy tất cả mã nguồn
+COPY . .
+
+# Expose ports
+EXPOSE 3003 9230 50055
+
+# Generate proto files
+RUN npm run generate-proto
+
+# Command to run the application
+CMD ["npm", "start"]
