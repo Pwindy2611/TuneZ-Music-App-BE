@@ -1,0 +1,61 @@
+version: '3'
+services:
+  api-gateway:
+    ports:
+      - "9227:9227"
+    command: npm run debug
+
+  user-service:
+    ports:
+      - "9228:9227"
+    command: npm run debug
+
+  official-artist-service:
+    ports:
+      - "9229:9227"
+    command: npm run debug
+
+  music-service:
+    ports:
+      - "9230:9227"
+    command: npm run debug
+
+  history-service:
+    ports:
+      - "9231:9227"
+    command: npm run debug
+
+  love-service:
+    ports:
+      - "9232:9227"
+    command: npm run debug
+
+  follow-service:
+    ports:
+      - "9233:9227"
+    command: npm run debug
+
+  playlist-service:
+    ports:
+      - "9234:9227"
+    command: npm run debug
+
+  album-service:
+    ports:
+      - "9235:9227"
+    command: npm run debug
+
+  subscription-service:
+    ports:
+      - "9236:9227"
+    command: npm run debug
+
+  payment-service:
+    ports:
+      - "9237:9227"
+    command: npm run debug
+
+  search-service:
+    ports:
+      - "9238:9227"
+    command: npm run debug

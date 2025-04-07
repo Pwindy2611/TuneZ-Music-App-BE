@@ -1,0 +1,259 @@
+version: '3'
+services:
+  api-gateway:
+    build:
+      context: ../src/services/api-gateway
+    ports:
+      - "3000:3000"
+    env_file:
+      - ../env/common/database.env
+      - ../env/common/cors.env
+      - ../env/services/api-gateway.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../key/localhost.pem:/usr/src/app/localhost.pem
+      - ../key/localhost-key.pem:/usr/src/app/localhost-key.pem
+    command: npm run start
+    networks:
+      - app_network
+
+  user-service:
+    build:
+      context: ../src/services/user-service
+    ports:
+      - "3001:3000"
+      - "50201:50201"
+    env_file:
+      - ../env/common/database.env
+      - ../env/common/storage.env
+      - ../env/common/grpc.env
+      - ../env/common/cors.env
+      - ../env/services/user.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+  official-artist-service:
+    build:
+      context: ../src/services/official-artist-service
+    ports:
+      - "3002:3000"
+      - "50202:50202"
+    env_file:
+      - ../env/common/database.env
+      - ../env/common/storage.env
+      - ../env/common/grpc.env
+      - ../env/common/cors.env
+      - ../env/services/official-artist.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+  music-service:
+    build:
+      context: ../src/services/music-service
+    ports:
+      - "3003:3000"
+      - "50203:50203"
+    depends_on:
+      - user-service
+      - official-artist-service
+    env_file:
+      - ../env/common/database.env
+      - ../env/common/storage.env
+      - ../env/common/grpc.env
+      - ../env/common/cors.env
+      - ../env/services/music.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+  history-service:
+    build:
+      context: ../src/services/history-service
+    ports:
+      - "3004:3000"
+      - "50204:50204"
+    depends_on:
+      - music-service
+    env_file:
+      - ../env/common/database.env
+      - ../env/common/grpc.env
+      - ../env/common/cors.env
+      - ../env/services/history.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+  love-service:
+    build:
+      context: ../src/services/love-service
+    ports:
+      - "3005:3000"
+      - "50205:50205"
+    depends_on:
+      - music-service
+    env_file:
+      - ../env/common/database.env
+      - ../env/common/grpc.env
+      - ../env/common/cors.env
+      - ../env/services/love.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+  follow-service:
+    build:
+      context: ../src/services/follow-service
+    ports:
+      - "3006:3000"
+      - "50206:50206"
+    depends_on:
+      - user-service
+      - official-artist-service
+    env_file:
+      - ../env/common/database.env
+      - ../env/common/grpc.env
+      - ../env/common/cors.env
+      - ../env/services/follow.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+  playlist-service:
+    build:
+      context: ../src/services/playlist-service
+    ports:
+      - "3007:3000"
+      - "50207:50207"
+    depends_on:
+      - music-service
+      - follow-service
+      - love-service
+      - history-service
+      - user-service
+      - official-artist-service
+    env_file:
+      - ../env/common/database.env
+      - ../env/common/storage.env
+      - ../env/common/grpc.env
+      - ../env/common/cors.env
+      - ../env/services/playlist.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+  album-service:
+    build:
+      context: ../src/services/album-service
+    ports:
+      - "3008:3000"
+      - "50208:50208"
+    depends_on:
+      - music-service
+      - official-artist-service
+    env_file:
+      - ../env/common/database.env
+      - ../env/common/storage.env
+      - ../env/common/grpc.env
+      - ../env/common/cors.env
+      - ../env/services/album.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+  subscription-service:
+    build:
+      context: ../src/services/subscription-service
+    ports:
+      - "3009:3000"
+      - "50209:50209"
+    depends_on:
+      - user-service
+    env_file:
+      - ../env/common/database.env
+      - ../env/common/grpc.env
+      - ../env/common/cors.env
+      - ../env/services/subscription.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+  payment-service:
+    build:
+      context: ../src/services/payment-service
+    ports:
+      - "3010:3000"
+      - "50210:50210"
+    depends_on:
+      - user-service
+      - subscription-service
+    env_file:
+      - ../env/common/database.env
+      - ../env/common/grpc.env
+      - ../env/common/cors.env
+      - ../env/services/payment.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+  search-service:
+    build:
+      context: ../src/services/search-service
+    ports:
+      - "3011:3000"
+      - "50211:50211"
+    depends_on:
+      - music-service
+      - official-artist-service
+      - user-service
+      - history-service
+      - love-service
+      - follow-service
+      - playlist-service
+      - album-service
+    env_file:
+      - ../env/common/database.env
+      - ../env/common/grpc.env
+      - ../env/common/cors.env
+      - ../env/services/search.env
+    volumes:
+      - ../key/key.json:/usr/src/app/key.json
+      - ../tsconfig.json:/usr/src/app/tsconfig.json
+    command: npm run start
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
