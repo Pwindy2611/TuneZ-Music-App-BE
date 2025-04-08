@@ -367,6 +367,41 @@ class MusicController {
             });
         }
     }
+    getUserMusicApi = async (req: IAuthRequest, res: Response) => {
+        try {
+            const userId = req.userId;
+
+            if (!userId) {
+                res.status(401).send("Unauthorized");
+                return;
+            }
+
+            const musicUser = await MusicUserService.getUserMusic.execute(userId);
+
+            if(musicUser?.length === 0) {
+                res.status(404).json({
+                    status: 404,
+                    success: false,
+                    message: `No music found with: ${userId}`,
+                });
+                return;
+            }
+
+            res.status(200).json({
+                status: 200,
+                success: true,
+                message: `Fetched music user with: ${userId}`,
+                data: musicUser,
+            });
+        }catch (error) {
+            console.error('Error fetching music user:', error);
+            res.status(500).json({
+                status: 500,
+                success: false,
+                message: `Internal Server Error: ${error.message}`,
+            });
+        }
+    }
     getMusicInfoApi = async (req: IAuthRequest, res: Response) => {
         try {
             const musicId = req.params.musicId;
@@ -626,7 +661,6 @@ class MusicController {
             });
         }
     }
-
     getAllGenresApi = async (_req: Request, res: Response) => {
         try {
             const genres = await MusicBaseService.getAllGenres.execute();
@@ -645,7 +679,6 @@ class MusicController {
             });
         }
     }
-
     getGenreByIdApi = async (req: Request, res: Response) => {
         try {
             const genreId = req.params.genreId;
@@ -674,7 +707,6 @@ class MusicController {
             });
         }
     }
-
     updateGenreApi = async (req: Request, res: Response) => {
         try {
             const genreId = req.params.genreId;
@@ -705,7 +737,6 @@ class MusicController {
             });
         }
     }
-
     deleteGenreApi = async (req: Request, res: Response) => {
         try {
             const genreId = req.params.genreId;

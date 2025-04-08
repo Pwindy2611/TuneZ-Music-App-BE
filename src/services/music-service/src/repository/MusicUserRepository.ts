@@ -18,6 +18,12 @@ export class MusicUserRepository implements IMusicUserRepository {
 
         return await FetchBase.fetchMusicDetails(uniqueMusicIds);
     }
+    async getUserMusic(userId: string): Promise<any> {
+        const musicIds = await FetchBase.fetchMusicIdsFromUser(userId, 50);
+        const uniqueMusicIds = [...new Set<string>(musicIds as string[])];
+
+        return await FetchBase.fetchMusicDetails(uniqueMusicIds);
+    }
     async uploadMusicByUser(musicData: any): Promise<any> {
         const musicRef = database.ref(`musics`).push();
         const musicId = musicRef.key as string;
@@ -34,7 +40,8 @@ export class MusicUserRepository implements IMusicUserRepository {
             genres: musicData.genres,
             userId: musicData.userId,
             musicPath: musicPath ?? '',
-            imgPath: imgPath?? ''
+            imgPath: imgPath?? '',
+            lyrics: musicData.lyrics ?? '',
         }
         await musicRef.set(newMusicData);
         return musicId;

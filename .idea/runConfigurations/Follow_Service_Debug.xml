@@ -1,6 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Follow Service Debug" type="ChromiumRemoteDebugType" factoryName="Chromium Remote" port="9233">
-    <mapping url="/usr/src/app" local-file="$PROJECT_DIR$/src/services/follow-service" />
-    <method v="2" />
-  </configuration>
-</component>

@@ -16,6 +16,7 @@ router.get('/getMusicByArtist', MusicController.getMusicByArtistApi);
 router.get('/getMusicByGenres', MusicController.getMusicByGenresApi);
 router.get('/getMusicHistory', authMiddleware, MusicController.getMusicHistoryApi);
 router.get('/getMusicLove', authMiddleware, MusicController.getMusicLoveApi);
+router.get('/getUserMusic', authMiddleware, MusicController.getUserMusicApi);
 
 //STREAM
 router.get('/getStreamMusic/:musicId', authMiddleware, MusicController.getStreamMusicApi);

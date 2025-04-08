@@ -6,4 +6,5 @@ export interface IMusicUserService{
     uploadMusicByUser(music: IMusic, musicFile: IMusicFile, imgFile: IMusicFile): Promise<string | null>;
     getMusicHistory(userId: string): Promise<MusicResponseDto[] | null>;
     getMusicLove(userId: string): Promise<MusicResponseDto[] | null>;
+    getUserMusic(userId: string): Promise<MusicResponseDto[] | null>;
 }

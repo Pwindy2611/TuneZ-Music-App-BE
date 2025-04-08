@@ -49,6 +49,20 @@ class FetchBase {
             });
         });
     }
+
+    async fetchMusicIdsFromUser(userId: string, limit: number) {
+        return new Promise((resolve, reject) => {
+            database.ref(`musics`).orderByChild('userId').equalTo(userId).limitToLast(limit).once('value', (snapshot) => {
+                const musicIds: string[] = [];
+                snapshot.forEach((childSnapshot) => {
+                    musicIds.push(childSnapshot.key as string);
+                });
+                resolve(musicIds);
+            }, (error) => {
+                reject(new Error(`Firebase error: ${error.message}`));
+            });
+        });
+    }
 }
 
 export default new FetchBase();
